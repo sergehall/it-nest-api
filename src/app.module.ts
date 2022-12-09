@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -8,6 +13,12 @@ import { CommentsModule } from './comments/comments.module';
 import { TestingModule } from './testing/testing.module';
 import { EmailsModule } from './emails/emails.module';
 import { ConfigModule } from './config/config.module';
+import { LoggerMiddleware } from './logger/middleware';
+import { BlogsController } from './blogs/blogs.controller';
+import { CommentsController } from './comments/comments.controller';
+import { EmailsController } from './emails/emails.controller';
+import { PostsController } from './posts/posts.controller';
+import { UsersController } from './users/users.controller';
 
 @Module({
   imports: [
@@ -29,4 +40,17 @@ import { ConfigModule } from './config/config.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude({ path: '/(.*)', method: RequestMethod.GET })
+      .forRoutes(
+        BlogsController,
+        CommentsController,
+        PostsController,
+        UsersController,
+        EmailsController,
+      );
+  }
+}
