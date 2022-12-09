@@ -7,9 +7,18 @@ import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { TestingModule } from './testing/testing.module';
 import { EmailsModule } from './emails/emails.module';
+import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
+    ConfigModule.forRootAsync({
+      useFactory: () => {
+        return {
+          folder: './config',
+        };
+      },
+      inject: [],
+    }),
     UsersModule,
     BlogsModule,
     PostsModule,

@@ -15,12 +15,6 @@ import { FindOneParams, UpdateBlogDto } from './dto/update-blog.dto';
 export class BlogsController {
   constructor(private readonly blogsService: BlogsService) {}
 
-  @Post()
-  create(@Body() createBlogDto: CreateBlogDto) {
-    console.log(createBlogDto);
-    return this.blogsService.create(createBlogDto);
-  }
-
   @Get()
   findAll() {
     return this.blogsService.findAll();
@@ -29,6 +23,11 @@ export class BlogsController {
   @Get(':id')
   findOne(@Param() params: FindOneParams) {
     return this.blogsService.findOne(params.id);
+  }
+
+  @Post()
+  create(@Body() createBlogDto: CreateBlogDto) {
+    return this.blogsService.create(createBlogDto);
   }
 
   @Put(':id')
