@@ -9,10 +9,10 @@ export class LoggerMiddleware implements NestMiddleware {
     const body = req.body;
     const params = req.params;
     const query = req.query;
-    console.log('Request...');
     console.log('body: ', body);
     console.log('params: ', params);
     console.log('query: ', query);
+    console.log('Request...');
     next();
   }
 }

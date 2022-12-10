@@ -1,18 +1,24 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { AllExceptionsFilter } from './all-exceptions/filter';
 import { HttpExceptionFilter } from './logger/filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      stopAtFirstError: false,
+      exceptionFactory: (errors) => {
+        const customErrors = errors.map((e) => {
+          const firstError = JSON.stringify(e.constraints);
+          return { field: e.property, message: firstError };
+        });
+        throw new BadRequestException(customErrors);
+      },
     }),
   );
   app.use(cookieParser());

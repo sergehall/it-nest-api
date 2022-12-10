@@ -14,11 +14,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    response.status(status).json({
-      statusCode: status,
-      message: 'Middleware',
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+    const responseBody: any = exception.getResponse();
+
+    if (responseBody.message.length !== 0) {
+      response.status(status).json({
+        errorsMessages: responseBody.message,
+      });
+    } else {
+      response.status(status).json({
+        statusCode: status,
+        errorResponse: exception.getResponse(),
+        timestamp: new Date().toISOString(),
+        path: request.url,
+      });
+    }
   }
 }
