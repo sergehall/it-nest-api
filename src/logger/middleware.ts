@@ -6,12 +6,12 @@ import { HttpExceptionFilter } from './filter';
 @UseFilters(HttpExceptionFilter)
 export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
-    const body = req.body;
-    const params = req.params;
-    const query = req.query;
-    console.log('body: ', body);
-    console.log('params: ', params);
-    console.log('query: ', query);
+    // const body = req.body;
+    // const params = req.params;
+    // const query = req.query;
+    // console.log('body: ', body);
+    // console.log('params: ', params);
+    // console.log('query: ', query);
     console.log('Request...');
     next();
   }

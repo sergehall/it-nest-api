@@ -16,27 +16,30 @@ export class EmailsController {
   constructor(private readonly emailsService: EmailsService) {}
 
   @Post()
-  create(@Body() createEmailDto: CreateEmailDto) {
+  async create(@Body() createEmailDto: CreateEmailDto) {
     return this.emailsService.create(createEmailDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.emailsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.emailsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmailDto: UpdateEmailDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateEmailDto: UpdateEmailDto,
+  ) {
     return this.emailsService.update(+id, updateEmailDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.emailsService.remove(+id);
   }
 }

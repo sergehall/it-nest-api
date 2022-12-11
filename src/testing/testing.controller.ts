@@ -7,7 +7,7 @@ export class TestingController {
 
   @Delete('all-data')
   @HttpCode(204)
-  removeAllData() {
+  async removeAllData() {
     return this.testingService.removeAllData();
   }
 }
