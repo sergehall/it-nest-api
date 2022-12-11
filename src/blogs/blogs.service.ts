@@ -1,19 +1,18 @@
-import { CreateBlogDto } from './dto/create-blog.dto';
-import { UpdateBlogDto } from './dto/update-blog.dto';
+import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { Injectable } from '@nestjs/common';
 import {
   DtoQueryType,
   EntityPaginationType,
-  QueryPaginationType,
   ReturnObjWithPagination,
 } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
-import { QueryDto } from '../infrastructure/common/dto/query-dto';
+import { QueryDto } from '../infrastructure/common/queries-params/dto/query-dto';
+import { UpdateBlogDto } from './dto/update-blods.dto';
 
 @Injectable()
 export class BlogsService {
   constructor(protected convertFiltersForDB: ConvertFiltersForDB) {}
-  async create(createBlogDto: CreateBlogDto) {
+  async create(createBlogDto: CreateBlogsDto) {
     return {
       name: createBlogDto.name,
       description: createBlogDto.description,

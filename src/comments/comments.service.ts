@@ -12,7 +12,7 @@ export class CommentsService {
     return `This action returns all comments`;
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return `This action returns a #${id} comment`;
   }
 

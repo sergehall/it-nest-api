@@ -1,6 +1,6 @@
 import { IsNotEmpty, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class CreateBlogDto {
+export class CreateBlogsDto {
   @IsNotEmpty()
   @MinLength(0)
   @MaxLength(15)
