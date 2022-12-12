@@ -7,7 +7,7 @@ import {
   UserType,
 } from '../types/types';
 import * as uuid4 from 'uuid4';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class PostsService {
     return newPost;
   }
 
-  async findAll(queryPagination: QueryDto) {
+  async findAll(queryPagination: PaginationDto) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'title' ||

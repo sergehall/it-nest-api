@@ -13,8 +13,8 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CommentsService } from '../comments/comments.service';
-import { ParseQuery } from '../infrastructure/common/manual-parse-queries/parse-query';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { ParseQuery } from '../infrastructure/common/parse-query';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -26,7 +26,7 @@ export class PostsController {
   @Get()
   async findAll(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
-    const queryPagination: QueryDto = {
+    const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       sortBy: paginationData.sortBy,

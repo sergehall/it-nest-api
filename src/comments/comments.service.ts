@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { Pagination } from '../infrastructure/common/pagination';
 
@@ -12,7 +12,7 @@ export class CommentsService {
     return 'This action adds a new comment';
   }
 
-  async findAll(queryPagination: QueryDto) {
+  async findAll(queryPagination: PaginationDto) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'content' ||

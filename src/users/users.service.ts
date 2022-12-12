@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { DtoQueryType, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
@@ -20,7 +20,7 @@ export class UsersService {
     return user;
   }
 
-  async findAll(queryPagination: QueryDto, searchFilters: DtoQueryType) {
+  async findAll(queryPagination: PaginationDto, searchFilters: DtoQueryType) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'login' ||

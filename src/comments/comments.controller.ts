@@ -11,8 +11,8 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { ParseQuery } from '../infrastructure/common/manual-parse-queries/parse-query';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { ParseQuery } from '../infrastructure/common/parse-query';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -26,7 +26,7 @@ export class CommentsController {
   @Get()
   async findAll(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
-    const queryPagination: QueryDto = {
+    const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       sortBy: paginationData.sortBy,

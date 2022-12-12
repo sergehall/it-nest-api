@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { QueryDto } from './manual-parse-queries/dto/query-dto';
+import { PaginationDto } from './dto/pagination.dto';
 import { EntityPaginationType } from '../../types/types';
 
 @Injectable()
 export class Pagination {
   async prepare(
-    queryPagination: QueryDto,
+    queryPagination: PaginationDto,
     field: string,
   ): Promise<EntityPaginationType> {
     const startIndex =

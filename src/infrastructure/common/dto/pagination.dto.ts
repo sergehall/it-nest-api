@@ -6,7 +6,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class QueryDto {
+export class PaginationDto {
   @IsNotEmpty()
   @IsInt()
   pageNumber: number;

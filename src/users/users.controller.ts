@@ -13,8 +13,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ParseQuery } from '../infrastructure/common/manual-parse-queries/parse-query';
-import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { ParseQuery } from '../infrastructure/common/parse-query';
+import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Request } from 'express';
 
 @Controller('users')
@@ -39,7 +39,7 @@ export class UsersController {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchLoginTerm = { searchLoginTerm: paginationData.searchLoginTerm };
     const searchEmailTerm = { searchEmailTerm: paginationData.searchEmailTerm };
-    const queryPagination: QueryDto = {
+    const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       sortBy: paginationData.sortBy,
