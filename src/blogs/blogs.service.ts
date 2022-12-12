@@ -38,7 +38,7 @@ export class BlogsService {
     // const pagesCount = Math.ceil(totalCount / pageSize)
     const totalCount = 0;
     const pagesCount = 0;
-    const convertedFilters = await this.convertFiltersForDB.convertAll(
+    const convertedFilters = await this.convertFiltersForDB.convert(
       searchFilters,
     );
     const pageNumber = queryPagination.pageNumber;

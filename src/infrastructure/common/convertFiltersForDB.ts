@@ -3,7 +3,7 @@ import { ConvertFilterType, DtoQueryType } from '../../types/types';
 
 @Injectable()
 export class ConvertFiltersForDB {
-  async convertAll([...rawFilters]: DtoQueryType) {
+  async convert([...rawFilters]: DtoQueryType) {
     const pathFilter = {
       searchNameTerm: 'name',
       searchLoginTerm: 'login',
