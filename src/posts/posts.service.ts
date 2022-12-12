@@ -37,6 +37,7 @@ export class PostsService {
   async findAll(queryPagination: QueryDto) {
     const entityPagination = await this.entityPagination.posts(queryPagination);
     const pageNumber = queryPagination.pageNumber;
+    const pageSize = entityPagination.pageSize;
     // const totalCount = await this.postsRepository.countDocuments([{}])
     // const pagesCount = Math.ceil(totalCount / pageSize)
     const totalCount = 0;
@@ -44,7 +45,7 @@ export class PostsService {
     return {
       pagesCount: pagesCount,
       page: pageNumber,
-      pageSize: entityPagination.pageSize,
+      pageSize: pageSize,
       totalCount: totalCount,
       items: [],
     };

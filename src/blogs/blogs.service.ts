@@ -8,10 +8,14 @@ import {
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
+import { EntityPagination } from '../posts/infrastructure/entityPagination';
 
 @Injectable()
 export class BlogsService {
-  constructor(protected convertFiltersForDB: ConvertFiltersForDB) {}
+  constructor(
+    protected convertFiltersForDB: ConvertFiltersForDB,
+    protected entityPagination: EntityPagination,
+  ) {}
   async create(createBlogDto: CreateBlogsDto) {
     return {
       name: createBlogDto.name,
@@ -24,33 +28,21 @@ export class BlogsService {
     queryPagination: QueryDto,
     searchFilters: DtoQueryType,
   ): Promise<ReturnObjWithPagination> {
-    const pageNumber = queryPagination.pageNumber;
-    const startIndex =
-      (queryPagination.pageNumber - 1) * queryPagination.pageSize;
-    const pageSize = queryPagination.pageSize;
-    let field = 'createdAt';
-    if (
-      queryPagination.sortBy === 'name' ||
-      queryPagination.sortBy === 'websiteUrl' ||
-      queryPagination.sortBy === 'description'
-    ) {
-      field = queryPagination.sortBy;
-    }
-    const direction = queryPagination.sortDirection;
-    const entityPagination: EntityPaginationType = {
-      startIndex,
-      pageSize,
-      field,
-      direction,
-    };
+    const entityPagination = await this.entityPagination.posts(queryPagination);
+    // const totalCount = await this.postsRepository.countDocuments([{}])
+    // const pagesCount = Math.ceil(totalCount / pageSize)
+    const totalCount = 0;
+    const pagesCount = 0;
     const convertedFilters = await this.convertFiltersForDB.convertAll(
       searchFilters,
     );
+    const pageNumber = queryPagination.pageNumber;
+    const pageSize = entityPagination.pageSize;
     return {
-      pagesCount: 0,
+      pagesCount: pagesCount,
       page: pageNumber,
       pageSize: pageSize,
-      totalCount: 0,
+      totalCount: totalCount,
       items: [
         {
           id: 'string',
