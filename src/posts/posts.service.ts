@@ -8,11 +8,11 @@ import {
 } from '../types/types';
 import * as uuid4 from 'uuid4';
 import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
-import { EntityPagination } from './infrastructure/entityPagination';
+import { Pagination } from '../infrastructure/common/pagination';
 
 @Injectable()
 export class PostsService {
-  constructor(protected entityPagination: EntityPagination) {}
+  constructor(protected pagination: Pagination) {}
 
   async create(createPostDto: CreatePostDto, blogName: string) {
     console.log(createPostDto, blogName);
@@ -35,9 +35,18 @@ export class PostsService {
   }
 
   async findAll(queryPagination: QueryDto) {
-    const entityPagination = await this.entityPagination.posts(queryPagination);
+    let field = 'createdAt';
+    if (
+      queryPagination.sortBy === 'title' ||
+      queryPagination.sortBy === 'shortDescription' ||
+      queryPagination.sortBy === 'blogName' ||
+      queryPagination.sortBy === 'content'
+    ) {
+      field = queryPagination.sortBy;
+    }
+    const pagination = await this.pagination.prepare(queryPagination, field);
     const pageNumber = queryPagination.pageNumber;
-    const pageSize = entityPagination.pageSize;
+    const pageSize = pagination.pageSize;
     // const totalCount = await this.postsRepository.countDocuments([{}])
     // const pagesCount = Math.ceil(totalCount / pageSize)
     const totalCount = 0;

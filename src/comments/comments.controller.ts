@@ -11,6 +11,8 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { ParseQuery } from '../infrastructure/common/manual-parse-queries/parse-query';
+import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -23,7 +25,14 @@ export class CommentsController {
 
   @Get()
   async findAll(@Query() query: any) {
-    return this.commentsService.findAll();
+    const paginationData = ParseQuery.getPaginationData(query);
+    const queryPagination: QueryDto = {
+      pageNumber: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      sortBy: paginationData.sortBy,
+      sortDirection: paginationData.sortDirection,
+    };
+    return this.commentsService.findAll(queryPagination);
   }
 
   @Get(':id')
@@ -36,11 +45,11 @@ export class CommentsController {
     @Param('id') id: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return this.commentsService.update(+id, updateCommentDto);
+    return this.commentsService.update(id, updateCommentDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.commentsService.remove(+id);
+    return this.commentsService.remove(id);
   }
 }

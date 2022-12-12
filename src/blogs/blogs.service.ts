@@ -1,20 +1,16 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { Injectable } from '@nestjs/common';
-import {
-  DtoQueryType,
-  EntityPaginationType,
-  ReturnObjWithPagination,
-} from '../types/types';
+import { DtoQueryType, ReturnObjWithPagination } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
-import { EntityPagination } from '../posts/infrastructure/entityPagination';
+import { Pagination } from '../infrastructure/common/pagination';
 
 @Injectable()
 export class BlogsService {
   constructor(
     protected convertFiltersForDB: ConvertFiltersForDB,
-    protected entityPagination: EntityPagination,
+    protected pagination: Pagination,
   ) {}
   async create(createBlogDto: CreateBlogsDto) {
     return {
@@ -28,7 +24,16 @@ export class BlogsService {
     queryPagination: QueryDto,
     searchFilters: DtoQueryType,
   ): Promise<ReturnObjWithPagination> {
-    const entityPagination = await this.entityPagination.posts(queryPagination);
+    let field = 'createdAt';
+    if (
+      queryPagination.sortBy === 'name' ||
+      queryPagination.sortBy === 'websiteUrl' ||
+      queryPagination.sortBy === 'description'
+    ) {
+      field = queryPagination.sortBy;
+    }
+
+    const pagination = await this.pagination.prepare(queryPagination, field);
     // const totalCount = await this.postsRepository.countDocuments([{}])
     // const pagesCount = Math.ceil(totalCount / pageSize)
     const totalCount = 0;
@@ -37,21 +42,20 @@ export class BlogsService {
       searchFilters,
     );
     const pageNumber = queryPagination.pageNumber;
-    const pageSize = entityPagination.pageSize;
+    const pageSize = pagination.pageSize;
+    const blog = {
+      id: 'string',
+      name: 'string',
+      description: 'string',
+      websiteUrl: 'string',
+      createdAt: '2022-12-12T10:13:39.557Z',
+    };
     return {
       pagesCount: pagesCount,
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,
-      items: [
-        {
-          id: 'string',
-          name: 'string',
-          description: 'string',
-          websiteUrl: 'string',
-          createdAt: 'string',
-        },
-      ],
+      items: [blog],
     };
   }
 

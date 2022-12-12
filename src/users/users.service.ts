@@ -2,25 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
-import { DtoQueryType, EntityPaginationType, UserType } from '../types/types';
+import { DtoQueryType, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
+import { Pagination } from '../infrastructure/common/pagination';
 
 @Injectable()
 export class UsersService {
-  constructor(protected convertFiltersForDB: ConvertFiltersForDB) {}
+  constructor(
+    protected convertFiltersForDB: ConvertFiltersForDB,
+    protected pagination: Pagination,
+  ) {}
   async create(createUserDto: CreateUserDto, ip: string, userAgent: string) {
     const user = await this._createNewUser(createUserDto, ip, userAgent);
     return user;
   }
 
   async findAll(queryPagination: QueryDto, searchFilters: DtoQueryType) {
-    const pageNumber = queryPagination.pageNumber;
-    const startIndex =
-      (queryPagination.pageNumber - 1) * queryPagination.pageSize;
-    const pageSize = queryPagination.pageSize;
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'login' ||
@@ -28,30 +28,32 @@ export class UsersService {
     ) {
       field = queryPagination.sortBy;
     }
-    const direction = queryPagination.sortDirection;
-    const entityPagination: EntityPaginationType = {
-      startIndex,
-      pageSize,
-      field,
-      direction,
-    };
+    const pagination = await this.pagination.prepare(queryPagination, field);
+    const pageNumber = queryPagination.pageNumber;
+    const pageSize = pagination.pageSize;
+    // const totalCount = await this.postRepository.......
+    // const pagesCount = Math.ceil(totalCount / pageSize)
+    const totalCount = 0;
+    const pagesCount = 0;
+
     const convertedFilters = await this.convertFiltersForDB.convertForUser(
       searchFilters,
     );
-    console.log(convertedFilters);
+    // const posts = await this.postRepository....
+    const posts = [
+      {
+        id: 'string',
+        login: 'string',
+        email: 'string',
+        createdAt: 'string',
+      },
+    ];
     return {
       pagesCount: 0,
       page: pageNumber,
       pageSize: pageSize,
       totalCount: 0,
-      items: [
-        {
-          id: 'string',
-          login: 'string',
-          email: 'string',
-          createdAt: 'string',
-        },
-      ],
+      items: posts,
     };
   }
 
