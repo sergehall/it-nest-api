@@ -11,7 +11,6 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Params } from '../infrastructure/common/queries-params/params-valid';
 
 @Controller('comments')
 export class CommentsController {
@@ -28,8 +27,8 @@ export class CommentsController {
   }
 
   @Get(':id')
-  async findOne(@Param() params: Params) {
-    return this.commentsService.findOne(params.id);
+  async findOne(@Param('id') id: string) {
+    return this.commentsService.findOne(id);
   }
 
   @Patch(':id')

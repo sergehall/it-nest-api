@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -14,7 +14,6 @@ export class CreatePostDto {
   @MaxLength(1000)
   content: string;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(100)
+  @IsString()
   blogId: string;
 }

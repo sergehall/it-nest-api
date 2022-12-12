@@ -1,17 +1,20 @@
-import { IsNotEmpty, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, Length, Matches } from 'class-validator';
 
 export class CreateBlogsDto {
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(15)
+  @Length(0, 15, {
+    message: 'Incorrect length! Must be max 15 ch.',
+  })
   name: string;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(500)
+  @Length(0, 500, {
+    message: 'Incorrect length! Must be max 500 ch.',
+  })
   description: string;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(100)
+  @Length(0, 100, {
+    message: 'Incorrect length! Must be max 100 ch.',
+  })
   @Matches(
     '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$',
   )

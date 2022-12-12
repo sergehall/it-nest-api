@@ -7,9 +7,13 @@ import {
   UserType,
 } from '../types/types';
 import * as uuid4 from 'uuid4';
+import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
+import { EntityPagination } from './infrastructure/entityPagination';
 
 @Injectable()
 export class PostsService {
+  constructor(protected entityPagination: EntityPagination) {}
+
   async create(createPostDto: CreatePostDto, blogName: string) {
     console.log(createPostDto, blogName);
     const newPost = {
@@ -30,11 +34,23 @@ export class PostsService {
     return newPost;
   }
 
-  async findAll() {
-    return `This action returns all posts`;
+  async findAll(queryPagination: QueryDto) {
+    const entityPagination = await this.entityPagination.posts(queryPagination);
+    const pageNumber = queryPagination.pageNumber;
+    // const totalCount = await this.postsRepository.countDocuments([{}])
+    // const pagesCount = Math.ceil(totalCount / pageSize)
+    const totalCount = 0;
+    const pagesCount = 0;
+    return {
+      pagesCount: pagesCount,
+      page: pageNumber,
+      pageSize: entityPagination.pageSize,
+      totalCount: totalCount,
+      items: [],
+    };
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return `This action returns a #${id} post`;
   }
 
@@ -46,11 +62,11 @@ export class PostsService {
     return `This action returns posts`;
   }
 
-  async update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto) {
+    return updatePostDto;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return `This action removes a #${id} post`;
   }
 }

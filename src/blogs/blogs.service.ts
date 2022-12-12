@@ -6,7 +6,7 @@ import {
   ReturnObjWithPagination,
 } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
-import { QueryDto } from '../infrastructure/common/queries-params/dto/query-dto';
+import { QueryDto } from '../infrastructure/common/manual-parse-queries/dto/query-dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
 
 @Injectable()
