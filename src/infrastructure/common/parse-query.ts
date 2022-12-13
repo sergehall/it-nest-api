@@ -4,6 +4,7 @@ import { SortOrder } from '../../types/types';
 @Injectable()
 export class ParseQuery {
   static getPaginationData(query: any) {
+    console.log(query);
     let pageNumber: number = parseInt(<string>query.pageNumber);
     let pageSize: number = parseInt(<string>query.pageSize);
     let searchNameTerm: string = query.searchNameTerm?.toString();
@@ -16,11 +17,11 @@ export class ParseQuery {
     let confirmationCode: string = query.sonfirmationCode?.toString();
     let sortBy: string = query.sortBy?.toString();
     const querySortDirection: SortOrder = query?.sortDirection;
-
+    let sortDirection: SortOrder = 'desc';
     if (!searchNameTerm) {
       searchNameTerm = '';
     }
-    if (!searchLoginTerm || searchLoginTerm.length === 0) {
+    if (!searchLoginTerm) {
       searchLoginTerm = '';
     }
     if (!searchEmailTerm) {
@@ -47,11 +48,9 @@ export class ParseQuery {
     if (isNaN(pageSize)) {
       pageSize = 10;
     }
-    if (!sortBy || sortBy.length === 0) {
+    if (!sortBy) {
       sortBy = '';
     }
-
-    let sortDirection: SortOrder = 'desc';
     if (
       [-1, 1, 'descending', 'desc', 'ascending', 'asc'].includes(
         querySortDirection,
