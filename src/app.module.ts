@@ -14,6 +14,7 @@ import { CommentsController } from './comments/comments.controller';
 import { EmailsController } from './emails/emails.controller';
 import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UsersController } from './users/users.controller';
     CommentsModule,
     TestingModule,
     EmailsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

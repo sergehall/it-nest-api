@@ -9,12 +9,29 @@ import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination';
 
+export type User = any;
+
 @Injectable()
 export class UsersService {
   constructor(
     protected convertFiltersForDB: ConvertFiltersForDB,
     protected pagination: Pagination,
   ) {}
+  async findOne2(username: string): Promise<User | undefined> {
+    const users = [
+      {
+        userId: 1,
+        username: 'john',
+        password: 'changeme',
+      },
+      {
+        userId: 2,
+        username: 'maria',
+        password: 'guess',
+      },
+    ];
+    return users.find((user) => user.username === username);
+  }
   async create(createUserDto: CreateUserDto, ip: string, userAgent: string) {
     const user = await this._createNewUser(createUserDto, ip, userAgent);
     return user;

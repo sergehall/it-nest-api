@@ -4,7 +4,6 @@ import { SortOrder } from '../../types/types';
 @Injectable()
 export class ParseQuery {
   static getPaginationData(query: any) {
-    console.log(query);
     let pageNumber: number = parseInt(<string>query.pageNumber);
     let pageSize: number = parseInt(<string>query.pageSize);
     let searchNameTerm: string = query.searchNameTerm?.toString();
