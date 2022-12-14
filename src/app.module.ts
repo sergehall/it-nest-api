@@ -15,6 +15,9 @@ import { EmailsController } from './emails/emails.controller';
 import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/roles/guard';
+import { CaslModule } from './casl/casl.module';
 
 @Module({
   imports: [
@@ -33,9 +36,16 @@ import { AuthModule } from './auth/auth.module';
     TestingModule,
     EmailsModule,
     AuthModule,
+    CaslModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

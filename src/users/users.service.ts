@@ -2,14 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { DtoQueryType, UserType } from '../types/types';
+import { DtoQueryType, User, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination';
-
-export type User = any;
+import { Role } from '../auth/roles/role.enum';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +16,7 @@ export class UsersService {
     protected convertFiltersForDB: ConvertFiltersForDB,
     protected pagination: Pagination,
   ) {}
-  async findOne2(username: string): Promise<User | undefined> {
+  async findOne2(username: string) {
     const users = [
       {
         userId: 1,
@@ -78,8 +77,14 @@ export class UsersService {
     return `This action returns a user #${id}`;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const user = new User();
+    user.id = id;
+    // user.orgId = 'IT-Incubator';
+    user.orgId = '2';
+    user.roles = Role.User;
+    console.log(user, 'user2');
+    return user;
   }
 
   async remove(id: string) {
@@ -103,13 +108,13 @@ export class UsersService {
     // expiration date in an 1 hour 5 min
     const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
     return {
-      accountData: {
-        id: id,
-        login: createUserDto.login,
-        email: createUserDto.email,
-        passwordHash: passwordHash,
-        createdAt: currentTime,
-      },
+      id: id,
+      login: createUserDto.login,
+      email: createUserDto.email,
+      passwordHash: passwordHash,
+      createdAt: currentTime,
+      orgId: 'It-Incubator',
+      roles: Role.User,
       emailConfirmation: {
         confirmationCode: confirmationCode,
         expirationDate: expirationDate,

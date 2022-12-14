@@ -1,5 +1,8 @@
 import { ObjectId } from 'mongodb';
+import { Role } from '../auth/roles/role.enum';
 
+// export type Actions = 'create' | 'read' | 'update' | 'delete';
+// export type Subjects = 'Article' | 'Comment' | 'User';
 export type SortOrder = -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
 export type DtoQueryType = {
   searchNameTerm?: string;
@@ -44,14 +47,38 @@ export type CreateUserInputModelType = {
   password: string;
   email: string;
 };
-export type UserType = {
-  accountData: {
-    id: string;
-    login: string;
-    email: string;
-    passwordHash: string;
-    createdAt: string;
+export class Article {
+  id: number;
+  isPublished: boolean;
+  authorId: number;
+}
+export class User {
+  id: string;
+  login: string;
+  email: string;
+  passwordHash: string;
+  createdAt: string;
+  orgId: string;
+  roles: Role;
+  emailConfirmation: {
+    confirmationCode: string;
+    expirationDate: string;
+    isConfirmed: boolean;
+    sentEmail: string[];
   };
+  registrationData: {
+    ip: string | null;
+    userAgent: string;
+  };
+}
+export type UserType = {
+  id: string;
+  login: string;
+  email: string;
+  passwordHash: string;
+  createdAt: string;
+  orgId: string;
+  roles: Role;
   emailConfirmation: {
     confirmationCode: string;
     expirationDate: string;
@@ -63,6 +90,27 @@ export type UserType = {
     userAgent: string;
   };
 };
+// export type UserType = {
+//   accountData: {
+//     id: string;
+//     login: string;
+//     email: string;
+//     passwordHash: string;
+//     createdAt: string;
+//   };
+//   emailConfirmation: {
+//     confirmationCode: string;
+//     expirationDate: string;
+//     isConfirmed: boolean;
+//     sentEmail: string[];
+//   };
+//   registrationData: {
+//     ip: string | null;
+//     userAgent: string;
+//   };
+//   isAdmin: boolean;
+//   roles: Role;
+// };
 export type UserTestOldType = {
   id: string;
   login: string;
