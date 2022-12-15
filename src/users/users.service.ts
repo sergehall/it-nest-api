@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
@@ -10,12 +10,16 @@ import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination';
 import { Role } from '../auth/roles/role.enum';
 import { User } from '../current-user/current-user';
+import { ForbiddenError } from '@casl/ability';
+import { Action } from '../auth/roles/action.enum';
+import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 
 @Injectable()
 export class UsersService {
   constructor(
     protected convertFiltersForDB: ConvertFiltersForDB,
     protected pagination: Pagination,
+    private caslAbilityFactory: CaslAbilityFactory,
   ) {}
   async findOne2(username: string) {
     const users = [
@@ -78,9 +82,23 @@ export class UsersService {
     return new User();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    //Update call DB
-    return `This action update a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
+    // const userToUpdate = await this.usersService.findOne(id);
+    const userToUpdate = await this.findOne(id);
+    userToUpdate.id = id;
+    userToUpdate.orgId = 'It-Incubator';
+    userToUpdate.roles = Role.User;
+    console.log(userToUpdate, 'userToUpdate');
+    const ability = this.caslAbilityFactory.createForUser(currentUser);
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
+      //Update call DB
+      return `This action update a #${id} user`;
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 
   async remove(id: string) {

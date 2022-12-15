@@ -81,23 +81,29 @@ export class UsersController {
     const currentUser = new User();
     currentUser.id = '1';
     currentUser.orgId = 'It-Incubator';
-    currentUser.roles = Role.Admin;
+    currentUser.roles = Role.User;
     console.log(currentUser, 'currentUser');
-    const userToUpdate = await this.findOne(id);
-    userToUpdate.id = id;
-    userToUpdate.orgId = 'It-Incubator';
-    userToUpdate.roles = Role.User;
-    console.log(userToUpdate, 'userToUpdate');
-    const ability = this.caslAbilityFactory.createForUser(currentUser);
-    try {
-      ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
-      //Update call DB for update
-      return this.usersService.update(id, updateUserDto);
-    } catch (error) {
-      if (error instanceof ForbiddenError) {
-        throw new ForbiddenException(error.message);
-      }
-    }
+    return this.usersService.update(id, updateUserDto, currentUser);
+    // const currentUser = new User();
+    // currentUser.id = '1';
+    // currentUser.orgId = 'It-Incubator';
+    // currentUser.roles = Role.Admin;
+    // console.log(currentUser, 'currentUser');
+    // const userToUpdate = await this.usersService.findOne(id);
+    // userToUpdate.id = id;
+    // userToUpdate.orgId = 'It-Incubator';
+    // userToUpdate.roles = Role.User;
+    // console.log(userToUpdate, 'userToUpdate');
+    // const ability = this.caslAbilityFactory.createForUser(currentUser);
+    // try {
+    //   ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
+    //   //Update call DB for update
+    //   return this.usersService.update(id, updateUserDto);
+    // } catch (error) {
+    //   if (error instanceof ForbiddenError) {
+    //     throw new ForbiddenException(error.message);
+    //   }
+    // }
   }
 
   @Delete(':id')
