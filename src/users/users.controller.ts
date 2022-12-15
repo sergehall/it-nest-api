@@ -4,6 +4,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  HttpException,
   Ip,
   Param,
   Post,
@@ -77,33 +78,14 @@ export class UsersController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     // const currentUser = req.user;
-    // const userToUpdate = await this.usersService.findOne(id);
     const currentUser = new User();
     currentUser.id = '1';
     currentUser.orgId = 'It-Incubator';
     currentUser.roles = Role.User;
     console.log(currentUser, 'currentUser');
-    return this.usersService.update(id, updateUserDto, currentUser);
-    // const currentUser = new User();
-    // currentUser.id = '1';
-    // currentUser.orgId = 'It-Incubator';
-    // currentUser.roles = Role.Admin;
-    // console.log(currentUser, 'currentUser');
-    // const userToUpdate = await this.usersService.findOne(id);
-    // userToUpdate.id = id;
-    // userToUpdate.orgId = 'It-Incubator';
-    // userToUpdate.roles = Role.User;
-    // console.log(userToUpdate, 'userToUpdate');
-    // const ability = this.caslAbilityFactory.createForUser(currentUser);
-    // try {
-    //   ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
-    //   //Update call DB for update
-    //   return this.usersService.update(id, updateUserDto);
-    // } catch (error) {
-    //   if (error instanceof ForbiddenError) {
-    //     throw new ForbiddenException(error.message);
-    //   }
-    // }
+    const result = this.usersService.update(id, updateUserDto, currentUser);
+    if (!result) throw new HttpException('Not found', 404);
+    return result;
   }
 
   @Delete(':id')

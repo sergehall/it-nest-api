@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware, UseFilters } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { HttpExceptionFilter } from './filter';
+import { HttpExceptionFilter } from './http-exception.filter';
 
 @Injectable()
 @UseFilters(HttpExceptionFilter)
