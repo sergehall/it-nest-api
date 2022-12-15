@@ -47,30 +47,25 @@ export type CreateUserInputModelType = {
   password: string;
   email: string;
 };
-export class Article {
-  id: number;
-  isPublished: boolean;
-  authorId: number;
-}
-export class User {
-  id: string;
-  login: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
-  orgId: string;
-  roles: Role;
-  emailConfirmation: {
-    confirmationCode: string;
-    expirationDate: string;
-    isConfirmed: boolean;
-    sentEmail: string[];
-  };
-  registrationData: {
-    ip: string | null;
-    userAgent: string;
-  };
-}
+// export class User {
+//   id: string;
+//   login: string;
+//   email: string;
+//   passwordHash: string;
+//   createdAt: string;
+//   orgId: string;
+//   roles: Role;
+//   emailConfirmation: {
+//     confirmationCode: string;
+//     expirationDate: string;
+//     isConfirmed: boolean;
+//     sentEmail: string[];
+//   };
+//   registrationData: {
+//     ip: string | null;
+//     userAgent: string;
+//   };
+// }
 export type UserType = {
   id: string;
   login: string;

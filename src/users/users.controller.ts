@@ -22,9 +22,9 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
 import { ForbiddenError } from '@casl/ability';
-import { User } from '../types/types';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
+import { User } from '../current-user/current-user';
 
 @Controller('users')
 export class UsersController {
@@ -34,6 +34,8 @@ export class UsersController {
   ) {}
 
   @Post()
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Create, subject: User })
   async create(
     @Req() req: Request,
     @Body() createUserDto: CreateUserDto,
@@ -47,6 +49,8 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Read, subject: User })
   async findAll(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchLoginTerm = { searchLoginTerm: paginationData.searchLoginTerm };
@@ -64,22 +68,30 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Read, subject: User })
   async findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const user = new User();
-    user.id = '3';
-    user.orgId = '2';
-    user.roles = Role.Admin;
-    console.log(user, 'user1');
-    // const user = req.user ? req.user | null;
-    const userToUpdate = await this.usersService.findOne(id);
-    const ability = this.caslAbilityFactory.createForUser(user);
+    // const currentUser = req.user;
+    // const userToUpdate = await this.usersService.findOne(id);
+    const currentUser = new User();
+    currentUser.id = '1';
+    currentUser.orgId = 'It-Incubator';
+    currentUser.roles = Role.Admin;
+    console.log(currentUser, 'currentUser');
+    const userToUpdate = await this.findOne(id);
+    userToUpdate.id = id;
+    userToUpdate.orgId = 'It-Incubator';
+    userToUpdate.roles = Role.User;
+    console.log(userToUpdate, 'userToUpdate');
+    const ability = this.caslAbilityFactory.createForUser(currentUser);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
+      //Update call DB for update
       return this.usersService.update(id, updateUserDto);
     } catch (error) {
       if (error instanceof ForbiddenError) {
@@ -93,22 +105,17 @@ export class UsersController {
     const user = new User();
     user.id = '123';
     user.orgId = '3';
-    user.roles = Role.Admin;
+    user.roles = Role.User;
     // const user = req.user ? req.user | null;
+    const userToDelete = await this.usersService.findOne(id);
     const ability = this.caslAbilityFactory.createForUser(user);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Action.Delete, user);
+      ForbiddenError.from(ability).throwUnlessCan(Action.Delete, userToDelete);
       return this.usersService.remove(id);
     } catch (error) {
       if (error instanceof ForbiddenError) {
         throw new ForbiddenException(error.message);
       }
     }
-  }
-  @Delete('all/users')
-  @UseGuards(AbilitiesGuard)
-  @CheckAbilities({ action: Action.Delete, subject: User })
-  async removeAllUsers() {
-    return await this.usersService.removeAll();
   }
 }

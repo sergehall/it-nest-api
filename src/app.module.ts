@@ -15,9 +15,7 @@ import { EmailsController } from './emails/emails.controller';
 import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
 import { CaslModule } from './ability/casl.module';
-import { AbilitiesGuard } from './ability/abilities.guard';
 
 @Module({
   imports: [
@@ -39,13 +37,7 @@ import { AbilitiesGuard } from './ability/abilities.guard';
     CaslModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: APP_GUARD,
-      useClass: AbilitiesGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

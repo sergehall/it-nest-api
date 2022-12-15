@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { DtoQueryType, User, UserType } from '../types/types';
+import { DtoQueryType, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination';
 import { Role } from '../auth/roles/role.enum';
+import { User } from '../current-user/current-user';
 
 @Injectable()
 export class UsersService {
@@ -74,24 +75,16 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    const user = new User();
-    user.id = id;
-    // user.orgId = 'IT-Incubator';
-    user.orgId = '2';
-    user.roles = Role.User;
-    return user;
+    return new User();
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    //Update call DB
     return `This action update a #${id} user`;
   }
 
   async remove(id: string) {
     return `This action removes a #${id} user`;
-  }
-
-  async removeAll(): Promise<string> {
-    return 'This action removes all users.';
   }
 
   async _createNewUser(
