@@ -74,21 +74,24 @@ export class UsersService {
   }
 
   async findOne(id: string) {
-    return `This action returns a user #${id}`;
-  }
-
-  async update(id: string, updateUserDto: UpdateUserDto) {
     const user = new User();
     user.id = id;
     // user.orgId = 'IT-Incubator';
     user.orgId = '2';
     user.roles = Role.User;
-    console.log(user, 'user2');
     return user;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return `This action update a #${id} user`;
   }
 
   async remove(id: string) {
     return `This action removes a #${id} user`;
+  }
+
+  async removeAll(): Promise<string> {
+    return 'This action removes all users.';
   }
 
   async _createNewUser(

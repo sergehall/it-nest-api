@@ -16,8 +16,8 @@ import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './auth/roles/guard';
-import { CaslModule } from './casl/casl.module';
+import { CaslModule } from './ability/casl.module';
+import { AbilitiesGuard } from './ability/abilities.guard';
 
 @Module({
   imports: [
@@ -43,7 +43,7 @@ import { CaslModule } from './casl/casl.module';
     AppService,
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useClass: AbilitiesGuard,
     },
   ],
 })

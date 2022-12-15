@@ -1,15 +1,16 @@
 import {
+  Body,
   Controller,
+  Delete,
+  ForbiddenException,
   Get,
+  Ip,
+  Param,
   Post,
   Put,
-  Body,
-  Param,
-  Delete,
   Query,
-  Ip,
   Req,
-  ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -17,11 +18,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseQuery } from '../infrastructure/common/parse-query';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Request } from 'express';
-import { CaslAbilityFactory } from '../casl/casl-ability.factory/casl-ability.factory';
+import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
 import { ForbiddenError } from '@casl/ability';
 import { User } from '../types/types';
+import { CheckAbilities } from '../ability/abilities.decorator';
+import { AbilitiesGuard } from '../ability/abilities.guard';
 
 @Controller('users')
 export class UsersController {
@@ -68,14 +71,13 @@ export class UsersController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const user = new User();
-    user.id = '123';
-    user.orgId = '3';
+    user.id = '3';
+    user.orgId = '2';
     user.roles = Role.Admin;
     console.log(user, 'user1');
     // const user = req.user ? req.user | null;
-    const userToUpdate = this.usersService.findOne(id);
+    const userToUpdate = await this.usersService.findOne(id);
     const ability = this.caslAbilityFactory.createForUser(user);
-    console.log(ability, '-------------------');
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
       return this.usersService.update(id, updateUserDto);
@@ -102,5 +104,11 @@ export class UsersController {
         throw new ForbiddenException(error.message);
       }
     }
+  }
+  @Delete('all/users')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.Delete, subject: User })
+  async removeAllUsers() {
+    return await this.usersService.removeAll();
   }
 }
