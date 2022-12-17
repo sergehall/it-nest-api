@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { DtoQueryType, UserType } from '../types/types';
+import { DtoQueryType, RegistrationData, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
 import * as bcrypt from 'bcrypt';
@@ -13,13 +13,17 @@ import { User } from '../current-user/current-user';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
+import { UsersRepository } from './users.repository';
+import mongoose from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersService {
   constructor(
     protected convertFiltersForDB: ConvertFiltersForDB,
     protected pagination: Pagination,
-    private caslAbilityFactory: CaslAbilityFactory,
+    protected caslAbilityFactory: CaslAbilityFactory,
+    protected usersRepository: UsersRepository,
   ) {}
   async findOne2(username: string) {
     const users = [
@@ -37,8 +41,26 @@ export class UsersService {
     return users.find((user) => user.username === username);
   }
 
-  async create(createUserDto: CreateUserDto, ip: string, userAgent: string) {
-    const user = await this._createNewUser(createUserDto, ip, userAgent);
+  async create(
+    createUserDto: CreateUserDto,
+    registrationData: RegistrationData,
+  ) {
+    const saltRounds = Number(process.env.SALT_FACTOR);
+    const saltHash = await bcrypt.genSalt(saltRounds);
+    const passwordHash = await this._generateHash(
+      createUserDto.password,
+      saltHash,
+    );
+    const newInstance = await this.usersRepository.makeInstance(
+      createUserDto,
+      passwordHash,
+      registrationData,
+    );
+    const user = await this._createNewUser(
+      createUserDto,
+      registrationData.ip,
+      registrationData.userAgent,
+    );
     return user;
   }
 
@@ -79,11 +101,11 @@ export class UsersService {
     };
   }
 
-  async findOne(id: string) {
+  async findOne(id: ObjectId) {
     return new User();
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
+  async update(id: ObjectId, updateUserDto: UpdateUserDto, currentUser: User) {
     // const userToUpdate = await this.usersService.findOne(id);
     const userToUpdate = await this.findOne(id);
     userToUpdate.id = id;
@@ -102,7 +124,7 @@ export class UsersService {
     }
   }
 
-  async remove(id: string) {
+  async remove(id: ObjectId) {
     return `This action removes a #${id} user`;
   }
 
@@ -117,7 +139,7 @@ export class UsersService {
       createUserDto.password,
       saltHash,
     );
-    const id = uuid4().toString();
+    const id = new mongoose.Types.ObjectId();
     const currentTime = new Date().toISOString();
     const confirmationCode = uuid4().toString();
     // expiration date in an 1 hour 5 min
@@ -134,6 +156,7 @@ export class UsersService {
         confirmationCode: confirmationCode,
         expirationDate: expirationDate,
         isConfirmed: false,
+        isConfirmedDate: 'None',
         sentEmail: [],
       },
       registrationData: {

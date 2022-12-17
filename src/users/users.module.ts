@@ -7,9 +7,12 @@ import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { CaslModule } from '../ability/casl.module';
+import { UsersRepository } from './users.repository';
+import { userProviders } from './user.providers';
+import { DatabaseModule } from '../infrastructure/database/database.module';
 
 @Module({
-  imports: [CaslModule],
+  imports: [DatabaseModule, CaslModule],
   controllers: [UsersController],
   providers: [
     UsersService,
@@ -18,6 +21,8 @@ import { CaslModule } from '../ability/casl.module';
     Pagination,
     AuthService,
     CaslAbilityFactory,
+    UsersRepository,
+    ...userProviders,
   ],
   exports: [UsersService],
 })

@@ -26,6 +26,7 @@ import { ForbiddenError } from '@casl/ability';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { User } from '../current-user/current-user';
+import { ObjectId } from 'mongodb';
 
 @Controller('users')
 export class UsersController {
@@ -46,7 +47,11 @@ export class UsersController {
     if (!userAgent) {
       userAgent = 'None';
     }
-    return this.usersService.create(createUserDto, ip, userAgent);
+    const registrationData = {
+      ip: ip,
+      userAgent: userAgent,
+    };
+    return this.usersService.create(createUserDto, registrationData);
   }
 
   @Get()
@@ -71,27 +76,29 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.Read, subject: User })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: ObjectId) {
     return this.usersService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: ObjectId,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     // const currentUser = req.user;
     const currentUser = new User();
-    currentUser.id = '1';
+    currentUser.id = new ObjectId();
     currentUser.orgId = 'It-Incubator';
     currentUser.roles = Role.User;
-    console.log(currentUser, 'currentUser');
     const result = this.usersService.update(id, updateUserDto, currentUser);
     if (!result) throw new HttpException('Not found', 404);
     return result;
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
+  async remove(@Param('id') id: ObjectId) {
     const user = new User();
-    user.id = '123';
+    user.id = new ObjectId();
     user.orgId = '3';
     user.roles = Role.User;
     // const user = req.user ? req.user | null;

@@ -64,8 +64,13 @@ export type CreateUserInputModelType = {
 //     userAgent: string;
 //   };
 // }
+export type RegistrationData = {
+  ip: string;
+  userAgent: string;
+};
+
 export type UserType = {
-  id: string;
+  id: ObjectId;
   login: string;
   email: string;
   passwordHash: string;
@@ -76,12 +81,10 @@ export type UserType = {
     confirmationCode: string;
     expirationDate: string;
     isConfirmed: boolean;
+    isConfirmedDate: string;
     sentEmail: string[];
   };
-  registrationData: {
-    ip: string | null;
-    userAgent: string;
-  };
+  registrationData: RegistrationData;
 };
 // export type UserType = {
 //   accountData: {
