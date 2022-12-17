@@ -1,8 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { Role } from '../auth/roles/role.enum';
 
-// export type Actions = 'create' | 'read' | 'update' | 'delete';
-// export type Subjects = 'Article' | 'Comment' | 'User';
 export type SortOrder = -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
 export type DtoQueryType = {
   searchNameTerm?: string;

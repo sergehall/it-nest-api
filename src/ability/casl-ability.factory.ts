@@ -30,8 +30,6 @@ export class CaslAbilityFactory {
       can(Action.Delete, 'User', ({ id }) => id === user.id);
       cannot(Action.Update, 'User', ({ orgId }) => orgId !== user.orgId);
       cannot(Action.Delete, 'User', ({ orgId }) => orgId !== user.orgId);
-      cannot(Action.Update, 'User', ({ roles }) => roles === Role.Admin);
-      cannot(Action.Delete, 'User', ({ roles }) => roles === Role.Admin);
     }
     return build({ conditionsMatcher: lambdaMatcher });
   }

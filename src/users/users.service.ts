@@ -36,6 +36,7 @@ export class UsersService {
     ];
     return users.find((user) => user.username === username);
   }
+
   async create(createUserDto: CreateUserDto, ip: string, userAgent: string) {
     const user = await this._createNewUser(createUserDto, ip, userAgent);
     return user;
@@ -57,7 +58,7 @@ export class UsersService {
     const totalCount = 0;
     const pagesCount = 0;
 
-    const convertedFilters = await this.convertFiltersForDB.convertForUser(
+    const convertedFilters = await this.convertFiltersForDB.convert(
       searchFilters,
     );
     // const posts = await this.postRepository....

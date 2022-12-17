@@ -9,17 +9,10 @@ export class ConvertFiltersForDB {
       searchLoginTerm: 'login',
       searchEmailTerm: 'email',
     };
-    return this._convert([...rawFilters], pathFilter);
-  }
-  async convertForUser([...rawFilters]) {
-    const pathFilter = {
-      searchLoginTerm: 'accountData.login',
-      searchEmailTerm: 'accountData.email',
-    };
-    return this._convert([...rawFilters], pathFilter);
+    return this._forMongo([...rawFilters], pathFilter);
   }
 
-  async _convert([...rawFilters], pattern: ConvertFilterType) {
+  async _forMongo([...rawFilters], pattern: ConvertFilterType) {
     const convertedFilters = [];
     for (let i = 0, l = Object.keys(rawFilters).length; i < l; i++) {
       for (const key in rawFilters[i]) {
@@ -29,10 +22,11 @@ export class ConvertFiltersForDB {
           // @ts-ignore
           convertedFilter[pattern[key]] = { $regex: rawFilters[i][key] };
           convertedFilters.push(convertedFilter);
-        } else {
-          convertedFilters.push({});
         }
       }
+    }
+    if (convertedFilters.length === 0) {
+      convertedFilters.push({});
     }
     return convertedFilters;
   }
