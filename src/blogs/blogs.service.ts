@@ -1,6 +1,6 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { Injectable } from '@nestjs/common';
-import { DtoQueryType, ReturnObjWithPagination } from '../types/types';
+import { QueryArrType, ReturnObjWithPagination } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
@@ -22,7 +22,7 @@ export class BlogsService {
 
   async findAll(
     queryPagination: PaginationDto,
-    searchFilters: DtoQueryType,
+    searchFilters: QueryArrType,
   ): Promise<ReturnObjWithPagination> {
     let field = 'createdAt';
     if (

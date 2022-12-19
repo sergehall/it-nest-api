@@ -1,6 +1,7 @@
 import { Role } from '../../auth/roles/role.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { ObjectId } from 'mongodb';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -27,6 +28,8 @@ export class UserRegistrationData {
 
 @Schema()
 export class User {
+  @Prop({ required: true, unique: true })
+  id: ObjectId;
   @Prop({ required: true, unique: true })
   login: string;
   @Prop({ required: true, unique: true })

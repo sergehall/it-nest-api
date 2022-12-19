@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { ConvertFilterType, DtoQueryType } from '../../types/types';
+import { ConvertFilterType, QueryArrType } from '../../types/types';
 
 @Injectable()
 export class ConvertFiltersForDB {
-  async convert([...rawFilters]: DtoQueryType) {
+  async convert([...rawFilters]: QueryArrType) {
     const pathFilter = {
       searchNameTerm: 'name',
       searchLoginTerm: 'login',

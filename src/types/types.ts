@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { Role } from '../auth/roles/role.enum';
 
 export type SortOrder = -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
-export type DtoQueryType = {
+export type QueryArrType = {
   searchNameTerm?: string;
   searchLoginTerm?: string;
   searchEmailTerm?: string;
@@ -33,7 +33,7 @@ export type QueryPaginationType = {
   sortBy: string;
   sortDirection: SortOrder;
 };
-export type EntityPaginationType = {
+export type PaginationDBType = {
   startIndex: number;
   pageSize: number;
   field: string;
@@ -70,6 +70,7 @@ export type RegistrationData = {
 };
 
 export type UserType = {
+  id: ObjectId;
   login: string;
   email: string;
   passwordHash: string;

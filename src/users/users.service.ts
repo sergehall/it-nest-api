@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { DtoQueryType, RegistrationData, UserType } from '../types/types';
+import { QueryArrType, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as process from 'process';
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,6 @@ import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
-import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
 import { RegDataDto } from './dto/reg-data.dto';
 
@@ -42,12 +41,15 @@ export class UsersService {
     return users.find((user) => user.username === username);
   }
 
-  async create(createUserDto: CreateUserDto, registrationData: RegDataDto) {
+  async create(
+    createUserDto: CreateUserDto,
+    registrationData: RegDataDto,
+  ): Promise<UserType> {
     const user = await this._createNewUser(createUserDto, registrationData);
     return await this.usersRepository.create(user);
   }
 
-  async findAll(queryPagination: PaginationDto, searchFilters: DtoQueryType) {
+  async findAll(queryPagination: PaginationDto, searchFilters: QueryArrType) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'login' ||
@@ -55,31 +57,26 @@ export class UsersService {
     ) {
       field = queryPagination.sortBy;
     }
-    const pagination = await this.pagination.prepare(queryPagination, field);
     const pageNumber = queryPagination.pageNumber;
-    const pageSize = pagination.pageSize;
-    // const totalCount = await this.postRepository.......
-    // const pagesCount = Math.ceil(totalCount / pageSize)
-    const totalCount = 0;
-    const pagesCount = 0;
+    const pageSize = queryPagination.pageSize;
 
     const convertedFilters = await this.convertFiltersForDB.convert(
       searchFilters,
     );
-    // const posts = await this.postRepository....
-    const posts = [
-      {
-        id: 'string',
-        login: 'string',
-        email: 'string',
-        createdAt: 'string',
-      },
-    ];
+    const totalCount = await this.usersRepository.countDocuments(
+      convertedFilters,
+    );
+    const pagesCount = Math.ceil(totalCount / pageSize);
+    const pagination = await this.pagination.prepare(queryPagination, field);
+    const posts = await this.usersRepository.findUsers(
+      pagination,
+      convertedFilters,
+    );
     return {
-      pagesCount: 0,
+      pagesCount: pagesCount,
       page: pageNumber,
       pageSize: pageSize,
-      totalCount: 0,
+      totalCount: totalCount,
       items: posts,
     };
   }
@@ -116,12 +113,13 @@ export class UsersService {
     registrationData: RegDataDto,
   ): Promise<UserType> {
     const passwordHash = await this._generateHash(createUserDto.password);
-    // const id = new mongoose.Types.ObjectId();
+    const id = new ObjectId();
     const currentTime = new Date().toISOString();
     const confirmationCode = uuid4().toString();
     // expiration date in an 1 hour 5 min
     const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
     return {
+      id: id,
       login: createUserDto.login,
       email: createUserDto.email,
       passwordHash: passwordHash,

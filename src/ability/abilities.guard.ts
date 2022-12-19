@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { CaslAbilityFactory } from './casl-ability.factory';
 import { CHECK_ABILITY, RequiredRule } from './abilities.decorator';
 import { ForbiddenError } from '@casl/ability';
-import { currentUser } from '../current-user/current-user';
+import { Role } from '../auth/roles/role.enum';
 
 @Injectable()
 export class AbilitiesGuard implements CanActivate {
@@ -24,7 +24,10 @@ export class AbilitiesGuard implements CanActivate {
       CHECK_ABILITY,
       context.getHandler() || [],
     );
-    // const {currentUser} = context.switchToHttp().getRequest();
+    let { currentUser } = context.switchToHttp().getRequest();
+    if (!currentUser) {
+      currentUser = { roles: Role.User };
+    }
     console.log(currentUser, 'context User');
     console.log(rules, 'rules');
     const ability = this.caslAbilityFactory.createForUser(currentUser);

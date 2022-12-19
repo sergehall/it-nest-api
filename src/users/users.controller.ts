@@ -43,7 +43,9 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Ip() ip: string,
   ) {
-    let userAgent = req.header('User-Agent');
+    let userAgent = req.header('User-Agent')
+      ? req.header('User-Agent')
+      : 'None';
     if (!userAgent) {
       userAgent = 'None';
     }
