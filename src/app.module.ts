@@ -7,7 +7,6 @@ import { PostsModule } from './posts/posts.module';
 import { CommentsModule } from './comments/comments.module';
 import { TestingModule } from './testing/testing.module';
 import { EmailsModule } from './emails/emails.module';
-import { ConfigModule } from './config/config.module';
 import { LoggerMiddleware } from './logger/middleware';
 import { BlogsController } from './blogs/blogs.controller';
 import { CommentsController } from './comments/comments.controller';
@@ -16,16 +15,12 @@ import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
 import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './ability/casl.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRootAsync({
-      useFactory: () => {
-        return {
-          folder: './config',
-        };
-      },
-      inject: [],
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     UsersModule,
     BlogsModule,

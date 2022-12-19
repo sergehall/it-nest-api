@@ -70,7 +70,6 @@ export type RegistrationData = {
 };
 
 export type UserType = {
-  id: ObjectId;
   login: string;
   email: string;
   passwordHash: string;

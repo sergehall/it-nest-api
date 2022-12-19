@@ -51,7 +51,16 @@ export class UsersController {
       ip: ip,
       userAgent: userAgent,
     };
-    return this.usersService.create(createUserDto, registrationData);
+    const user = await this.usersService.create(
+      createUserDto,
+      registrationData,
+    );
+    return {
+      id: user.id,
+      login: user.login,
+      email: user.email,
+      createdAt: user.createdAt,
+    };
   }
 
   @Get()

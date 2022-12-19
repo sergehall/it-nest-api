@@ -16,6 +16,7 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
 import mongoose from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { RegDataDto } from './dto/reg-data.dto';
 
 @Injectable()
 export class UsersService {
@@ -41,27 +42,9 @@ export class UsersService {
     return users.find((user) => user.username === username);
   }
 
-  async create(
-    createUserDto: CreateUserDto,
-    registrationData: RegistrationData,
-  ) {
-    const saltRounds = Number(process.env.SALT_FACTOR);
-    const saltHash = await bcrypt.genSalt(saltRounds);
-    const passwordHash = await this._generateHash(
-      createUserDto.password,
-      saltHash,
-    );
-    const newInstance = await this.usersRepository.makeInstance(
-      createUserDto,
-      passwordHash,
-      registrationData,
-    );
-    const user = await this._createNewUser(
-      createUserDto,
-      registrationData.ip,
-      registrationData.userAgent,
-    );
-    return user;
+  async create(createUserDto: CreateUserDto, registrationData: RegDataDto) {
+    const user = await this._createNewUser(createUserDto, registrationData);
+    return await this.usersRepository.create(user);
   }
 
   async findAll(queryPagination: PaginationDto, searchFilters: DtoQueryType) {
@@ -130,22 +113,15 @@ export class UsersService {
 
   async _createNewUser(
     createUserDto: CreateUserDto,
-    ip: string,
-    userAgent: string,
+    registrationData: RegDataDto,
   ): Promise<UserType> {
-    const saltRounds = Number(process.env.SALT_FACTOR);
-    const saltHash = await bcrypt.genSalt(saltRounds);
-    const passwordHash = await this._generateHash(
-      createUserDto.password,
-      saltHash,
-    );
-    const id = new mongoose.Types.ObjectId();
+    const passwordHash = await this._generateHash(createUserDto.password);
+    // const id = new mongoose.Types.ObjectId();
     const currentTime = new Date().toISOString();
     const confirmationCode = uuid4().toString();
     // expiration date in an 1 hour 5 min
     const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
     return {
-      id: id,
       login: createUserDto.login,
       email: createUserDto.email,
       passwordHash: passwordHash,
@@ -160,13 +136,15 @@ export class UsersService {
         sentEmail: [],
       },
       registrationData: {
-        ip: ip,
-        userAgent: userAgent,
+        ip: registrationData.ip,
+        userAgent: registrationData.userAgent,
       },
     };
   }
 
-  async _generateHash(password: string, salt: string) {
-    return await bcrypt.hash(password, salt);
+  async _generateHash(password: string) {
+    const saltRounds = Number(process.env.SALT_FACTOR);
+    const saltHash = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(password, saltHash);
   }
 }
