@@ -7,7 +7,7 @@ import {
 } from '@casl/ability';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
-import { User } from '../current-user/current-user';
+import { User } from '../users/schemas/user.schema';
 
 type AppAbility = PureAbility<AbilityTuple, MatchConditions>;
 const lambdaMatcher = (matchConditions: MatchConditions) => matchConditions;
@@ -24,6 +24,7 @@ export class CaslAbilityFactory {
         ({ orgId }) => orgId !== user.orgId,
       ).because('Because different organizations');
     } else {
+      console.log(user, typeof user);
       can(Action.Read, 'all');
       can(Action.Create, 'all');
       can(Action.Update, 'User', ({ id }) => id === user.id);

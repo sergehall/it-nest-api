@@ -1,11 +1,21 @@
-// import { User, UserDocument } from '../schemas/user.schema';
-// import { CreateUserDto } from '../dto/create-user.dto';
-// import { RegistrationData } from '../../types/types';
+// import { Role } from '../../auth/roles/role.enum';
 //
-// export interface UserInterface extends UserDocument {
-//   makeInstance(
-//     createUserDto: CreateUserDto,
-//     passwordHash: string,
-//     registrationData: RegistrationData,
-//   ): Promise<User>;
+// export interface UserInterface {
+//   id: string;
+//   login: string;
+//   email: string;
+//   passwordHash: string;
+//   createdAt: string;
+//   orgId: string;
+//   roles: Role;
+//   emailConfirmation: {
+//     confirmationCode: string;
+//     expirationDate: string;
+//     isConfirmed: boolean;
+//     sentEmail: string[];
+//   };
+//   registrationData: {
+//     ip: string;
+//     userAgent: string;
+//   };
 // }

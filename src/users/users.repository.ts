@@ -2,6 +2,7 @@ import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserDocument } from './schemas/user.schema';
 import { PaginationDBType, QueryArrType, UserType } from '../types/types';
+import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersRepository {
@@ -45,5 +46,21 @@ export class UsersRepository {
       .skip(pagination.startIndex)
       .sort({ [pagination.field]: pagination.direction })
       .lean();
+  }
+  async findUserByUserId(userId: string): Promise<UserType | null> {
+    return await this.usersModel.findOne(
+      { id: userId },
+      {
+        _id: false,
+        __v: false,
+        'emailConfirmation._id': false,
+        'registrationData._id': false,
+      },
+    );
+  }
+
+  async deleteUserById(id: string): Promise<boolean> {
+    const result = await this.usersModel.deleteOne({ id: id });
+    return result.acknowledged && result.deletedCount === 1;
   }
 }

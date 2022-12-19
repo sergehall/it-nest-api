@@ -22,6 +22,7 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
     AuthService,
     CaslAbilityFactory,
     UsersRepository,
+    UserCreator,
     ...userProviders,
   ],
   exports: [UsersService],

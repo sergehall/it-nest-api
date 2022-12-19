@@ -25,8 +25,9 @@ import { Action } from '../auth/roles/action.enum';
 import { ForbiddenError } from '@casl/ability';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
-import { User } from '../current-user/current-user';
-import { ObjectId } from 'mongodb';
+import * as uuid4 from 'uuid4';
+import { User } from './schemas/user.schema';
+import { UserType } from '../types/types';
 
 @Controller('users')
 export class UsersController {
@@ -87,18 +88,15 @@ export class UsersController {
   @Get(':id')
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.Read, subject: User })
-  async findOne(@Param('id') id: ObjectId) {
-    return this.usersService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    return this.usersService.findUserByUserId(id);
   }
 
   @Put(':id')
-  async update(
-    @Param('id') id: ObjectId,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     // const currentUser = req.user;
     const currentUser = new User();
-    currentUser.id = new ObjectId();
+    currentUser.id = uuid4().toString();
     currentUser.orgId = 'It-Incubator';
     currentUser.roles = Role.User;
     const result = this.usersService.update(id, updateUserDto, currentUser);
@@ -107,21 +105,12 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: ObjectId) {
-    const user = new User();
-    user.id = new ObjectId();
-    user.orgId = '3';
-    user.roles = Role.User;
-    // const user = req.user ? req.user | null;
-    const userToDelete = await this.usersService.findOne(id);
-    const ability = this.caslAbilityFactory.createForUser(user);
-    try {
-      ForbiddenError.from(ability).throwUnlessCan(Action.Delete, userToDelete);
-      return this.usersService.remove(id);
-    } catch (error) {
-      if (error instanceof ForbiddenError) {
-        throw new ForbiddenException(error.message);
-      }
-    }
+  async deleteUserById(@Param('id') id: string) {
+    // const currentUser = req.user;
+    const currentUser = new User();
+    currentUser.id = id;
+    currentUser.orgId = 'It-Incubator';
+    currentUser.roles = Role.User;
+    return this.usersService.deleteUserById(id, currentUser);
   }
 }

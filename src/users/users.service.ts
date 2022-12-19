@@ -1,21 +1,19 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { QueryArrType, UserType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
-import * as process from 'process';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination';
 import { Role } from '../auth/roles/role.enum';
-import { User } from '../current-user/current-user';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
-import { ObjectId } from 'mongodb';
 import { RegDataDto } from './dto/reg-data.dto';
+import { User } from './schemas/user.schema';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +22,7 @@ export class UsersService {
     protected pagination: Pagination,
     protected caslAbilityFactory: CaslAbilityFactory,
     protected usersRepository: UsersRepository,
+    protected readonly userCreator: UserCreator,
   ) {}
   async findOne2(username: string) {
     const users = [
@@ -81,16 +80,18 @@ export class UsersService {
     };
   }
 
-  async findOne(id: ObjectId) {
-    return new User();
+  async findUserByUserId(userId: string): Promise<UserType | null> {
+    return await this.usersRepository.findUserByUserId(userId);
   }
 
-  async update(id: ObjectId, updateUserDto: UpdateUserDto, currentUser: User) {
+  async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
     // const userToUpdate = await this.usersService.findOne(id);
-    const userToUpdate = await this.findOne(id);
-    userToUpdate.id = id;
-    userToUpdate.orgId = 'It-Incubator';
-    userToUpdate.roles = Role.User;
+    // const userToUpdate = await this.findOne(id);
+    const userToUpdate = {
+      id: id,
+      orgId: 'It-Incubator',
+      roles: Role.User,
+    };
     console.log(userToUpdate, 'userToUpdate');
     const ability = this.caslAbilityFactory.createForUser(currentUser);
     try {
@@ -104,8 +105,29 @@ export class UsersService {
     }
   }
 
-  async remove(id: ObjectId) {
-    return `This action removes a #${id} user`;
+  async deleteUserById(id: string, currentUser: User) {
+    const userToDelete: User | null =
+      await this.usersRepository.findUserByUserId(currentUser.id);
+    const newU = this.userCreator.convertToClass(userToDelete);
+    console.log(currentUser instanceof User, '++++++++++');
+    userToDelete;
+    console.log(userToDelete instanceof User, '---------');
+    if (!userToDelete)
+      throw new HttpException({ message: ['Not found user'] }, 404);
+    const userFromDB = new User();
+    userFromDB.id;
+    userFromDB;
+    // console.log(currentUser, 'currentUser');
+    // console.log(userToDelete, 'userToDelete');
+    try {
+      const ability = this.caslAbilityFactory.createForUser(currentUser);
+      ForbiddenError.from(ability).throwUnlessCan(Action.Delete, userToDelete);
+      return this.usersRepository.deleteUserById(id);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 
   async _createNewUser(
@@ -113,7 +135,7 @@ export class UsersService {
     registrationData: RegDataDto,
   ): Promise<UserType> {
     const passwordHash = await this._generateHash(createUserDto.password);
-    const id = new ObjectId();
+    const id = uuid4().toString();
     const currentTime = new Date().toISOString();
     const confirmationCode = uuid4().toString();
     // expiration date in an 1 hour 5 min
