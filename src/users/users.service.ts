@@ -110,7 +110,7 @@ export class UsersService {
 
   async deleteUserById(id: string, currentUser: User) {
     const userToDelete: User | null =
-      await this.usersRepository.findUserByUserId(currentUser.id);
+      await this.usersRepository.findUserByUserId(id);
     if (!userToDelete)
       throw new HttpException({ message: ['Not found user'] }, 404);
     try {

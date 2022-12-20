@@ -18,6 +18,7 @@ export class UsersRepository {
   }
 
   async countDocuments(searchFilters: QueryArrType) {
+    console.log(searchFilters, 'countDocuments');
     return await this.usersModel.countDocuments({
       $and: searchFilters,
     });
