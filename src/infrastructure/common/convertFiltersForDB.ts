@@ -20,7 +20,10 @@ export class ConvertFiltersForDB {
           const convertedFilter = {};
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          convertedFilter[pattern[key]] = { $regex: rawFilters[i][key] };
+          convertedFilter[pattern[key]] = {
+            $regex: rawFilters[i][key].toLowerCase(),
+            $options: 'i',
+          };
           convertedFilters.push(convertedFilter);
         }
       }

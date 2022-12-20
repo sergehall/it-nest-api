@@ -61,6 +61,7 @@ export class UsersService {
     const convertedFilters = await this.convertFiltersForDB.convert(
       searchFilters,
     );
+    console.log(convertedFilters, 'convertedFilters');
     const totalCount = await this.usersRepository.countDocuments(
       convertedFilters,
     );
