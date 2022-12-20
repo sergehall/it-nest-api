@@ -65,14 +65,15 @@ export class UsersController {
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findAll(@Query() query: any) {
-    const paginationData = ParseQuery.getPaginationData(query);
-    const searchLoginTerm = { searchLoginTerm: paginationData.searchLoginTerm };
-    const searchEmailTerm = { searchEmailTerm: paginationData.searchEmailTerm };
+    const queryData = ParseQuery.getPaginationData(query);
+    console.log(queryData, 'queryData');
+    const searchLoginTerm = { searchLoginTerm: queryData.searchLoginTerm };
+    const searchEmailTerm = { searchEmailTerm: queryData.searchEmailTerm };
     const queryPagination: PaginationDto = {
-      pageNumber: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      sortBy: paginationData.sortBy,
-      sortDirection: paginationData.sortDirection,
+      pageNumber: queryData.pageNumber,
+      pageSize: queryData.pageSize,
+      sortBy: queryData.sortBy,
+      sortDirection: queryData.sortDirection,
     };
     return this.usersService.findAll(queryPagination, [
       searchLoginTerm,
