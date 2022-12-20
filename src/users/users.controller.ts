@@ -66,7 +66,6 @@ export class UsersController {
   @CheckAbilities({ action: Action.READ, subject: User })
   async findAll(@Query() query: any) {
     const queryData = ParseQuery.getPaginationData(query);
-    console.log(queryData, 'queryData');
     const searchLoginTerm = { searchLoginTerm: queryData.searchLoginTerm };
     const searchEmailTerm = { searchEmailTerm: queryData.searchEmailTerm };
     const queryPagination: PaginationDto = {

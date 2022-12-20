@@ -26,7 +26,6 @@ export class UsersRepository {
     pagination: PaginationDBType,
     searchFilters: QueryArrType,
   ): Promise<UserType[]> {
-    console.log(pagination, 'pagination');
     return await this.usersModel
       .find(
         {
