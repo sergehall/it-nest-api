@@ -39,12 +39,12 @@ export class UsersService {
     return users.find((user) => user.username === username);
   }
 
-  async create(
+  async createUser(
     createUserDto: CreateUserDto,
     registrationData: RegDataDto,
   ): Promise<UserType> {
     const user = await this._createNewUser(createUserDto, registrationData);
-    return await this.usersRepository.create(user);
+    return await this.usersRepository.createUser(user);
   }
 
   async findAll(queryPagination: PaginationDto, searchFilters: QueryArrType) {

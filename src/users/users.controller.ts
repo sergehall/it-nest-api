@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpException,
   Ip,
   Param,
@@ -18,7 +19,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ParseQuery } from '../infrastructure/common/parse-query';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Request } from 'express';
-import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
 import { CheckAbilities } from '../ability/abilities.decorator';
@@ -29,15 +29,12 @@ import { constUser } from '../current-user/current-user';
 
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private caslAbilityFactory: CaslAbilityFactory,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.CREATE, subject: User })
-  async create(
+  async createUser(
     @Req() req: Request,
     @Body() createUserDto: CreateUserDto,
     @Ip() ip: string,
@@ -52,7 +49,7 @@ export class UsersController {
       ip: ip,
       userAgent: userAgent,
     };
-    const user = await this.usersService.create(
+    const user = await this.usersService.createUser(
       createUserDto,
       registrationData,
     );
@@ -101,7 +98,7 @@ export class UsersController {
     if (!result) throw new HttpException('Not found', 404);
     return result;
   }
-
+  @HttpCode(204)
   @Delete(':id')
   async deleteUserById(@Param('id') id: string) {
     // const currentUser = req.user;
@@ -110,6 +107,6 @@ export class UsersController {
     currentUser.id = id;
     currentUser.orgId = 'It-Incubator';
     currentUser.roles = Role.User;
-    return this.usersService.deleteUserById(id, currentUser);
+    return await this.usersService.deleteUserById(id, currentUser);
   }
 }

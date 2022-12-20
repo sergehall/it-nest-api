@@ -2,7 +2,6 @@ import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserDocument } from './schemas/user.schema';
 import { PaginationDBType, QueryArrType, UserType } from '../types/types';
-import { ObjectId } from 'mongodb';
 
 @Injectable()
 export class UsersRepository {
@@ -10,7 +9,7 @@ export class UsersRepository {
     @Inject('USER_MODEL')
     private usersModel: Model<UserDocument>,
   ) {}
-  async create(user: UserType): Promise<UserType> {
+  async createUser(user: UserType): Promise<UserType> {
     try {
       return await this.usersModel.create(user);
     } catch (error) {
