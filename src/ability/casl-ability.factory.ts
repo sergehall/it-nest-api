@@ -17,20 +17,20 @@ export class CaslAbilityFactory {
   createForUser(user: User) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
     if (user.roles === Role.Admin) {
-      can(Action.Manage, 'all');
+      can(Action.MANAGE, 'all');
       cannot(
-        Action.Manage,
+        Action.MANAGE,
         'User',
         ({ orgId }) => orgId !== user.orgId,
       ).because('Because different organizations');
     } else {
-      console.log(user, typeof user);
-      can(Action.Read, 'all');
-      can(Action.Create, 'all');
-      can(Action.Update, 'User', ({ id }) => id === user.id);
-      can(Action.Delete, 'User', ({ id }) => id === user.id);
-      cannot(Action.Update, 'User', ({ orgId }) => orgId !== user.orgId);
-      cannot(Action.Delete, 'User', ({ orgId }) => orgId !== user.orgId);
+      console.log(user, typeof user, '----CaslAbilityFactory---');
+      can(Action.READ, 'all');
+      can(Action.CREATE, 'all');
+      can(Action.UPDATE, 'User', ({ id }) => id === user.id);
+      can(Action.DELETE, 'User', ({ id }) => id === user.id);
+      cannot(Action.UPDATE, 'User', ({ orgId }) => orgId !== user.orgId);
+      cannot(Action.DELETE, 'User', ({ orgId }) => orgId !== user.orgId);
     }
     return build({ conditionsMatcher: lambdaMatcher });
   }

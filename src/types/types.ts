@@ -68,6 +68,24 @@ export type RegistrationData = {
   ip: string;
   userAgent: string;
 };
+export type EmailConfirmation = {
+  confirmationCode: string;
+  expirationDate: string;
+  isConfirmed: boolean;
+  isConfirmedDate: string;
+  sentEmail: string[];
+};
+// export interface User {
+//   id: string;
+//   login: string;
+//   email: string;
+//   passwordHash: string;
+//   createdAt: string;
+//   orgId: string;
+//   roles: Role;
+//   emailConfirmation: EmailConfirmation;
+//   registrationData: RegistrationData;
+// }
 
 export type UserType = {
   id: string;
@@ -77,36 +95,10 @@ export type UserType = {
   createdAt: string;
   orgId: string;
   roles: Role;
-  emailConfirmation: {
-    confirmationCode: string;
-    expirationDate: string;
-    isConfirmed: boolean;
-    isConfirmedDate: string;
-    sentEmail: string[];
-  };
+  emailConfirmation: EmailConfirmation;
   registrationData: RegistrationData;
 };
-// export type UserType = {
-//   accountData: {
-//     id: string;
-//     login: string;
-//     email: string;
-//     passwordHash: string;
-//     createdAt: string;
-//   };
-//   emailConfirmation: {
-//     confirmationCode: string;
-//     expirationDate: string;
-//     isConfirmed: boolean;
-//     sentEmail: string[];
-//   };
-//   registrationData: {
-//     ip: string | null;
-//     userAgent: string;
-//   };
-//   isAdmin: boolean;
-//   roles: Role;
-// };
+
 export type UserTestOldType = {
   id: string;
   login: string;

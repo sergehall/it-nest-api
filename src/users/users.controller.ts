@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   HttpException,
   Ip,
@@ -22,12 +21,11 @@ import { Request } from 'express';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
-import { ForbiddenError } from '@casl/ability';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import * as uuid4 from 'uuid4';
 import { User } from './schemas/user.schema';
-import { UserType } from '../types/types';
+import { constUser } from '../current-user/current-user';
 
 @Controller('users')
 export class UsersController {
@@ -38,7 +36,7 @@ export class UsersController {
 
   @Post()
   @UseGuards(AbilitiesGuard)
-  @CheckAbilities({ action: Action.Create, subject: User })
+  @CheckAbilities({ action: Action.CREATE, subject: User })
   async create(
     @Req() req: Request,
     @Body() createUserDto: CreateUserDto,
@@ -68,7 +66,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(AbilitiesGuard)
-  @CheckAbilities({ action: Action.Read, subject: User })
+  @CheckAbilities({ action: Action.READ, subject: User })
   async findAll(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchLoginTerm = { searchLoginTerm: paginationData.searchLoginTerm };
@@ -87,7 +85,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(AbilitiesGuard)
-  @CheckAbilities({ action: Action.Read, subject: User })
+  @CheckAbilities({ action: Action.READ, subject: User })
   async findOne(@Param('id') id: string) {
     return this.usersService.findUserByUserId(id);
   }
@@ -95,11 +93,11 @@ export class UsersController {
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     // const currentUser = req.user;
-    const currentUser = new User();
-    currentUser.id = uuid4().toString();
-    currentUser.orgId = 'It-Incubator';
-    currentUser.roles = Role.User;
-    const result = this.usersService.update(id, updateUserDto, currentUser);
+    const newCurrentUser = constUser;
+    newCurrentUser.id = uuid4().toString();
+    newCurrentUser.orgId = 'It-Incubator';
+    newCurrentUser.roles = Role.User;
+    const result = this.usersService.update(id, updateUserDto, newCurrentUser);
     if (!result) throw new HttpException('Not found', 404);
     return result;
   }
@@ -107,6 +105,7 @@ export class UsersController {
   @Delete(':id')
   async deleteUserById(@Param('id') id: string) {
     // const currentUser = req.user;
+    // const currentUser = constUser;
     const currentUser = new User();
     currentUser.id = id;
     currentUser.orgId = 'It-Incubator';

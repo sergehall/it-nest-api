@@ -22,7 +22,6 @@ export class UsersService {
     protected pagination: Pagination,
     protected caslAbilityFactory: CaslAbilityFactory,
     protected usersRepository: UsersRepository,
-    protected readonly userCreator: UserCreator,
   ) {}
   async findOne2(username: string) {
     const users = [
@@ -84,18 +83,22 @@ export class UsersService {
     return await this.usersRepository.findUserByUserId(userId);
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, currentUser: User) {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    currentUser: UserType,
+  ) {
     // const userToUpdate = await this.usersService.findOne(id);
     // const userToUpdate = await this.findOne(id);
-    const userToUpdate = {
-      id: id,
-      orgId: 'It-Incubator',
-      roles: Role.User,
-    };
+    const userToUpdate = currentUser;
+    userToUpdate.id = currentUser.id;
+    userToUpdate.orgId = currentUser.orgId;
+    userToUpdate.roles = currentUser.roles;
+
     console.log(userToUpdate, 'userToUpdate');
     const ability = this.caslAbilityFactory.createForUser(currentUser);
     try {
-      ForbiddenError.from(ability).throwUnlessCan(Action.Update, userToUpdate);
+      ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, userToUpdate);
       //Update call DB
       return `This action update a #${id} user`;
     } catch (error) {
@@ -108,20 +111,23 @@ export class UsersService {
   async deleteUserById(id: string, currentUser: User) {
     const userToDelete: User | null =
       await this.usersRepository.findUserByUserId(currentUser.id);
-    const newU = this.userCreator.convertToClass(userToDelete);
-    console.log(currentUser instanceof User, '++++++++++');
-    userToDelete;
-    console.log(userToDelete instanceof User, '---------');
+    console.log(currentUser, 'currentUser');
+    const currentUser2 = currentUser;
+    currentUser2.id = '-----------';
+    console.log(currentUser2, 'currentUser2');
+    console.log(userToDelete, 'userToDelete');
+    // console.log(
+    //   userToDelete,
+    //   userToDelete instanceof User,
+    //   '-----userToDelete----',
+    // );
     if (!userToDelete)
       throw new HttpException({ message: ['Not found user'] }, 404);
-    const userFromDB = new User();
-    userFromDB.id;
-    userFromDB;
-    // console.log(currentUser, 'currentUser');
-    // console.log(userToDelete, 'userToDelete');
+    // console.log(userToDelete, 'userToDelete ');
+
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);
-      ForbiddenError.from(ability).throwUnlessCan(Action.Delete, userToDelete);
+      ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, currentUser);
       return this.usersRepository.deleteUserById(id);
     } catch (error) {
       if (error instanceof ForbiddenError) {
