@@ -111,23 +111,11 @@ export class UsersService {
   async deleteUserById(id: string, currentUser: User) {
     const userToDelete: User | null =
       await this.usersRepository.findUserByUserId(currentUser.id);
-    console.log(currentUser, 'currentUser');
-    const currentUser2 = currentUser;
-    currentUser2.id = '-----------';
-    console.log(currentUser2, 'currentUser2');
-    console.log(userToDelete, 'userToDelete');
-    // console.log(
-    //   userToDelete,
-    //   userToDelete instanceof User,
-    //   '-----userToDelete----',
-    // );
     if (!userToDelete)
       throw new HttpException({ message: ['Not found user'] }, 404);
-    // console.log(userToDelete, 'userToDelete ');
-
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);
-      ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, currentUser);
+      ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, userToDelete);
       return this.usersRepository.deleteUserById(id);
     } catch (error) {
       if (error instanceof ForbiddenError) {
