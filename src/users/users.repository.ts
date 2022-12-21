@@ -1,7 +1,8 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserDocument } from './schemas/user.schema';
-import { PaginationDBType, QueryArrType, UserType } from '../types/types';
+import { PaginationDBType, QueryArrType } from '../types/types';
+import { UserType } from './types/user.types';
 
 @Injectable()
 export class UsersRepository {
@@ -58,7 +59,7 @@ export class UsersRepository {
     );
   }
 
-  async deleteUserById(id: string): Promise<boolean> {
+  async removeUserById(id: string): Promise<boolean> {
     const result = await this.usersModel.deleteOne({ id: id });
     return result.acknowledged && result.deletedCount === 1;
   }

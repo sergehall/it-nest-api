@@ -8,15 +8,19 @@ import {
   Put,
   Query,
   HttpException,
+  HttpCode,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { ParseQuery } from '../infrastructure/common/parse-query';
-import { QueryPaginationType, UserType } from '../types/types';
+import { QueryPaginationType } from '../types/types';
 import { PostsService } from '../posts/posts.service';
 import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
+import { UserType } from '../users/types/user.types';
+import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { BlogEntity } from './entities/blog.entity';
 
 @Controller('blogs')
 export class BlogsController {
@@ -26,7 +30,7 @@ export class BlogsController {
   ) {}
 
   @Get()
-  async findAll(@Query() query: any) {
+  async findAll(@Query() query: any): Promise<PaginationWithItems> {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = { searchNameTerm: paginationData.searchNameTerm };
     const queryPagination: PaginationDto = {
@@ -39,13 +43,13 @@ export class BlogsController {
   }
 
   @Post()
-  async create(@Body() createBlogDto: CreateBlogsDto) {
+  async createBlog(@Body() createBlogDto: CreateBlogsDto) {
     const blogDTO = {
       name: createBlogDto.name,
       description: createBlogDto.description,
       websiteUrl: createBlogDto.websiteUrl,
     };
-    return this.blogsService.create(blogDTO);
+    return this.blogsService.createBlog(blogDTO);
   }
 
   @Get(':blogId/posts')
@@ -75,23 +79,22 @@ export class BlogsController {
     return await this.postsService.create(createPostDto, blogName);
   }
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const blog = this.blogsService.findOne(id);
-    if (!blog) throw new HttpException('Not found', 404);
+  async findOne(@Param('id') id: string): Promise<BlogEntity | null> {
+    const blog = await this.blogsService.findOne(id);
+    if (!blog) throw new HttpException({ message: ['Not found blogger'] }, 404);
     return blog;
   }
-
+  @HttpCode(204)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
-    const update = this.blogsService.update(id, updateBlogDto);
-    if (!update) throw new HttpException('Not found', 404);
-    return update;
+  async updateBlog(
+    @Param('id') id: string,
+    @Body() updateBlogDto: UpdateBlogDto,
+  ) {
+    return this.blogsService.updateBlog(id, updateBlogDto);
   }
-
+  @HttpCode(204)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    const deletedPost = this.blogsService.remove(id);
-    if (!deletedPost) throw new HttpException('Not found', 404);
-    return deletedPost;
+  async removeBlogById(@Param('id') id: string) {
+    return this.blogsService.removeBlogById(id);
   }
 }

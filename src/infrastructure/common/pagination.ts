@@ -4,7 +4,7 @@ import { PaginationDBType } from '../../types/types';
 
 @Injectable()
 export class Pagination {
-  async prepare(
+  async convert(
     queryPagination: PaginationDto,
     field: string,
   ): Promise<PaginationDBType> {

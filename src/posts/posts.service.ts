@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import {
-  ArrayEmptyObjects,
-  QueryPaginationType,
-  UserType,
-} from '../types/types';
+import { ArrayEmptyObjects, QueryPaginationType } from '../types/types';
 import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
+import { UserType } from '../users/types/user.types';
 
 @Injectable()
 export class PostsService {
@@ -44,7 +41,7 @@ export class PostsService {
     ) {
       field = queryPagination.sortBy;
     }
-    const pagination = await this.pagination.prepare(queryPagination, field);
+    const pagination = await this.pagination.convert(queryPagination, field);
     const pageNumber = queryPagination.pageNumber;
     const pageSize = pagination.pageSize;
     // const totalCount = await this.postsRepository.countDocuments([{}])

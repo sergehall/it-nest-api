@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { Pagination } from '../infrastructure/common/pagination';
 
 @Injectable()
@@ -20,7 +19,7 @@ export class CommentsService {
     ) {
       field = queryPagination.sortBy;
     }
-    const pagination = await this.pagination.prepare(queryPagination, field);
+    const pagination = await this.pagination.convert(queryPagination, field);
     // const totalCount = await this.commentsRepository.countDocuments....
     // const pagesCount = Math.ceil(totalCount / pageSize)
     const totalCount = 0;

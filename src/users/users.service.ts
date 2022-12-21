@@ -2,7 +2,7 @@ import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { QueryArrType, UserType } from '../types/types';
+import { QueryArrType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
@@ -14,6 +14,8 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
 import { RegDataDto } from './dto/reg-data.dto';
 import { User } from './schemas/user.schema';
+import { UserType } from './types/user.types';
+import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 
 @Injectable()
 export class UsersService {
@@ -47,7 +49,10 @@ export class UsersService {
     return await this.usersRepository.createUser(user);
   }
 
-  async findAll(queryPagination: PaginationDto, searchFilters: QueryArrType) {
+  async findAll(
+    queryPagination: PaginationDto,
+    searchFilters: QueryArrType,
+  ): Promise<PaginationWithItems> {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'login' ||
@@ -65,7 +70,7 @@ export class UsersService {
       convertedFilters,
     );
     const pagesCount = Math.ceil(totalCount / pageSize);
-    const pagination = await this.pagination.prepare(queryPagination, field);
+    const pagination = await this.pagination.convert(queryPagination, field);
     const posts = await this.usersRepository.findUsers(
       pagination,
       convertedFilters,
@@ -83,7 +88,7 @@ export class UsersService {
     return await this.usersRepository.findUserByUserId(userId);
   }
 
-  async update(
+  async updateUser(
     id: string,
     updateUserDto: UpdateUserDto,
     currentUser: UserType,
@@ -108,7 +113,7 @@ export class UsersService {
     }
   }
 
-  async deleteUserById(id: string, currentUser: User) {
+  async removeUserById(id: string, currentUser: User) {
     const userToDelete: User | null =
       await this.usersRepository.findUserByUserId(id);
     if (!userToDelete)
@@ -116,7 +121,7 @@ export class UsersService {
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);
       ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, userToDelete);
-      return this.usersRepository.deleteUserById(id);
+      return this.usersRepository.removeUserById(id);
     } catch (error) {
       if (error instanceof ForbiddenError) {
         throw new ForbiddenException(error.message);

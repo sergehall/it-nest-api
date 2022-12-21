@@ -25,7 +25,6 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import * as uuid4 from 'uuid4';
 import { User } from './schemas/user.schema';
-import { constUser } from '../current-user/current-user';
 
 @Controller('users')
 export class UsersController {
@@ -49,15 +48,15 @@ export class UsersController {
       ip: ip,
       userAgent: userAgent,
     };
-    const user = await this.usersService.createUser(
+    const newUser = await this.usersService.createUser(
       createUserDto,
       registrationData,
     );
     return {
-      id: user.id,
-      login: user.login,
-      email: user.email,
-      createdAt: user.createdAt,
+      id: newUser.id,
+      login: newUser.login,
+      email: newUser.email,
+      createdAt: newUser.createdAt,
     };
   }
 
@@ -88,25 +87,32 @@ export class UsersController {
   }
 
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async updateUser(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     // const currentUser = req.user;
-    const newCurrentUser = constUser;
+    const newCurrentUser = new User();
     newCurrentUser.id = uuid4().toString();
     newCurrentUser.orgId = 'It-Incubator';
     newCurrentUser.roles = Role.User;
-    const result = this.usersService.update(id, updateUserDto, newCurrentUser);
-    if (!result) throw new HttpException('Not found', 404);
+    const result = this.usersService.updateUser(
+      id,
+      updateUserDto,
+      newCurrentUser,
+    );
+    if (!result) throw new HttpException({ message: ['Not found user'] }, 404);
     return result;
   }
   @HttpCode(204)
   @Delete(':id')
-  async deleteUserById(@Param('id') id: string) {
+  async removeUserById(@Param('id') id: string) {
     // const currentUser = req.user;
     // const currentUser = constUser;
     const currentUser = new User();
     currentUser.id = id;
     currentUser.orgId = 'It-Incubator';
     currentUser.roles = Role.User;
-    return await this.usersService.deleteUserById(id, currentUser);
+    return await this.usersService.removeUserById(id, currentUser);
   }
 }

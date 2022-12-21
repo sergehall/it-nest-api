@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb';
-import { Role } from '../auth/roles/role.enum';
 
 export type SortOrder = -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
 export type QueryArrType = {
@@ -20,13 +19,13 @@ export type ErrorType = {
 };
 export type ArrayErrorsType = ErrorType[];
 //...............................................Pagination Query
-export type ReturnObjWithPagination = {
-  pagesCount: number;
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  items: PostsType[] | CommentType[] | BlogsEntityType[] | UserType[];
-};
+// export type ReturnObjWithPagination = {
+//   pagesCount: number;
+//   page: number;
+//   pageSize: number;
+//   totalCount: number;
+//   items: PostsType[] | CommentType[] | BlogEntity[] | UserType[];
+// };
 export type QueryPaginationType = {
   pageNumber: number;
   pageSize: number;
@@ -64,40 +63,6 @@ export type CreateUserInputModelType = {
 //     userAgent: string;
 //   };
 // }
-export type RegistrationData = {
-  ip: string;
-  userAgent: string;
-};
-export type EmailConfirmation = {
-  confirmationCode: string;
-  expirationDate: string;
-  isConfirmed: boolean;
-  isConfirmedDate: string;
-  sentEmail: string[];
-};
-// export interface User {
-//   id: string;
-//   login: string;
-//   email: string;
-//   passwordHash: string;
-//   createdAt: string;
-//   orgId: string;
-//   roles: Role;
-//   emailConfirmation: EmailConfirmation;
-//   registrationData: RegistrationData;
-// }
-
-export type UserType = {
-  id: string;
-  login: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
-  orgId: string;
-  roles: Role;
-  emailConfirmation: EmailConfirmation;
-  registrationData: RegistrationData;
-};
 
 export type UserTestOldType = {
   id: string;
@@ -139,18 +104,18 @@ export type BlogInputModelType = {
   description: string;
   websiteUrl: string;
 };
-export type BlogsEntityType = {
-  id: string;
-  name: string;
-  description: string;
-  websiteUrl: string;
-  createdAt: string;
-};
-export type ReturnObjBlogType = {
-  data: BlogsEntityType | null;
-  errorsMessages: ErrorType[];
-  resultCode: number;
-};
+// export type BlogsEntityType = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   websiteUrl: string;
+//   createdAt: string;
+// };
+// export type ReturnObjBlogType = {
+//   data: BlogsEntityType | null;
+//   errorsMessages: ErrorType[];
+//   resultCode: number;
+// };
 export type DTOBlogsType = {
   pageSize: number;
   startIndex: number;

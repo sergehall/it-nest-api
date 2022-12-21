@@ -1,29 +1,50 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
-import { Injectable } from '@nestjs/common';
-import { QueryArrType, ReturnObjWithPagination } from '../types/types';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import { QueryArrType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
 import { Pagination } from '../infrastructure/common/pagination';
+import * as uuid4 from 'uuid4';
+import { BlogEntity } from './entities/blog.entity';
+import { BlogsRepository } from './blogs.repository';
+import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { CaslAbilityFactory } from '../ability/casl-ability.factory';
+import { ForbiddenError } from '@casl/ability';
+import { Action } from '../auth/roles/action.enum';
 
 @Injectable()
 export class BlogsService {
   constructor(
     protected convertFiltersForDB: ConvertFiltersForDB,
     protected pagination: Pagination,
+    protected blogsRepository: BlogsRepository,
+    protected caslAbilityFactory: CaslAbilityFactory,
   ) {}
-  async create(createBlogDto: CreateBlogsDto) {
-    return {
+  async createBlog(createBlogDto: CreateBlogsDto): Promise<BlogEntity> {
+    const blogEntity: BlogEntity = {
+      id: uuid4().toString(),
       name: createBlogDto.name,
       description: createBlogDto.description,
       websiteUrl: createBlogDto.websiteUrl,
+      createdAt: new Date().toISOString(),
+    };
+    const newBlog: BlogEntity = await this.blogsRepository.createBlog(
+      blogEntity,
+    );
+    return {
+      id: newBlog.id,
+      name: newBlog.name,
+      description: newBlog.description,
+      websiteUrl: newBlog.websiteUrl,
+      createdAt: newBlog.createdAt,
     };
   }
 
   async findAll(
     queryPagination: PaginationDto,
     searchFilters: QueryArrType,
-  ): Promise<ReturnObjWithPagination> {
+  ): Promise<PaginationWithItems> {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'name' ||
@@ -33,41 +54,71 @@ export class BlogsService {
       field = queryPagination.sortBy;
     }
 
-    const pagination = await this.pagination.prepare(queryPagination, field);
-    // const totalCount = await this.postsRepository.countDocuments([{}])
-    // const pagesCount = Math.ceil(totalCount / pageSize)
-    const totalCount = 0;
-    const pagesCount = 0;
     const convertedFilters = await this.convertFiltersForDB.convert(
       searchFilters,
     );
+    const pagination = await this.pagination.convert(queryPagination, field);
+    const totalCount = await this.blogsRepository.countDocuments(
+      convertedFilters,
+    );
+    const pagesCount = Math.ceil(totalCount / queryPagination.pageSize);
+    const blogs: BlogEntity[] = await this.blogsRepository.findBlogs(
+      pagination,
+      convertedFilters,
+    );
     const pageNumber = queryPagination.pageNumber;
     const pageSize = pagination.pageSize;
-    const blog = {
-      id: 'string',
-      name: 'string',
-      description: 'string',
-      websiteUrl: 'string',
-      createdAt: '2022-12-12T10:13:39.557Z',
-    };
     return {
       pagesCount: pagesCount,
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,
-      items: [blog],
+      items: blogs,
     };
   }
 
-  async findOne(id: string) {
-    return `This action returns a #${id} blog`;
+  async findOne(id: string): Promise<BlogEntity | null> {
+    return this.blogsRepository.findBlogById(id);
   }
 
-  async update(id: string, updateBlogDto: UpdateBlogDto) {
-    return `This action updates a #${id} blog`;
+  async updateBlog(id: string, updateBlogDto: UpdateBlogDto) {
+    const blogToUpdate = await this.blogsRepository.findBlogById(id);
+    if (!blogToUpdate)
+      throw new HttpException({ message: ['Not found user'] }, 404);
+    const ability = this.caslAbilityFactory.createForBlog({ id: id });
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
+        id: blogToUpdate.id,
+      });
+      const blogEntity: BlogEntity = {
+        id: id,
+        name: updateBlogDto.name,
+        description: updateBlogDto.description,
+        websiteUrl: updateBlogDto.websiteUrl,
+        createdAt: new Date().toISOString(),
+      };
+      return await this.blogsRepository.updatedBlogById(blogEntity);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} blog`;
+  async removeBlogById(id: string) {
+    const blogToUpdate = await this.blogsRepository.findBlogById(id);
+    if (!blogToUpdate)
+      throw new HttpException({ message: ['Not found user'] }, 404);
+    const ability = this.caslAbilityFactory.createForBlog({ id: id });
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
+        id: blogToUpdate.id,
+      });
+      return await this.blogsRepository.removeBlogById(id);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 }
