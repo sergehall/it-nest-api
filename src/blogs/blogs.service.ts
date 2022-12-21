@@ -91,11 +91,11 @@ export class BlogsService {
         id: blogToUpdate.id,
       });
       const blogEntity: BlogsEntity = {
-        id: id,
+        id: blogToUpdate.id,
         name: updateBlogDto.name,
         description: updateBlogDto.description,
         websiteUrl: updateBlogDto.websiteUrl,
-        createdAt: new Date().toISOString(),
+        createdAt: blogToUpdate.createdAt,
       };
       return await this.blogsRepository.updatedBlogById(blogEntity);
     } catch (error) {
