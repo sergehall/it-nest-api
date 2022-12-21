@@ -1,27 +1,27 @@
 import { Role } from '../../auth/roles/role.enum';
-
-export type EmailConfirmation = {
-  confirmationCode: string;
-  expirationDate: string;
-  isConfirmed: boolean;
-  isConfirmedDate: string;
-  sentEmail: string[];
-};
-export type RegistrationData = {
-  ip: string;
-  userAgent: string;
-};
-export type UserType = {
-  id: string;
-  login: string;
-  email: string;
-  passwordHash: string;
-  createdAt: string;
-  orgId: string;
-  roles: Role;
-  emailConfirmation: EmailConfirmation;
-  registrationData: RegistrationData;
-};
+//
+// export type EmailConfirmation = {
+//   confirmationCode: string;
+//   expirationDate: string;
+//   isConfirmed: boolean;
+//   isConfirmedDate: string;
+//   sentEmail: string[];
+// };
+// export type RegistrationData = {
+//   ip: string;
+//   userAgent: string;
+// };
+// export type UserType = {
+//   id: string;
+//   login: string;
+//   email: string;
+//   passwordHash: string;
+//   createdAt: string;
+//   orgId: string;
+//   roles: Role;
+//   emailConfirmation: EmailConfirmation;
+//   registrationData: RegistrationData;
+// };
 
 // export interface User {
 //   id: string;

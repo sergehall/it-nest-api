@@ -2,7 +2,7 @@ import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UserDocument } from './schemas/user.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
-import { UserType } from './types/user.types';
+import { UsersEntity } from './entities/users.entity';
 
 @Injectable()
 export class UsersRepository {
@@ -10,7 +10,7 @@ export class UsersRepository {
     @Inject('USER_MODEL')
     private usersModel: Model<UserDocument>,
   ) {}
-  async createUser(user: UserType): Promise<UserType> {
+  async createUser(user: UsersEntity): Promise<UsersEntity> {
     try {
       return await this.usersModel.create(user);
     } catch (error) {
@@ -18,7 +18,7 @@ export class UsersRepository {
     }
   }
 
-  async countDocuments(searchFilters: QueryArrType) {
+  async countDocuments(searchFilters: QueryArrType): Promise<number> {
     return await this.usersModel.countDocuments({
       $or: searchFilters,
     });
@@ -26,7 +26,7 @@ export class UsersRepository {
   async findUsers(
     pagination: PaginationDBType,
     searchFilters: QueryArrType,
-  ): Promise<UserType[]> {
+  ): Promise<UsersEntity[]> {
     return await this.usersModel
       .find(
         {
@@ -47,7 +47,7 @@ export class UsersRepository {
       .sort({ [pagination.field]: pagination.direction })
       .lean();
   }
-  async findUserByUserId(userId: string): Promise<UserType | null> {
+  async findUserByUserId(userId: string): Promise<UsersEntity | null> {
     return await this.usersModel.findOne(
       { id: userId },
       {

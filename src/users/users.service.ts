@@ -14,8 +14,8 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
 import { RegDataDto } from './dto/reg-data.dto';
 import { User } from './schemas/user.schema';
-import { UserType } from './types/user.types';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { UsersEntity } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
@@ -44,7 +44,7 @@ export class UsersService {
   async createUser(
     createUserDto: CreateUserDto,
     registrationData: RegDataDto,
-  ): Promise<UserType> {
+  ): Promise<UsersEntity> {
     const user = await this._createNewUser(createUserDto, registrationData);
     return await this.usersRepository.createUser(user);
   }
@@ -84,14 +84,14 @@ export class UsersService {
     };
   }
 
-  async findUserByUserId(userId: string): Promise<UserType | null> {
+  async findUserByUserId(userId: string): Promise<UsersEntity | null> {
     return await this.usersRepository.findUserByUserId(userId);
   }
 
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto,
-    currentUser: UserType,
+    currentUser: UsersEntity,
   ) {
     // const userToUpdate = await this.usersService.findOne(id);
     // const userToUpdate = await this.findOne(id);
@@ -132,7 +132,7 @@ export class UsersService {
   async _createNewUser(
     createUserDto: CreateUserDto,
     registrationData: RegDataDto,
-  ): Promise<UserType> {
+  ): Promise<UsersEntity> {
     const passwordHash = await this._generateHash(createUserDto.password);
     const id = uuid4().toString();
     const currentTime = new Date().toISOString();

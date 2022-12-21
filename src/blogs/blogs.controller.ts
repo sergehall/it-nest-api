@@ -18,9 +18,9 @@ import { PostsService } from '../posts/posts.service';
 import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
-import { UserType } from '../users/types/user.types';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 import { BlogsEntity } from './entities/blogs.entity';
+import { UsersEntity } from '../users/entities/users.entity';
 
 @Controller('blogs')
 export class BlogsController {
@@ -44,17 +44,17 @@ export class BlogsController {
 
   @Post()
   async createBlog(@Body() createBlogDto: CreateBlogsDto) {
-    const blogDTO = {
+    const blogDto = {
       name: createBlogDto.name,
       description: createBlogDto.description,
       websiteUrl: createBlogDto.websiteUrl,
     };
-    return this.blogsService.createBlog(blogDTO);
+    return this.blogsService.createBlog(blogDto);
   }
 
   @Get(':blogId/posts')
   async getPostsByBlogId(@Query() query: any, @Param('blogId') blogId: string) {
-    const currentUser: UserType | null = null;
+    const currentUser: UsersEntity | null = null;
     const paginationData = ParseQuery.getPaginationData(query);
     const dtoPagination: QueryPaginationType = {
       pageNumber: paginationData.pageNumber,

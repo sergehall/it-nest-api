@@ -11,7 +11,7 @@ export class BlogsRepository {
     private blogsModel: Model<BlogsDocument>,
   ) {}
 
-  async createBlog(blogEntity: BlogsEntity) {
+  async createBlog(blogEntity: BlogsEntity): Promise<BlogsEntity> {
     try {
       return await this.blogsModel.create(blogEntity);
     } catch (error) {
@@ -48,7 +48,7 @@ export class BlogsRepository {
       )
       .lean();
   }
-  async countDocuments(searchFilters: QueryArrType) {
+  async countDocuments(searchFilters: QueryArrType): Promise<number> {
     return await this.blogsModel.countDocuments({
       $or: searchFilters,
     });

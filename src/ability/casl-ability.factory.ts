@@ -7,15 +7,15 @@ import {
 } from '@casl/ability';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
-import { UserType } from '../users/types/user.types';
 import { BlogIdType } from '../blogs/types/blogs.types';
+import { UsersEntity } from '../users/entities/users.entity';
 
 type AppAbility = PureAbility<AbilityTuple, MatchConditions>;
 const lambdaMatcher = (matchConditions: MatchConditions) => matchConditions;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: UserType) {
+  createForUser(user: UsersEntity) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
     if (user.roles === Role.Admin) {
       can(Action.MANAGE, 'all');

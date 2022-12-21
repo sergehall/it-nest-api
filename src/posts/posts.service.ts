@@ -5,7 +5,7 @@ import { ArrayEmptyObjects, QueryPaginationType } from '../types/types';
 import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
-import { UserType } from '../users/types/user.types';
+import { UsersEntity } from '../users/entities/users.entity';
 
 @Injectable()
 export class PostsService {
@@ -64,7 +64,7 @@ export class PostsService {
   async findPosts(
     dtoPagination: QueryPaginationType,
     filterBlogId: ArrayEmptyObjects,
-    currentUser: UserType | null,
+    currentUser: UsersEntity | null,
   ) {
     return `This action returns posts`;
   }
