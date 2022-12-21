@@ -7,10 +7,13 @@ export class TestingRepository {
   constructor(
     @Inject('USER_MODEL')
     private usersModel: Model<UserDocument>,
+    @Inject('BLOG_MODEL')
+    private blogsModel: Model<UserDocument>,
   ) {}
   async delAllData(): Promise<boolean> {
     // delete all Collections
     await this.usersModel.deleteMany({});
+    await this.blogsModel.deleteMany({});
     // await this.myModelEmailsConfirmCode.deleteMany({});
     // await this.myModelEmailsRecoveryCode.deleteMany({});
     // await MyModelBlogs.deleteMany({});
