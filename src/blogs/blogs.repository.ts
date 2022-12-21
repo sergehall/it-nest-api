@@ -1,24 +1,24 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { BlogEntity } from './entities/blog.entity';
+import { BlogsEntity } from './entities/blogs.entity';
 import { Model } from 'mongoose';
-import { UserDocument } from '../users/schemas/user.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
+import { BlogsDocument } from './schemas/blogs.schema';
 
 @Injectable()
 export class BlogsRepository {
   constructor(
     @Inject('BLOG_MODEL')
-    private blogsModel: Model<UserDocument>,
+    private blogsModel: Model<BlogsDocument>,
   ) {}
 
-  async createBlog(blogEntity: BlogEntity) {
+  async createBlog(blogEntity: BlogsEntity) {
     try {
       return await this.blogsModel.create(blogEntity);
     } catch (error) {
       throw new ForbiddenException(error.message);
     }
   }
-  async findBlogById(blogId: string): Promise<BlogEntity | null> {
+  async findBlogById(blogId: string): Promise<BlogsEntity | null> {
     return await this.blogsModel.findOne(
       { id: blogId },
       {
@@ -31,7 +31,7 @@ export class BlogsRepository {
     const result = await this.blogsModel.deleteOne({ id: id });
     return result.acknowledged && result.deletedCount === 1;
   }
-  async updatedBlogById(blogEntity: BlogEntity): Promise<boolean> {
+  async updatedBlogById(blogEntity: BlogsEntity): Promise<boolean> {
     return await this.blogsModel
       .findOneAndUpdate(
         { id: blogEntity.id },
@@ -56,7 +56,7 @@ export class BlogsRepository {
   async findBlogs(
     pagination: PaginationDBType,
     searchFilters: QueryArrType,
-  ): Promise<BlogEntity[]> {
+  ): Promise<BlogsEntity[]> {
     return await this.blogsModel
       .find(
         {

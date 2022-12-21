@@ -11,7 +11,7 @@ export class Blog {
   name: string;
   @Prop({ required: true })
   description: string;
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   websiteUrl: string;
   @Prop({ required: true })
   createdAt: string;

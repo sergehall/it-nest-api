@@ -2,7 +2,7 @@ import { PartialType } from '@nestjs/mapped-types';
 import { CreateBlogsDto } from '../dto/create-blogs.dto';
 import { IsNotEmpty, Matches, MaxLength, MinLength } from 'class-validator';
 
-export class BlogEntity extends PartialType(CreateBlogsDto) {
+export class BlogsEntity extends PartialType(CreateBlogsDto) {
   @IsNotEmpty()
   @MinLength(0)
   @MaxLength(100)

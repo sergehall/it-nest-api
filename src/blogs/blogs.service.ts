@@ -6,7 +6,7 @@ import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
 import { Pagination } from '../infrastructure/common/pagination';
 import * as uuid4 from 'uuid4';
-import { BlogEntity } from './entities/blog.entity';
+import { BlogsEntity } from './entities/blogs.entity';
 import { BlogsRepository } from './blogs.repository';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
@@ -21,15 +21,15 @@ export class BlogsService {
     protected blogsRepository: BlogsRepository,
     protected caslAbilityFactory: CaslAbilityFactory,
   ) {}
-  async createBlog(createBlogDto: CreateBlogsDto): Promise<BlogEntity> {
-    const blogEntity: BlogEntity = {
+  async createBlog(createBlogDto: CreateBlogsDto): Promise<BlogsEntity> {
+    const blogEntity: BlogsEntity = {
       id: uuid4().toString(),
       name: createBlogDto.name,
       description: createBlogDto.description,
       websiteUrl: createBlogDto.websiteUrl,
       createdAt: new Date().toISOString(),
     };
-    const newBlog: BlogEntity = await this.blogsRepository.createBlog(
+    const newBlog: BlogsEntity = await this.blogsRepository.createBlog(
       blogEntity,
     );
     return {
@@ -62,7 +62,7 @@ export class BlogsService {
       convertedFilters,
     );
     const pagesCount = Math.ceil(totalCount / queryPagination.pageSize);
-    const blogs: BlogEntity[] = await this.blogsRepository.findBlogs(
+    const blogs: BlogsEntity[] = await this.blogsRepository.findBlogs(
       pagination,
       convertedFilters,
     );
@@ -77,7 +77,7 @@ export class BlogsService {
     };
   }
 
-  async findOne(id: string): Promise<BlogEntity | null> {
+  async findOne(id: string): Promise<BlogsEntity | null> {
     return this.blogsRepository.findBlogById(id);
   }
 
@@ -90,7 +90,7 @@ export class BlogsService {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
         id: blogToUpdate.id,
       });
-      const blogEntity: BlogEntity = {
+      const blogEntity: BlogsEntity = {
         id: id,
         name: updateBlogDto.name,
         description: updateBlogDto.description,

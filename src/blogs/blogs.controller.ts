@@ -20,7 +20,7 @@ import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { UpdateBlogDto } from './dto/update-blods.dto';
 import { UserType } from '../users/types/user.types';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
-import { BlogEntity } from './entities/blog.entity';
+import { BlogsEntity } from './entities/blogs.entity';
 
 @Controller('blogs')
 export class BlogsController {
@@ -79,7 +79,7 @@ export class BlogsController {
     return await this.postsService.create(createPostDto, blogName);
   }
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<BlogEntity | null> {
+  async findOne(@Param('id') id: string): Promise<BlogsEntity | null> {
     const blog = await this.blogsService.findOne(id);
     if (!blog) throw new HttpException({ message: ['Not found blogger'] }, 404);
     return blog;
