@@ -1,13 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { ArrayEmptyObjects, QueryPaginationType } from '../types/types';
+import {
+  ArrayEmptyObjects,
+  QueryArrType,
+  QueryPaginationType,
+} from '../types/types';
 import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsRepository } from './posts.repository';
 import { StatusLike } from './enums/posts.enums';
+import { BlogsEntity } from '../blogs/entities/blogs.entity';
+import { PostsEntity } from './entities/posts.entity';
 
 @Injectable()
 export class PostsService {
@@ -32,11 +38,26 @@ export class PostsService {
         newestLikes: [],
       },
     };
-    const createPost = await this.postsRepository.createPost(newPost);
-    return newPost;
+
+    const result = await this.postsRepository.createPost(newPost);
+    return {
+      id: result.id,
+      title: result.title,
+      shortDescription: result.shortDescription,
+      content: result.content,
+      blogId: result.blogId,
+      blogName: result.blogName,
+      createdAt: result.createdAt,
+      extendedLikesInfo: {
+        likesCount: result.extendedLikesInfo.likesCount,
+        dislikesCount: result.extendedLikesInfo.dislikesCount,
+        myStatus: result.extendedLikesInfo.myStatus,
+        newestLikes: result.extendedLikesInfo.newestLikes,
+      },
+    };
   }
 
-  async findAll(queryPagination: PaginationDto) {
+  async findAll(queryPagination: PaginationDto, searchFilters: QueryArrType) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'title' ||
@@ -47,18 +68,20 @@ export class PostsService {
       field = queryPagination.sortBy;
     }
     const pagination = await this.pagination.convert(queryPagination, field);
+    const totalCount = await this.postsRepository.countDocuments([{}]);
+    const pagesCount = Math.ceil(totalCount / queryPagination.pageSize);
+    const posts: PostsEntity[] = await this.postsRepository.findPosts(
+      pagination,
+      searchFilters,
+    );
     const pageNumber = queryPagination.pageNumber;
     const pageSize = pagination.pageSize;
-    // const totalCount = await this.postsRepository.countDocuments([{}])
-    // const pagesCount = Math.ceil(totalCount / pageSize)
-    const totalCount = 0;
-    const pagesCount = 0;
     return {
       pagesCount: pagesCount,
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,
-      items: [],
+      items: posts,
     };
   }
 

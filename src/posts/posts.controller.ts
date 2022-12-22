@@ -29,13 +29,14 @@ export class PostsController {
   @Get()
   async findAll(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
+    const searchFilters = {};
     const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       sortBy: paginationData.sortBy,
       sortDirection: paginationData.sortDirection,
     };
-    return this.postsService.findAll(queryPagination);
+    return this.postsService.findAll(queryPagination, [searchFilters]);
   }
 
   @Post()
