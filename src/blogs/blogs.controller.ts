@@ -20,6 +20,8 @@ import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
+import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
+import * as uuid4 from 'uuid4';
 
 @Controller('blogs')
 export class BlogsController {
@@ -71,14 +73,18 @@ export class BlogsController {
   @Post(':blogId/posts')
   async createPostByBlogId(
     @Param('blogId') blogId: string,
-    @Body() createPostDto: CreatePostDto,
+    @Body() createPostByBlogIdDto: CreatePostByBlogIdDto,
   ) {
-    const blog: BlogsEntity | null = await this.blogsService.findOne(
-      createPostDto.blogId,
-    );
+    const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
       throw new HttpException({ message: ['Not found blogger'] }, 404);
     }
+    const createPostDto = {
+      title: createPostByBlogIdDto.title,
+      shortDescription: createPostByBlogIdDto.shortDescription,
+      content: createPostByBlogIdDto.content,
+      blogId: blogId,
+    };
     return await this.postsService.createPost(createPostDto, blog.name);
   }
   @Get(':id')
