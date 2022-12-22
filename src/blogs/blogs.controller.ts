@@ -15,13 +15,11 @@ import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { ParseQuery } from '../infrastructure/common/parse-query';
 import { QueryPaginationType } from '../types/types';
 import { PostsService } from '../posts/posts.service';
-import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
-import * as uuid4 from 'uuid4';
 
 @Controller('blogs')
 export class BlogsController {
@@ -64,11 +62,7 @@ export class BlogsController {
       sortDirection: paginationData.sortDirection,
     };
     const filterBlogId = { blogId: blogId };
-    return await this.postsService.findPosts(
-      dtoPagination,
-      [filterBlogId],
-      currentUser,
-    );
+    return await this.postsService.findPosts(dtoPagination, [filterBlogId]);
   }
   @Post(':blogId/posts')
   async createPostByBlogId(

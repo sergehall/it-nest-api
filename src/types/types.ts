@@ -5,6 +5,7 @@ export type QueryArrType = {
   searchNameTerm?: string;
   searchLoginTerm?: string;
   searchEmailTerm?: string;
+  blogId?: string;
 }[];
 export type ConvertFilterType = {
   searchNameTerm?: string;

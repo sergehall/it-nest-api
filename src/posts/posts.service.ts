@@ -1,15 +1,10 @@
 import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import {
-  ArrayEmptyObjects,
-  QueryArrType,
-  QueryPaginationType,
-} from '../types/types';
+import { QueryArrType } from '../types/types';
 import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
-import { UsersEntity } from '../users/entities/users.entity';
 import { PostsRepository } from './posts.repository';
 import { StatusLike } from './enums/posts.enums';
 import { PostsEntity } from './entities/posts.entity';
@@ -60,7 +55,7 @@ export class PostsService {
     };
   }
 
-  async findAll(queryPagination: PaginationDto, searchFilters: QueryArrType) {
+  async findPosts(queryPagination: PaginationDto, searchFilters: QueryArrType) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'title' ||
@@ -71,7 +66,7 @@ export class PostsService {
       field = queryPagination.sortBy;
     }
     const pagination = await this.pagination.convert(queryPagination, field);
-    const totalCount = await this.postsRepository.countDocuments([{}]);
+    const totalCount = await this.postsRepository.countDocuments(searchFilters);
     const pagesCount = Math.ceil(totalCount / queryPagination.pageSize);
     const posts: PostsEntity[] = await this.postsRepository.findPosts(
       pagination,
@@ -90,14 +85,6 @@ export class PostsService {
 
   async findPostById(postId: string): Promise<PostsEntity | null> {
     return await this.postsRepository.findPostById(postId);
-  }
-
-  async findPosts(
-    dtoPagination: QueryPaginationType,
-    filterBlogId: ArrayEmptyObjects,
-    currentUser: UsersEntity | null,
-  ) {
-    return `This action returns posts`;
   }
 
   async updatePost(id: string, updatePostDto: CreatePostDto) {

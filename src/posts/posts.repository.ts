@@ -3,7 +3,6 @@ import { PostsEntity } from './entities/posts.entity';
 import { Model } from 'mongoose';
 import { PostDocument } from './schemas/posts.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
-import { BlogsEntity } from '../blogs/entities/blogs.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()

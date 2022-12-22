@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
 import { CommentsService } from '../comments/comments.service';
 import { ParseQuery } from '../infrastructure/common/parse-query';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
@@ -29,7 +28,7 @@ export class PostsController {
   ) {}
 
   @Get()
-  async findAll(@Query() query: any) {
+  async findPosts(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = {};
     const queryPagination: PaginationDto = {
@@ -38,7 +37,7 @@ export class PostsController {
       sortBy: paginationData.sortBy,
       sortDirection: paginationData.sortDirection,
     };
-    return this.postsService.findAll(queryPagination, [searchFilters]);
+    return this.postsService.findPosts(queryPagination, [searchFilters]);
   }
   @Post()
   async createPost(@Body() createPostDto: CreatePostDto) {

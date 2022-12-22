@@ -8,6 +8,7 @@ export class ConvertFiltersForDB {
       searchNameTerm: 'name',
       searchLoginTerm: 'login',
       searchEmailTerm: 'email',
+      blogId: 'blogId',
     };
     return this._forMongo([...rawFilters], pathFilter);
   }
