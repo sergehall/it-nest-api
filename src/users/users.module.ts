@@ -5,10 +5,9 @@ import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForD
 import { Pagination } from '../infrastructure/common/pagination';
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { CaslModule } from '../ability/casl.module';
 import { UsersRepository } from './users.repository';
-import { userProviders } from './user.providers';
+import { usersProviders } from './users.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 
 @Module({
@@ -20,9 +19,8 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
     ConvertFiltersForDB,
     Pagination,
     AuthService,
-    CaslAbilityFactory,
     UsersRepository,
-    ...userProviders,
+    ...usersProviders,
   ],
   exports: [UsersService],
 })

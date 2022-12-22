@@ -1,7 +1,7 @@
 import { Mongoose } from 'mongoose';
 import { UserDocument, UserSchema } from './schemas/user.schema';
 
-export const userProviders = [
+export const usersProviders = [
   {
     provide: 'USER_MODEL',
     useFactory: (mongoose: Mongoose) =>

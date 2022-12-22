@@ -13,7 +13,7 @@ export class CreateBlogsDto {
   description: string;
   @IsNotEmpty()
   @Length(0, 100, {
-    message: 'Incorrect length! Must be max 100 ch.',
+    message: 'Incorrect websiteUrl length! Must be max 100 ch.',
   })
   @Matches(
     '^https://([a-zA-Z0-9_-]+\\.)+[a-zA-Z0-9_-]+(\\/[a-zA-Z0-9_-]+)*\\/?$',

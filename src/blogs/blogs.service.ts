@@ -3,7 +3,6 @@ import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { QueryArrType } from '../types/types';
 import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { UpdateBlogDto } from './dto/update-blods.dto';
 import { Pagination } from '../infrastructure/common/pagination';
 import * as uuid4 from 'uuid4';
 import { BlogsEntity } from './entities/blogs.entity';
@@ -81,8 +80,9 @@ export class BlogsService {
     return this.blogsRepository.findBlogById(id);
   }
 
-  async updateBlog(id: string, updateBlogDto: UpdateBlogDto) {
-    const blogToUpdate = await this.blogsRepository.findBlogById(id);
+  async updateBlog(id: string, updateBlogDto: CreateBlogsDto) {
+    const blogToUpdate: BlogsEntity | null =
+      await this.blogsRepository.findBlogById(id);
     if (!blogToUpdate)
       throw new HttpException({ message: ['Not found user'] }, 404);
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
@@ -90,7 +90,7 @@ export class BlogsService {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
         id: blogToUpdate.id,
       });
-      const blogEntity: BlogsEntity = {
+      const blogEntity = {
         id: blogToUpdate.id,
         name: updateBlogDto.name,
         description: updateBlogDto.description,

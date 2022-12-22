@@ -15,12 +15,15 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { CommentsService } from '../comments/comments.service';
 import { ParseQuery } from '../infrastructure/common/parse-query';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
+import { BlogsService } from '../blogs/blogs.service';
+import { BlogsEntity } from '../blogs/entities/blogs.entity';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     private readonly postsService: PostsService,
     private readonly commentsService: CommentsService,
+    private readonly blogsService: BlogsService,
   ) {}
 
   @Get()
@@ -37,8 +40,13 @@ export class PostsController {
 
   @Post()
   async create(@Body() createPostDto: CreatePostDto) {
-    const blogName = 'Volt';
-    return this.postsService.create(createPostDto, blogName);
+    const blog: BlogsEntity | null = await this.blogsService.findOne(
+      createPostDto.blogId,
+    );
+    if (!blog) {
+      throw new HttpException({ message: ['Not found blogger'] }, 404);
+    }
+    return this.postsService.create(createPostDto, blog.name);
   }
 
   @Get(':id')

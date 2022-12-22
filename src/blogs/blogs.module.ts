@@ -7,8 +7,8 @@ import { Pagination } from '../infrastructure/common/pagination';
 import { BlogsRepository } from './blogs.repository';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { blogsProviders } from './blogs.providers';
-import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { CaslModule } from '../ability/casl.module';
+import { PostsRepository } from '../posts/posts.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -19,7 +19,7 @@ import { CaslModule } from '../ability/casl.module';
     ConvertFiltersForDB,
     BlogsRepository,
     Pagination,
-    CaslAbilityFactory,
+    PostsRepository,
     ...blogsProviders,
   ],
 })

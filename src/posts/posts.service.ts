@@ -6,13 +6,17 @@ import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination';
 import { UsersEntity } from '../users/entities/users.entity';
+import { PostsRepository } from './posts.repository';
+import { StatusLike } from './enums/posts.enums';
 
 @Injectable()
 export class PostsService {
-  constructor(protected pagination: Pagination) {}
+  constructor(
+    protected pagination: Pagination,
+    protected postsRepository: PostsRepository,
+  ) {}
 
   async create(createPostDto: CreatePostDto, blogName: string) {
-    console.log(createPostDto, blogName);
     const newPost = {
       id: uuid4().toString(),
       title: createPostDto.title,
@@ -24,10 +28,11 @@ export class PostsService {
       extendedLikesInfo: {
         likesCount: 0,
         dislikesCount: 0,
-        myStatus: 'None',
+        myStatus: StatusLike.NONE,
         newestLikes: [],
       },
     };
+    const createPost = await this.postsRepository.createPost(newPost);
     return newPost;
   }
 

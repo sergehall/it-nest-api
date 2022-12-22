@@ -17,7 +17,6 @@ import { QueryPaginationType } from '../types/types';
 import { PostsService } from '../posts/posts.service';
 import { CreatePostDto } from '../posts/dto/create-post.dto';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { UpdateBlogDto } from './dto/update-blods.dto';
 import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
@@ -74,9 +73,13 @@ export class BlogsController {
     @Param('blogId') blogId: string,
     @Body() createPostDto: CreatePostDto,
   ) {
-    // find blogger in DB if not exist return 404; CreatePostBlogInputModelType
-    const blogName = 'Volt';
-    return await this.postsService.create(createPostDto, blogName);
+    const blog: BlogsEntity | null = await this.blogsService.findOne(
+      createPostDto.blogId,
+    );
+    if (!blog) {
+      throw new HttpException({ message: ['Not found blogger'] }, 404);
+    }
+    return await this.postsService.create(createPostDto, blog.name);
   }
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<BlogsEntity | null> {
@@ -88,7 +91,7 @@ export class BlogsController {
   @Put(':id')
   async updateBlog(
     @Param('id') id: string,
-    @Body() updateBlogDto: UpdateBlogDto,
+    @Body() updateBlogDto: CreateBlogsDto,
   ) {
     return this.blogsService.updateBlog(id, updateBlogDto);
   }

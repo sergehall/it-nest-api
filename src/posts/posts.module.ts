@@ -3,9 +3,26 @@ import { PostsService } from './posts.service';
 import { PostsController } from './posts.controller';
 import { CommentsService } from '../comments/comments.service';
 import { Pagination } from '../infrastructure/common/pagination';
+import { DatabaseModule } from '../infrastructure/database/database.module';
+import { CaslModule } from '../ability/casl.module';
+import { postsProviders } from './posts.providers';
+import { BlogsService } from '../blogs/blogs.service';
+import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
+import { BlogsRepository } from '../blogs/blogs.repository';
+import { PostsRepository } from './posts.repository';
 
 @Module({
+  imports: [DatabaseModule, CaslModule],
   controllers: [PostsController],
-  providers: [PostsService, CommentsService, Pagination],
+  providers: [
+    PostsService,
+    CommentsService,
+    ConvertFiltersForDB,
+    BlogsService,
+    BlogsRepository,
+    Pagination,
+    PostsRepository,
+    ...postsProviders,
+  ],
 })
 export class PostsModule {}
