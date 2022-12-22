@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { StatusLike } from '../enums/posts.enums';
 
-export type PostDocument = HydratedDocument<Post>;
+export type PostsDocument = HydratedDocument<Post>;
 
 @Schema()
 export class NewestLikes {

@@ -1,6 +1,6 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { UserDocument } from './schemas/user.schema';
+import { UsersDocument } from './schemas/user.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
 import { UsersEntity } from './entities/users.entity';
 
@@ -8,7 +8,7 @@ import { UsersEntity } from './entities/users.entity';
 export class UsersRepository {
   constructor(
     @Inject('USER_MODEL')
-    private usersModel: Model<UserDocument>,
+    private usersModel: Model<UsersDocument>,
   ) {}
   async createUser(user: UsersEntity): Promise<UsersEntity> {
     try {

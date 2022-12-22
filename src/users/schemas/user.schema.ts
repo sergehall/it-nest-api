@@ -2,7 +2,7 @@ import { Role } from '../../auth/roles/role.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type UserDocument = HydratedDocument<User>;
+export type UsersDocument = HydratedDocument<User>;
 
 @Schema()
 export class UserEmailConfirmation {

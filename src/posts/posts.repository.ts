@@ -1,7 +1,7 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { PostsEntity } from './entities/posts.entity';
 import { Model } from 'mongoose';
-import { PostDocument } from './schemas/posts.schema';
+import { PostsDocument } from './schemas/posts.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
 import { UpdatePostDto } from './dto/update-post.dto';
 
@@ -9,7 +9,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostsRepository {
   constructor(
     @Inject('POST_MODEL')
-    private postsModel: Model<PostDocument>,
+    private postsModel: Model<PostsDocument>,
   ) {}
   async findPosts(
     pagination: PaginationDBType,

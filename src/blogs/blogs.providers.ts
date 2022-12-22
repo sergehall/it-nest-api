@@ -1,6 +1,6 @@
 import { Mongoose } from 'mongoose';
 import { BlogSchema, BlogsDocument } from './schemas/blogs.schema';
-import { PostDocument, PostsSchema } from '../posts/schemas/posts.schema';
+import { PostsDocument, PostsSchema } from '../posts/schemas/posts.schema';
 
 export const blogsProviders = [
   {
@@ -12,7 +12,7 @@ export const blogsProviders = [
   {
     provide: 'POST_MODEL',
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<PostDocument>('Posts', PostsSchema, 'Posts'),
+      mongoose.model<PostsDocument>('Posts', PostsSchema, 'Posts'),
     inject: ['ASYNC_CONNECTION'],
   },
 ];
