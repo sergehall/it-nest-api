@@ -54,6 +54,10 @@ export class BlogsController {
   @Get(':blogId/posts')
   async getPostsByBlogId(@Query() query: any, @Param('blogId') blogId: string) {
     const currentUser: UsersEntity | null = null;
+    const blog = await this.blogsService.findOne(blogId);
+    if (!blog) {
+      throw new HttpException({ message: ['Not found blogger'] }, 404);
+    }
     const paginationData = ParseQuery.getPaginationData(query);
     const dtoPagination: QueryPaginationType = {
       pageNumber: paginationData.pageNumber,
@@ -98,6 +102,6 @@ export class BlogsController {
   @HttpCode(204)
   @Delete(':id')
   async removeBlog(@Param('id') id: string) {
-    return this.blogsService.removeBlog(id);
+    return await this.blogsService.removeBlog(id);
   }
 }
