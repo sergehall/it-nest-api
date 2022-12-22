@@ -3,6 +3,7 @@ import { PostsEntity } from './entities/posts.entity';
 import { Model } from 'mongoose';
 import { PostDocument } from './schemas/posts.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
+import { BlogsEntity } from '../blogs/entities/blogs.entity';
 
 @Injectable()
 export class PostsRepository {
@@ -28,6 +29,17 @@ export class PostsRepository {
       .skip(pagination.startIndex)
       .sort({ [pagination.field]: pagination.direction })
       .lean();
+  }
+  async findPostById(postId: string): Promise<PostsEntity | null> {
+    return await this.postsModel.findOne(
+      { id: postId },
+      {
+        _id: false,
+        __v: false,
+        'extendedLikesInfo._id': false,
+        'extendedLikesInfo.newestLikes._id': false,
+      },
+    );
   }
   async createPost(postsEntity: PostsEntity): Promise<PostsEntity> {
     try {

@@ -85,8 +85,8 @@ export class PostsService {
     };
   }
 
-  async findOne(id: string) {
-    return `This action returns a #${id} post`;
+  async findPostById(postId: string): Promise<PostsEntity | null> {
+    return await this.postsRepository.findPostById(postId);
   }
 
   async findPosts(

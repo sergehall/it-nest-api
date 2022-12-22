@@ -17,6 +17,7 @@ import { ParseQuery } from '../infrastructure/common/parse-query';
 import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
 import { BlogsService } from '../blogs/blogs.service';
 import { BlogsEntity } from '../blogs/entities/blogs.entity';
+import { PostsEntity } from './entities/posts.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -50,17 +51,10 @@ export class PostsController {
     return this.postsService.create(createPostDto, blog.name);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const post = this.postsService.findOne(id);
-    if (!post) throw new HttpException('Not found', 404);
-    return post;
-  }
-
   @Get(':postId')
-  async findPostById(@Param('postId') postId: string) {
-    const post = this.commentsService.findOne(postId);
-    if (!post) throw new HttpException('Not found', 404);
+  async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
+    const post = await this.postsService.findPostById(postId);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return post;
   }
 
