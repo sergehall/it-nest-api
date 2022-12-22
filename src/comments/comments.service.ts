@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { Pagination } from '../infrastructure/common/pagination';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
 
 @Injectable()
 export class CommentsService {

@@ -12,11 +12,11 @@ import {
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
-import { ParseQuery } from '../infrastructure/common/parse-query';
+import { ParseQuery } from '../infrastructure/common/parse-query/parse-query';
 import { QueryPaginationType } from '../types/types';
 import { PostsService } from '../posts/posts.service';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
+import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
@@ -29,7 +29,7 @@ export class BlogsController {
   ) {}
 
   @Get()
-  async findAll(@Query() query: any): Promise<PaginationWithItems> {
+  async findAll(@Query() query: any): Promise<PaginationTypes> {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = { searchNameTerm: paginationData.searchNameTerm };
     const queryPagination: PaginationDto = {

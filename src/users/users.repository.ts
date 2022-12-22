@@ -1,8 +1,9 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { UsersDocument } from './schemas/user.schema';
-import { PaginationDBType, QueryArrType } from '../types/types';
 import { UsersEntity } from './entities/users.entity';
+import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
+import { PaginationDBType } from '../infrastructure/common/pagination/types/pagination.types';
 
 @Injectable()
 export class UsersRepository {

@@ -1,17 +1,18 @@
 import { ObjectId } from 'mongodb';
+import { SortOrder } from '../infrastructure/common/parse-query/types/sort-order.types';
 
-export type SortOrder = -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
-export type QueryArrType = {
-  searchNameTerm?: string;
-  searchLoginTerm?: string;
-  searchEmailTerm?: string;
-  blogId?: string;
-}[];
-export type ConvertFilterType = {
-  searchNameTerm?: string;
-  searchLoginTerm?: string;
-  searchEmailTerm?: string;
-};
+// export type QueryArrType = {
+//   searchNameTerm?: string;
+//   searchLoginTerm?: string;
+//   searchEmailTerm?: string;
+//   blogId?: string;
+// }[];
+// export type ConvertFilterType = {
+//   searchNameTerm?: string;
+//   searchLoginTerm?: string;
+//   searchEmailTerm?: string;
+//   blogId?: string;
+// };
 export type ArrayEmptyObjects = object[];
 //...............................................Errors
 export type ErrorType = {
@@ -33,12 +34,12 @@ export type QueryPaginationType = {
   sortBy: string;
   sortDirection: SortOrder;
 };
-export type PaginationDBType = {
-  startIndex: number;
-  pageSize: number;
-  field: string;
-  direction: SortOrder;
-};
+// export type PaginationDBType = {
+//   startIndex: number;
+//   pageSize: number;
+//   field: string;
+//   direction: SortOrder;
+// };
 //...............................................User
 export type CreateUserInputModelType = {
   login: string;

@@ -2,8 +2,9 @@ import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { PostsEntity } from './entities/posts.entity';
 import { Model } from 'mongoose';
 import { PostsDocument } from './schemas/posts.schema';
-import { PaginationDBType, QueryArrType } from '../types/types';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
+import { PaginationDBType } from '../infrastructure/common/pagination/types/pagination.types';
 
 @Injectable()
 export class PostsRepository {

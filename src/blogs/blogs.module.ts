@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { BlogsController } from './blogs.controller';
-import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
+import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { PostsService } from '../posts/posts.service';
-import { Pagination } from '../infrastructure/common/pagination';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { BlogsRepository } from './blogs.repository';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { blogsProviders } from './blogs.providers';

@@ -1,16 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ConvertFilterType, QueryArrType } from '../../types/types';
+import { PathFilterEnum } from './enums/filters.enums';
+import { ConvertFilterType, QueryArrType } from './types/convert-filter.types';
 
 @Injectable()
 export class ConvertFiltersForDB {
   async convert([...rawFilters]: QueryArrType) {
-    const pathFilter = {
-      searchNameTerm: 'name',
-      searchLoginTerm: 'login',
-      searchEmailTerm: 'email',
-      blogId: 'blogId',
-    };
-    return this._forMongo([...rawFilters], pathFilter);
+    return this._forMongo([...rawFilters], PathFilterEnum);
   }
 
   async _forMongo([...rawFilters], pattern: ConvertFilterType) {

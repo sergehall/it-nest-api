@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PaginationDto } from './dto/pagination.dto';
-import { PaginationDBType } from '../../types/types';
+import { PaginationDBType } from './types/pagination.types';
 
 @Injectable()
 export class Pagination {

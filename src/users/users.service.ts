@@ -1,12 +1,11 @@
 import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { QueryArrType } from '../types/types';
-import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
+import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
-import { Pagination } from '../infrastructure/common/pagination';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { Role } from '../auth/roles/role.enum';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
@@ -14,8 +13,9 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
 import { RegDataDto } from './dto/reg-data.dto';
 import { User } from './schemas/user.schema';
-import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { UsersEntity } from './entities/users.entity';
+import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 
 @Injectable()
 export class UsersService {
@@ -52,7 +52,7 @@ export class UsersService {
   async findAll(
     queryPagination: PaginationDto,
     searchFilters: QueryArrType,
-  ): Promise<PaginationWithItems> {
+  ): Promise<PaginationTypes> {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'login' ||

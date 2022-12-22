@@ -1,16 +1,16 @@
 import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { QueryArrType } from '../types/types';
 import * as uuid4 from 'uuid4';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { Pagination } from '../infrastructure/common/pagination';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { PostsRepository } from './posts.repository';
 import { StatusLike } from './enums/posts.enums';
 import { PostsEntity } from './entities/posts.entity';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
+import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 
 @Injectable()
 export class PostsService {

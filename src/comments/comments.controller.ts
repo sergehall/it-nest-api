@@ -11,8 +11,8 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { ParseQuery } from '../infrastructure/common/parse-query';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
+import { ParseQuery } from '../infrastructure/common/parse-query/parse-query';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 
 @Controller('comments')
 export class CommentsController {

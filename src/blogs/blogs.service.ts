@@ -1,16 +1,16 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
-import { QueryArrType } from '../types/types';
-import { ConvertFiltersForDB } from '../infrastructure/common/convertFiltersForDB';
-import { PaginationDto } from '../infrastructure/common/dto/pagination.dto';
-import { Pagination } from '../infrastructure/common/pagination';
+import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
+import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
 import * as uuid4 from 'uuid4';
 import { BlogsEntity } from './entities/blogs.entity';
 import { BlogsRepository } from './blogs.repository';
-import { PaginationWithItems } from '../infrastructure/common/types/paginationWithItems';
+import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
+import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 
 @Injectable()
 export class BlogsService {
@@ -43,7 +43,7 @@ export class BlogsService {
   async findAll(
     queryPagination: PaginationDto,
     searchFilters: QueryArrType,
-  ): Promise<PaginationWithItems> {
+  ): Promise<PaginationTypes> {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'name' ||
