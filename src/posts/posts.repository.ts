@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { PostDocument } from './schemas/posts.schema';
 import { PaginationDBType, QueryArrType } from '../types/types';
 import { BlogsEntity } from '../blogs/entities/blogs.entity';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsRepository {
@@ -52,5 +53,34 @@ export class PostsRepository {
     return await this.postsModel.countDocuments({
       $or: searchFilters,
     });
+  }
+  async updatePost(postsEntity: UpdatePostDto): Promise<PostsEntity> {
+    return await this.postsModel
+      .findOneAndUpdate(
+        { id: postsEntity.id },
+        {
+          $set: {
+            id: postsEntity.id,
+            title: postsEntity.title,
+            shortDescription: postsEntity.shortDescription,
+            content: postsEntity.content,
+            blogId: postsEntity.blogId,
+          },
+        },
+        {
+          returnDocument: 'after',
+          projection: {
+            _id: false,
+            __v: false,
+            'extendedLikesInfo._id': false,
+            'extendedLikesInfo.newestLikes._id': false,
+          },
+        },
+      )
+      .lean();
+  }
+  async removePost(id: string): Promise<boolean> {
+    const result = await this.postsModel.deleteOne({ id: id });
+    return result.acknowledged && result.deletedCount === 1;
   }
 }

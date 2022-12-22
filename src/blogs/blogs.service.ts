@@ -105,7 +105,7 @@ export class BlogsService {
     }
   }
 
-  async removeBlogById(id: string) {
+  async removeBlog(id: string) {
     const blogToUpdate = await this.blogsRepository.findBlogById(id);
     if (!blogToUpdate)
       throw new HttpException({ message: ['Not found user'] }, 404);
@@ -114,7 +114,7 @@ export class BlogsService {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
         id: blogToUpdate.id,
       });
-      return await this.blogsRepository.removeBlogById(id);
+      return await this.blogsRepository.removeBlog(id);
     } catch (error) {
       if (error instanceof ForbiddenError) {
         throw new ForbiddenException(error.message);

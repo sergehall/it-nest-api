@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import {
@@ -12,17 +12,20 @@ import { Pagination } from '../infrastructure/common/pagination';
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsRepository } from './posts.repository';
 import { StatusLike } from './enums/posts.enums';
-import { BlogsEntity } from '../blogs/entities/blogs.entity';
 import { PostsEntity } from './entities/posts.entity';
+import { CaslAbilityFactory } from '../ability/casl-ability.factory';
+import { ForbiddenError } from '@casl/ability';
+import { Action } from '../auth/roles/action.enum';
 
 @Injectable()
 export class PostsService {
   constructor(
     protected pagination: Pagination,
     protected postsRepository: PostsRepository,
+    protected caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  async create(createPostDto: CreatePostDto, blogName: string) {
+  async createPost(createPostDto: CreatePostDto, blogName: string) {
     const newPost = {
       id: uuid4().toString(),
       title: createPostDto.title,
@@ -97,11 +100,45 @@ export class PostsService {
     return `This action returns posts`;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto) {
-    return updatePostDto;
+  async updatePost(id: string, updatePostDto: CreatePostDto) {
+    const postToUpdate: PostsEntity | null =
+      await this.postsRepository.findPostById(id);
+    if (!postToUpdate)
+      throw new HttpException({ message: ['Not found post'] }, 404);
+    const ability = this.caslAbilityFactory.createForPost({ id: id });
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
+        id: postToUpdate.id,
+      });
+      const postsEntity: UpdatePostDto = {
+        id: postToUpdate.id,
+        title: updatePostDto.title,
+        shortDescription: updatePostDto.shortDescription,
+        content: updatePostDto.content,
+        blogId: updatePostDto.blogId,
+      };
+      return await this.postsRepository.updatePost(postsEntity);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} post`;
+  async removePost(id: string) {
+    const postToDelete = await this.postsRepository.findPostById(id);
+    if (!postToDelete)
+      throw new HttpException({ message: ['Not found post'] }, 404);
+    const ability = this.caslAbilityFactory.createForPost({ id: id });
+    try {
+      ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
+        id: postToDelete.id,
+      });
+      return await this.postsRepository.removePost(id);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 }

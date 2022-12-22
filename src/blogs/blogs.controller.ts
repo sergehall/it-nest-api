@@ -79,7 +79,7 @@ export class BlogsController {
     if (!blog) {
       throw new HttpException({ message: ['Not found blogger'] }, 404);
     }
-    return await this.postsService.create(createPostDto, blog.name);
+    return await this.postsService.createPost(createPostDto, blog.name);
   }
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<BlogsEntity | null> {
@@ -97,7 +97,7 @@ export class BlogsController {
   }
   @HttpCode(204)
   @Delete(':id')
-  async removeBlogById(@Param('id') id: string) {
-    return this.blogsService.removeBlogById(id);
+  async removeBlog(@Param('id') id: string) {
+    return this.blogsService.removeBlog(id);
   }
 }

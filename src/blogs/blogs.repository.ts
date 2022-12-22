@@ -27,7 +27,7 @@ export class BlogsRepository {
       },
     );
   }
-  async removeBlogById(id: string): Promise<boolean> {
+  async removeBlog(id: string): Promise<boolean> {
     const result = await this.blogsModel.deleteOne({ id: id });
     return result.acknowledged && result.deletedCount === 1;
   }

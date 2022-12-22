@@ -8,6 +8,7 @@ import {
   HttpException,
   Put,
   Query,
+  HttpCode,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -39,36 +40,35 @@ export class PostsController {
     };
     return this.postsService.findAll(queryPagination, [searchFilters]);
   }
-
   @Post()
-  async create(@Body() createPostDto: CreatePostDto) {
+  async createPost(@Body() createPostDto: CreatePostDto) {
     const blog: BlogsEntity | null = await this.blogsService.findOne(
       createPostDto.blogId,
     );
     if (!blog) {
       throw new HttpException({ message: ['Not found blogger'] }, 404);
     }
-    return this.postsService.create(createPostDto, blog.name);
+    return this.postsService.createPost(createPostDto, blog.name);
   }
-
   @Get(':postId')
   async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
     const post = await this.postsService.findPostById(postId);
     if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return post;
   }
-
+  @HttpCode(204)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    const post = this.postsService.update(id, updatePostDto);
-    if (!post) throw new HttpException('Not found', 404);
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: CreatePostDto,
+  ) {
+    const post = await this.postsService.updatePost(id, updatePostDto);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return post;
   }
-
+  @HttpCode(204)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    const post = this.postsService.remove(id);
-    if (!post) throw new HttpException('Not found', 404);
-    return post;
+  async removePost(@Param('id') id: string) {
+    return await this.postsService.removePost(id);
   }
 }

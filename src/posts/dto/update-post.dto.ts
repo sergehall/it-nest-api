@@ -4,8 +4,8 @@ import { IsNotEmpty, Length } from 'class-validator';
 
 export class UpdatePostDto extends PartialType(CreatePostDto) {
   @IsNotEmpty()
-  @Length(0, 100, {
-    message: 'Incorrect id! Must be max 15 ch.',
+  @Length(0, 50, {
+    message: 'Incorrect id length! Must be max 50 ch.',
   })
   id: string;
 }
