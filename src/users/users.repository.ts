@@ -18,7 +18,6 @@ export class UsersRepository {
       throw new ForbiddenException(error.message);
     }
   }
-
   async countDocuments(searchFilters: QueryArrType): Promise<number> {
     return await this.usersModel.countDocuments({
       $or: searchFilters,

@@ -1,18 +1,9 @@
 import { createConnection } from 'mongoose';
-
-// export const databaseProviders = [
-//   {
-//     provide: 'DATABASE_CONNECTION',
-//     useFactory: async (): Promise<typeof mongoose> =>
-//       await mongoose.connect(
-//         process.env.ATLAS_URI + '/' + process.env.NEST_DATABASE,
-//       ),
-//   },
-// ];
+import { ConnectionEnums } from './enums/connection.enums';
 
 export const databaseProviders = [
   {
-    provide: 'ASYNC_CONNECTION',
+    provide: ConnectionEnums.ASYNC_CONNECTION,
     useFactory: async () => {
       const connection = await createConnection(
         process.env.ATLAS_URI + '/' + process.env.NEST_DATABASE,
@@ -21,4 +12,12 @@ export const databaseProviders = [
       return connection;
     },
   },
+
+  // {
+  //   provide: ConnectionEnums.DATABASE_CONNECTION,
+  //   useFactory: async (): Promise<typeof mongoose> =>
+  //     await mongoose.connect(
+  //       process.env.ATLAS_URI + '/' + process.env.NEST_DATABASE,
+  //     ),
+  // },
 ];
