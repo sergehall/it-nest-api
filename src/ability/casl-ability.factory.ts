@@ -26,7 +26,6 @@ export class CaslAbilityFactory {
         ({ orgId }) => orgId !== user.orgId,
       ).because('Because different organizations');
     } else {
-      console.log(user, typeof user);
       can(Action.READ, 'all');
       can(Action.CREATE, 'all');
       can(Action.UPDATE, 'all', ({ id }) => id === user.id);

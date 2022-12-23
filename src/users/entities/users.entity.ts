@@ -26,7 +26,7 @@ export class UsersEntity {
   login: string;
   @Prop({ required: true, unique: true })
   email: string;
-  @Prop({ required: true, unique: true })
+  @Prop({ required: true })
   passwordHash: string;
   @Prop({ required: true })
   createdAt: string;
@@ -34,8 +34,8 @@ export class UsersEntity {
   orgId: string;
   @Prop({ required: true })
   roles: Role;
-  @Prop({ required: true })
+  @Prop({ required: true, type: EmailConfirmation })
   emailConfirmation: EmailConfirmation;
-  @Prop({ required: true })
+  @Prop({ required: true, type: RegistrationData })
   registrationData: RegistrationData;
 }

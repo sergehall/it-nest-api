@@ -1,25 +1,40 @@
 import { Mongoose } from 'mongoose';
-import { UserSchema, UsersDocument } from '../users/schemas/user.schema';
+import { UsersSchema, UsersDocument } from '../users/schemas/user.schema';
 import { BlogSchema, BlogsDocument } from '../blogs/schemas/blogs.schema';
 import { PostsSchema, PostsDocument } from '../posts/schemas/posts.schema';
+import { ConnectionEnums } from '../infrastructure/database/enums/connection.enums';
+import { NamesCollectionsEnums } from '../infrastructure/database/enums/names-collections.enums';
+import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
 
 export const testingProviders = [
   {
-    provide: 'USER_MODEL',
+    provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<UsersDocument>('Users', UserSchema, 'Users'),
-    inject: ['ASYNC_CONNECTION'],
+      mongoose.model<UsersDocument>(
+        'Users',
+        UsersSchema,
+        NamesCollectionsEnums.USERS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: 'BLOG_MODEL',
+    provide: ProvidersEnums.BLOG_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<BlogsDocument>('Blogs', BlogSchema, 'Blogs'),
-    inject: ['ASYNC_CONNECTION'],
+      mongoose.model<BlogsDocument>(
+        'Blogs',
+        BlogSchema,
+        NamesCollectionsEnums.BLOGS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: 'POST_MODEL',
+    provide: ProvidersEnums.POST_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<PostsDocument>('Posts', PostsSchema, 'Posts'),
-    inject: ['ASYNC_CONNECTION'],
+      mongoose.model<PostsDocument>(
+        'Posts',
+        PostsSchema,
+        NamesCollectionsEnums.POSTS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
 ];

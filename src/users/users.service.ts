@@ -12,7 +12,7 @@ import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './users.repository';
 import { RegDataDto } from './dto/reg-data.dto';
-import { User } from './schemas/user.schema';
+import { User, UsersDocument } from './schemas/user.schema';
 import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
@@ -40,13 +40,24 @@ export class UsersService {
     ];
     return users.find((user) => user.username === username);
   }
-
   async createUser(
     createUserDto: CreateUserDto,
     registrationData: RegDataDto,
   ): Promise<UsersEntity> {
     const user = await this._createNewUser(createUserDto, registrationData);
     return await this.usersRepository.createUser(user);
+  }
+
+  async newInstance(
+    createUserDto: CreateUserDto,
+    registrationData: RegDataDto,
+  ): Promise<UsersDocument> {
+    const newInstance = await this.usersRepository.makeInstanceUser(
+      createUserDto,
+      registrationData,
+    );
+    await this.usersRepository.save(newInstance);
+    return newInstance;
   }
 
   async findAll(
@@ -114,8 +125,7 @@ export class UsersService {
   }
 
   async removeUserById(id: string, currentUser: User) {
-    const userToDelete: User | null =
-      await this.usersRepository.findUserByUserId(id);
+    const userToDelete = await this.usersRepository.findUserByUserId(id);
     if (!userToDelete)
       throw new HttpException({ message: ['Not found user'] }, 404);
     try {

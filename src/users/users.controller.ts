@@ -48,7 +48,7 @@ export class UsersController {
       ip: ip,
       userAgent: userAgent,
     };
-    const newUser = await this.usersService.createUser(
+    const newUser = await this.usersService.newInstance(
       createUserDto,
       registrationData,
     );
