@@ -1,49 +1,119 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
+import { UsersEntity } from '../users/entities/users.entity';
+import * as uuid4 from 'uuid4';
+import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
+import { CommentsRepository } from './comments.repository';
+import { CommentsEntity } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {
-  constructor(protected pagination: Pagination) {}
-  async create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  constructor(
+    protected pagination: Pagination,
+    protected commentsRepository: CommentsRepository,
+  ) {}
+  async createComment(
+    postId: string,
+    createCommentDto: CreateCommentDto,
+    user: UsersEntity,
+  ): Promise<CommentsEntity> {
+    const newComment: CommentsEntity = {
+      id: uuid4().toString(),
+      content: createCommentDto.content,
+      userId: user.id,
+      userLogin: user.login,
+      createdAt: new Date().toISOString(),
+      likesInfo: {
+        likesCount: 0,
+        dislikesCount: 0,
+        myStatus: StatusLike.NONE,
+      },
+    };
+
+    return await this.commentsRepository.createComment(postId, newComment);
+  }
+  async getCommentById(commentId: string, currentUser: UsersEntity | null) {
+    const comment = await this.commentsRepository.findCommentById(commentId);
+    if (!comment)
+      throw new HttpException({ message: ['Not found comment'] }, 404);
+    const filledComments =
+      await this.commentsRepository.preparationCommentsForReturn(
+        [comment],
+        currentUser,
+      );
+    return filledComments[0];
   }
 
-  async findAll(queryPagination: PaginationDto) {
-    let field = 'createdAt';
+  async findCommentsByPostId(
+    queryPagination: PaginationDto,
+    postId: string,
+    currentUser: UsersEntity | null,
+  ) {
+    const commentsDoc = await this.commentsRepository.findCommentsByPostId(
+      postId,
+    );
+    if (!commentsDoc || commentsDoc.comments.length === 0) {
+      return {
+        pagesCount: 1,
+        page: 1,
+        pageSize: 10,
+        totalCount: 0,
+        items: [],
+      };
+    }
+    let desc = 1;
+    let asc = -1;
+    let field: 'userId' | 'userLogin' | 'content' | 'createdAt' = 'createdAt';
+    if (
+      queryPagination.sortDirection === 'asc' ||
+      queryPagination.sortDirection === 'ascending' ||
+      queryPagination.sortDirection === 1
+    ) {
+      desc = -1;
+      asc = 1;
+    }
     if (
       queryPagination.sortBy === 'content' ||
       queryPagination.sortBy === 'userLogin'
     ) {
       field = queryPagination.sortBy;
     }
-    const pagination = await this.pagination.convert(queryPagination, field);
-    // const totalCount = await this.commentsRepository.countDocuments....
-    // const pagesCount = Math.ceil(totalCount / pageSize)
-    const totalCount = 0;
-    const pagesCount = 0;
-    const pageNumber = queryPagination.pageNumber;
-    const pageSize = pagination.pageSize;
-    const comment = {
-      id: 'string',
-      content: 'string',
-      userId: 'string',
-      userLogin: 'string',
-      createdAt: '2022-12-12T10:13:39.557Z',
-      likesInfo: {
-        likesCount: 0,
-        dislikesCount: 0,
-        myStatus: 'None',
-      },
-    };
+    const totalCount = commentsDoc.comments.length;
+    const allComments = commentsDoc.comments.sort(
+      await byField(field, asc, desc),
+    );
+
+    async function byField(
+      field: 'userId' | 'userLogin' | 'content' | 'createdAt',
+      asc: number,
+      desc: number,
+    ) {
+      return (a: CommentsEntity, b: CommentsEntity) =>
+        a[field] > b[field] ? asc : desc;
+    }
+    const startIndex =
+      (queryPagination.pageNumber - 1) * queryPagination.pageSize;
+    const pagesCount = Math.ceil(totalCount / queryPagination.pageSize);
+
+    const commentsSlice = allComments.slice(
+      startIndex,
+      startIndex + queryPagination.pageSize,
+    );
+    const filledComments =
+      await this.commentsRepository.preparationCommentsForReturn(
+        commentsSlice,
+        currentUser,
+      );
+
     return {
       pagesCount: pagesCount,
-      page: pageNumber,
-      pageSize: pageSize,
+      page: queryPagination.pageNumber,
+      pageSize: queryPagination.pageSize,
       totalCount: totalCount,
-      items: [comment],
+      items: filledComments,
     };
   }
 

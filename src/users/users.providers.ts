@@ -9,7 +9,7 @@ export const usersProviders = [
     provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<UsersDocument>(
-        'Blogs',
+        'Users',
         UsersSchema,
         NamesCollectionsEnums.USERS,
       ),

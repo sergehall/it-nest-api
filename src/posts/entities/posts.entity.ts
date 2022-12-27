@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { StatusLike } from '../enums/posts.enums';
+import { StatusLike } from '../../infrastructure/database/enums/like-status.enums';
 
 class NewestLikes {
   @IsNotEmpty()

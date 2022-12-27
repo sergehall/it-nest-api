@@ -10,6 +10,7 @@ import { BlogsService } from '../blogs/blogs.service';
 import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { BlogsRepository } from '../blogs/blogs.repository';
 import { PostsRepository } from './posts.repository';
+import { CommentsRepository } from '../comments/comments.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -17,6 +18,7 @@ import { PostsRepository } from './posts.repository';
   providers: [
     PostsService,
     CommentsService,
+    CommentsRepository,
     ConvertFiltersForDB,
     BlogsService,
     BlogsRepository,

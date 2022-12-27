@@ -5,12 +5,12 @@ import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { PostsRepository } from './posts.repository';
-import { StatusLike } from './enums/posts.enums';
 import { PostsEntity } from './entities/posts.entity';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
+import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
 
 @Injectable()
 export class PostsService {

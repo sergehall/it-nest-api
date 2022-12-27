@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { StatusLike } from '../enums/posts.enums';
+import { StatusLike } from '../../infrastructure/database/enums/like-status.enums';
 
 export type PostsDocument = HydratedDocument<Post>;
 

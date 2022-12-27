@@ -25,6 +25,7 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import * as uuid4 from 'uuid4';
 import { User } from './schemas/user.schema';
+import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 
 @Controller('users')
 export class UsersController {
@@ -94,7 +95,7 @@ export class UsersController {
     // const currentUser = req.user;
     const newCurrentUser = new User();
     newCurrentUser.id = uuid4().toString();
-    newCurrentUser.orgId = 'It-Incubator';
+    newCurrentUser.orgId = OrgIdEnums.INCUBATOR;
     newCurrentUser.roles = Role.User;
     const result = this.usersService.updateUser(
       id,
@@ -111,7 +112,7 @@ export class UsersController {
     // const currentUser = constUser;
     const currentUser = new User();
     currentUser.id = id;
-    currentUser.orgId = 'It-Incubator';
+    currentUser.orgId = OrgIdEnums.INCUBATOR;
     currentUser.roles = Role.User;
     return await this.usersService.removeUserById(id, currentUser);
   }

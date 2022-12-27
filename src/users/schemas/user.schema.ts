@@ -5,7 +5,6 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import * as uuid4 from 'uuid4';
 import * as bcrypt from 'bcrypt';
 import { RegistrationData } from '../entities/users.entity';
-import { ObjectId } from 'mongodb';
 import { OrgIdEnums } from '../../infrastructure/database/enums/org-id.enums';
 
 export type UsersDocument = HydratedDocument<User>;
@@ -30,9 +29,9 @@ export class UserRegistrationData {
   @Prop({ required: true })
   userAgent: string;
 }
+// _id: ObjectId;
 @Schema()
 export class User {
-  _id: ObjectId;
   @Prop({ required: true, unique: true })
   id: string;
   @Prop({ required: true, unique: true })
@@ -44,14 +43,14 @@ export class User {
   @Prop({ required: true })
   createdAt: string;
   @Prop({ required: true })
-  orgId: string;
+  orgId: OrgIdEnums;
   @Prop({ required: true })
   roles: Role;
   @Prop({ required: true })
   emailConfirmation: UserEmailConfirmation;
   @Prop({ required: true })
   registrationData: UserRegistrationData;
-  async setOrgId(organization: string) {
+  async setOrgId(organization: OrgIdEnums) {
     this.orgId = organization;
   }
   async setRoles(role: Role) {

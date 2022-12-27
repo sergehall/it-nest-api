@@ -1,43 +1,15 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { ParseQuery } from '../infrastructure/common/parse-query/parse-query';
-import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
-  @Post()
-  async create(@Body() createCommentDto: CreateCommentDto) {
-    return this.commentsService.create(createCommentDto);
-  }
-
-  @Get()
-  async findAll(@Query() query: any) {
-    const paginationData = ParseQuery.getPaginationData(query);
-    const queryPagination: PaginationDto = {
-      pageNumber: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      sortBy: paginationData.sortBy,
-      sortDirection: paginationData.sortDirection,
-    };
-    return this.commentsService.findAll(queryPagination);
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    return this.commentsService.findOne(id);
+    const currentUser = null;
+    return this.commentsService.getCommentById(id, currentUser);
   }
 
   @Patch(':id')
