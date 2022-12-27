@@ -8,6 +8,9 @@ import * as uuid4 from 'uuid4';
 import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
 import { CommentsRepository } from './comments.repository';
 import { CommentsEntity } from './entities/comment.entity';
+import { LikeStatusDto } from './dto/like-status.dto';
+import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
+import { User } from '../users/schemas/user.schema';
 
 @Injectable()
 export class CommentsService {
@@ -116,7 +119,27 @@ export class CommentsService {
       items: filledComments,
     };
   }
-
+  async changeLikeStatusComment(
+    commentId: string,
+    likeStatusDto: LikeStatusDto,
+    currentUser: User,
+  ): Promise<boolean> {
+    const findCommentInDB = await this.commentsRepository.findCommentById(
+      commentId,
+    );
+    if (!findCommentInDB) {
+      throw new HttpException({ message: ['Not found comment'] }, 404);
+    }
+    const likeStatusCommEntity: LikeStatusCommentEntity = {
+      commentId: commentId,
+      userId: currentUser.id,
+      likeStatus: likeStatusDto.likeStatus,
+      createdAt: new Date().toISOString(),
+    };
+    return await this.commentsRepository.updateLikeStatusComment(
+      likeStatusCommEntity,
+    );
+  }
   async findOne(id: string) {
     return `This action returns a #${id} comment`;
   }

@@ -1,5 +1,6 @@
 import { StatusLike } from '../../infrastructure/database/enums/like-status.enums';
 import {
+  IsEnum,
   IsNotEmpty,
   IsNumber,
   Length,
@@ -16,9 +17,8 @@ export class LikesInfo {
   @IsNumber()
   dislikesCount: number;
   @IsNotEmpty()
-  @Length(4, 7, {
-    message:
-      'Incorrect StatusLike length! Must be min 3, max 7 ch. Type of Like, Dislike or None.',
+  @IsEnum(StatusLike, {
+    message: 'Incorrect likeStatus must be type of Like, Dislike or None.',
   })
   myStatus: StatusLike.NONE;
 }
