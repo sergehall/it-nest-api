@@ -49,7 +49,7 @@ export class CommentsService {
     if (!comment)
       throw new HttpException({ message: ['Not found comment'] }, 404);
     const filledComments =
-      await this.commentsRepository.preparationCommentsForReturn(
+      await this.likeStatusCommentsRepository.preparationCommentsForReturn(
         [comment],
         currentUser,
       );
@@ -112,7 +112,7 @@ export class CommentsService {
       startIndex + queryPagination.pageSize,
     );
     const filledComments =
-      await this.commentsRepository.preparationCommentsForReturn(
+      await this.likeStatusCommentsRepository.preparationCommentsForReturn(
         commentsSlice,
         currentUser,
       );
