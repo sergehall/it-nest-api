@@ -7,10 +7,10 @@ import {
 } from '@casl/ability';
 import { Role } from '../auth/roles/role.enum';
 import { Action } from '../auth/roles/action.enum';
-import { BlogIdType } from '../blogs/types/blogs.types';
+import { UserIdEntity } from '../comments/entities/userId.entity';
+import { PostsIdEntity } from '../posts/entities/postsId.entity';
 import { UsersEntity } from '../users/entities/users.entity';
-import { PostsIdType } from '../posts/types/posts.types';
-import { UserIdType } from '../comments/types/types';
+import { BlogIdEntity } from '../blogs/entities/blogsId.entity';
 
 type AppAbility = PureAbility<AbilityTuple, MatchConditions>;
 const lambdaMatcher = (matchConditions: MatchConditions) => matchConditions;
@@ -36,7 +36,7 @@ export class CaslAbilityFactory {
     }
     return build({ conditionsMatcher: lambdaMatcher });
   }
-  createForBlog(blog: BlogIdType) {
+  createForBlog(blog: BlogIdEntity) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
     can(Action.READ, 'all');
     can(Action.CREATE, 'all');
@@ -44,7 +44,7 @@ export class CaslAbilityFactory {
     can(Action.DELETE, 'all', ({ id }) => id === blog.id);
     return build({ conditionsMatcher: lambdaMatcher });
   }
-  createForPost(post: PostsIdType) {
+  createForPost(post: PostsIdEntity) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
     can(Action.READ, 'all');
     can(Action.CREATE, 'all');
@@ -52,7 +52,7 @@ export class CaslAbilityFactory {
     can(Action.DELETE, 'all', ({ id }) => id === post.id);
     return build({ conditionsMatcher: lambdaMatcher });
   }
-  createForComments(user: UserIdType) {
+  createForComments(user: UserIdEntity) {
     const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
     can(Action.READ, 'all');
     can(Action.CREATE, 'all');
