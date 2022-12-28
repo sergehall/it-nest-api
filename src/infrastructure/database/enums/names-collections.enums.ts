@@ -3,5 +3,6 @@ export enum NamesCollectionsEnums {
   BLOGS = 'Blogs',
   USERS = 'Users',
   COMMENTS = 'Comments',
-  LIKE_STATUS = 'LikeStatusComments',
+  LIKE_STATUS_COMMENTS = 'LikeStatusComments',
+  LIKE_STATUS_POST = 'LikeStatusPosts',
 }

@@ -5,7 +5,7 @@ import { PaginationDto } from '../infrastructure/common/pagination/dto/paginatio
 import { Pagination } from '../infrastructure/common/pagination/pagination';
 import * as uuid4 from 'uuid4';
 import { BlogsEntity } from './entities/blogs.entity';
-import { BlogsRepository } from './blogs.repository';
+import { BlogsRepository } from './infrastructure/blogs.repository';
 import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';

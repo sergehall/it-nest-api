@@ -1,15 +1,16 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { PostsEntity } from './entities/posts.entity';
+import { PostsEntity } from '../entities/posts.entity';
 import { Model } from 'mongoose';
 import { PostsDocument } from './schemas/posts.schema';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
-import { PaginationDBType } from '../infrastructure/common/pagination/types/pagination.types';
+import { UpdatePostDto } from '../dto/update-post.dto';
+import { QueryArrType } from '../../infrastructure/common/convert-filters/types/convert-filter.types';
+import { PaginationDBType } from '../../infrastructure/common/pagination/types/pagination.types';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 
 @Injectable()
 export class PostsRepository {
   constructor(
-    @Inject('POST_MODEL')
+    @Inject(ProvidersEnums.POST_MODEL)
     private postsModel: Model<PostsDocument>,
   ) {}
   async findPosts(

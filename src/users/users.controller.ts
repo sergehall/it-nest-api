@@ -24,7 +24,7 @@ import { Action } from '../auth/roles/action.enum';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import * as uuid4 from 'uuid4';
-import { User } from './schemas/user.schema';
+import { User } from './infrastructure/schemas/user.schema';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 
 @Controller('users')

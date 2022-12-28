@@ -1,11 +1,11 @@
-import { Role } from '../../auth/roles/role.enum';
+import { Role } from '../../../auth/roles/role.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../../dto/create-user.dto';
 import * as uuid4 from 'uuid4';
 import * as bcrypt from 'bcrypt';
-import { RegistrationData } from '../entities/users.entity';
-import { OrgIdEnums } from '../../infrastructure/database/enums/org-id.enums';
+import { RegistrationData } from '../../entities/users.entity';
+import { OrgIdEnums } from '../../../infrastructure/database/enums/org-id.enums';
 
 export type UsersDocument = HydratedDocument<User>;
 

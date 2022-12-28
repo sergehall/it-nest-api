@@ -4,13 +4,17 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import * as uuid4 from 'uuid4';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
-import { PostsRepository } from './posts.repository';
+import { PostsRepository } from './infrastructure/posts.repository';
 import { PostsEntity } from './entities/posts.entity';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
+import { LikeStatusDto } from '../comments/dto/like-status.dto';
+import { LikeStatusPostEntity } from './entities/like-status-post.entity';
+import { UsersEntity } from '../users/entities/users.entity';
+import { LikeStatusPostsRepository } from './infrastructure/like-status-posts.repository';
 
 @Injectable()
 export class PostsService {
@@ -18,6 +22,7 @@ export class PostsService {
     protected pagination: Pagination,
     protected postsRepository: PostsRepository,
     protected caslAbilityFactory: CaslAbilityFactory,
+    protected likeStatusPostsRepository: LikeStatusPostsRepository,
   ) {}
 
   async createPost(createPostDto: CreatePostDto, blogName: string) {
@@ -127,5 +132,23 @@ export class PostsService {
         throw new ForbiddenException(error.message);
       }
     }
+  }
+  async changeLikeStatusPost(
+    postId: string,
+    likeStatusDto: LikeStatusDto,
+    currentUser: UsersEntity,
+  ) {
+    const post = await this.postsRepository.findPostById(postId);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    const likeStatusPostEntity: LikeStatusPostEntity = {
+      postId: postId,
+      userId: currentUser.id,
+      login: currentUser.login,
+      likeStatus: likeStatusDto.likeStatus,
+      addedAt: new Date().toISOString(),
+    };
+    return await this.likeStatusPostsRepository.updateLikeStatusPost(
+      likeStatusPostEntity,
+    );
   }
 }

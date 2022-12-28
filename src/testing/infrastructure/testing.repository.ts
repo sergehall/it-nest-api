@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { UsersDocument } from '../users/schemas/user.schema';
-import { PostsDocument } from '../posts/schemas/posts.schema';
-import { BlogsDocument } from '../blogs/schemas/blogs.schema';
+import { UsersDocument } from '../../users/infrastructure/schemas/user.schema';
+import { PostsDocument } from '../../posts/infrastructure/schemas/posts.schema';
+import { BlogsDocument } from '../../blogs/infrastructure/schemas/blogs.schema';
 
 @Injectable()
 export class TestingRepository {

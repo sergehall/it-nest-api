@@ -6,8 +6,8 @@ import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { CaslModule } from '../ability/casl.module';
-import { UsersRepository } from './users.repository';
-import { usersProviders } from './users.providers';
+import { UsersRepository } from './infrastructure/users.repository';
+import { usersProviders } from './infrastructure/users.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 
 @Module({

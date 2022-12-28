@@ -1,20 +1,19 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 import { Comment, CommentsDocument } from './schemas/comments.schema';
-import { CommentsEntity } from './entities/comment.entity';
-import { UsersEntity } from '../users/entities/users.entity';
-import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
+import { CommentsEntity } from '../entities/comment.entity';
+import { UsersEntity } from '../../users/entities/users.entity';
+import { StatusLike } from '../../infrastructure/database/enums/like-status.enums';
 import { LikeStatusCommentDocument } from './schemas/like-status-comments.schema';
-import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { UpdateCommentDto } from '../dto/update-comment.dto';
 
 @Injectable()
 export class CommentsRepository {
   constructor(
     @Inject(ProvidersEnums.COMMENT_MODEL)
     private commentsModel: Model<CommentsDocument>,
-    @Inject(ProvidersEnums.LIKE_STATUS)
+    @Inject(ProvidersEnums.LIKE_STATUS_COMMENTS)
     private likeStatusModel: Model<LikeStatusCommentDocument>,
   ) {}
   async createComment(
@@ -114,29 +113,6 @@ export class CommentsRepository {
     );
 
     return result.modifiedCount !== 0 && result.matchedCount !== 0;
-  }
-  async updateLikeStatusComment(likeStatusCommEntity: LikeStatusCommentEntity) {
-    const result = await this.likeStatusModel
-      .findOneAndUpdate(
-        {
-          $and: [
-            { commentId: likeStatusCommEntity.commentId },
-            { userId: likeStatusCommEntity.userId },
-          ],
-        },
-        {
-          $set: {
-            commentId: likeStatusCommEntity.commentId,
-            userId: likeStatusCommEntity.userId,
-            likeStatus: likeStatusCommEntity.likeStatus,
-            createdAt: likeStatusCommEntity.createdAt,
-          },
-        },
-        { upsert: true, returnDocument: 'after' },
-      )
-      .lean();
-
-    return result !== null;
   }
   async removeComment(commentId: string): Promise<boolean> {
     const resultDeleted = await this.commentsModel.findOneAndUpdate(

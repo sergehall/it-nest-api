@@ -1,7 +1,7 @@
 import { Mongoose } from 'mongoose';
-import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
-import { ConnectionEnums } from '../infrastructure/database/enums/connection.enums';
-import { NamesCollectionsEnums } from '../infrastructure/database/enums/names-collections.enums';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
+import { ConnectionEnums } from '../../infrastructure/database/enums/connection.enums';
+import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
 import { CommentsDocument, CommentsSchema } from './schemas/comments.schema';
 import {
   LikeStatusCommentDocument,
@@ -20,12 +20,12 @@ export const commentsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LIKE_STATUS,
+    provide: ProvidersEnums.LIKE_STATUS_COMMENTS,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<LikeStatusCommentDocument>(
-        NamesCollectionsEnums.LIKE_STATUS,
+        NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
         LikeStatusCommentSchema,
-        NamesCollectionsEnums.LIKE_STATUS,
+        NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

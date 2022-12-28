@@ -6,14 +6,15 @@ import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { UsersEntity } from '../users/entities/users.entity';
 import * as uuid4 from 'uuid4';
 import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
-import { CommentsRepository } from './comments.repository';
+import { CommentsRepository } from './infrastructure/comments.repository';
 import { CommentsEntity } from './entities/comment.entity';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
-import { User } from '../users/schemas/user.schema';
+import { User } from '../users/infrastructure/schemas/user.schema';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
+import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 
 @Injectable()
 export class CommentsService {
@@ -21,6 +22,7 @@ export class CommentsService {
     protected pagination: Pagination,
     protected commentsRepository: CommentsRepository,
     protected caslAbilityFactory: CaslAbilityFactory,
+    protected likeStatusCommentsRepository: LikeStatusCommentsRepository,
   ) {}
   async createComment(
     postId: string,
@@ -42,7 +44,7 @@ export class CommentsService {
 
     return await this.commentsRepository.createComment(postId, newComment);
   }
-  async getCommentById(commentId: string, currentUser: UsersEntity | null) {
+  async findCommentById(commentId: string, currentUser: UsersEntity | null) {
     const comment = await this.commentsRepository.findCommentById(commentId);
     if (!comment)
       throw new HttpException({ message: ['Not found comment'] }, 404);
@@ -140,7 +142,7 @@ export class CommentsService {
       likeStatus: likeStatusDto.likeStatus,
       createdAt: new Date().toISOString(),
     };
-    return await this.commentsRepository.updateLikeStatusComment(
+    return await this.likeStatusCommentsRepository.updateLikeStatusComment(
       likeStatusCommEntity,
     );
   }

@@ -1,10 +1,5 @@
-import {
-  IsInt,
-  IsNotEmpty,
-  IsNumberString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumberString, Length } from 'class-validator';
+import { SortOrder } from '../../parse-query/types/sort-order.types';
 
 export class PaginationDto {
   @IsNotEmpty()
@@ -14,12 +9,14 @@ export class PaginationDto {
   @IsInt()
   pageSize: number;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(100)
+  @Length(0, 100, {
+    message: 'Incorrect sortBy length! Must be min 0, max 100 ch.',
+  })
   sortBy: string;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(100)
+  @Length(0, 10, {
+    message: 'Incorrect sortDirection length! Must be min 1, max 10 ch.',
+  })
   @IsNumberString()
-  sortDirection: -1 | 1 | 'descending' | 'desc' | 'ascending' | 'asc';
+  sortDirection: SortOrder;
 }

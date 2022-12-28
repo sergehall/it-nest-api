@@ -4,11 +4,12 @@ import { BlogsController } from './blogs.controller';
 import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { PostsService } from '../posts/posts.service';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
-import { BlogsRepository } from './blogs.repository';
+import { BlogsRepository } from './infrastructure/blogs.repository';
 import { DatabaseModule } from '../infrastructure/database/database.module';
-import { blogsProviders } from './blogs.providers';
+import { blogsProviders } from './infrastructure/blogs.providers';
 import { CaslModule } from '../ability/casl.module';
-import { PostsRepository } from '../posts/posts.repository';
+import { PostsRepository } from '../posts/infrastructure/posts.repository';
+import { LikeStatusPostsRepository } from '../posts/infrastructure/like-status-posts.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -20,6 +21,7 @@ import { PostsRepository } from '../posts/posts.repository';
     BlogsRepository,
     Pagination,
     PostsRepository,
+    LikeStatusPostsRepository,
     ...blogsProviders,
   ],
 })

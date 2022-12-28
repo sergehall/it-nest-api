@@ -1,18 +1,21 @@
-import { IsNotEmpty, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, Length, Matches } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @MinLength(3)
-  @MaxLength(10)
+  @Length(3, 10, {
+    message: 'Incorrect login length! Must be min 3, max 10 ch.',
+  })
   @Matches('^[a-zA-Z0-9_-]*$')
   login: string;
   @IsNotEmpty()
-  @MinLength(6)
-  @MaxLength(20)
+  @Length(6, 20, {
+    message: 'Incorrect login length! Must be min 6, max 20 ch.',
+  })
   password: string;
   @IsNotEmpty()
-  @MinLength(0)
-  @MaxLength(50)
+  @Length(6, 20, {
+    message: 'Incorrect email length! Must be min 0, max 50 ch.',
+  })
   @Matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
   email: string;
 }

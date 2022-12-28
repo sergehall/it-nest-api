@@ -1,9 +1,9 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
-import { BlogsEntity } from './entities/blogs.entity';
+import { BlogsEntity } from '../entities/blogs.entity';
 import { Model } from 'mongoose';
 import { BlogsDocument } from './schemas/blogs.schema';
-import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
-import { PaginationDBType } from '../infrastructure/common/pagination/types/pagination.types';
+import { QueryArrType } from '../../infrastructure/common/convert-filters/types/convert-filter.types';
+import { PaginationDBType } from '../../infrastructure/common/pagination/types/pagination.types';
 
 @Injectable()
 export class BlogsRepository {

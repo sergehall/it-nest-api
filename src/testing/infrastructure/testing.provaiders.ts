@@ -1,10 +1,19 @@
 import { Mongoose } from 'mongoose';
-import { UsersSchema, UsersDocument } from '../users/schemas/user.schema';
-import { BlogSchema, BlogsDocument } from '../blogs/schemas/blogs.schema';
-import { PostsSchema, PostsDocument } from '../posts/schemas/posts.schema';
-import { ConnectionEnums } from '../infrastructure/database/enums/connection.enums';
-import { NamesCollectionsEnums } from '../infrastructure/database/enums/names-collections.enums';
-import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
+import {
+  UsersSchema,
+  UsersDocument,
+} from '../../users/infrastructure/schemas/user.schema';
+import {
+  BlogSchema,
+  BlogsDocument,
+} from '../../blogs/infrastructure/schemas/blogs.schema';
+import {
+  PostsSchema,
+  PostsDocument,
+} from '../../posts/infrastructure/schemas/posts.schema';
+import { ConnectionEnums } from '../../infrastructure/database/enums/connection.enums';
+import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 
 export const testingProviders = [
   {

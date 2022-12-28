@@ -1,10 +1,10 @@
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { UsersDocument, UsersModelsType } from './schemas/user.schema';
-import { RegistrationData, UsersEntity } from './entities/users.entity';
-import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
-import { PaginationDBType } from '../infrastructure/common/pagination/types/pagination.types';
-import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
-import { CreateUserDto } from './dto/create-user.dto';
+import { RegistrationData, UsersEntity } from '../entities/users.entity';
+import { QueryArrType } from '../../infrastructure/common/convert-filters/types/convert-filter.types';
+import { PaginationDBType } from '../../infrastructure/common/pagination/types/pagination.types';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable()
 export class UsersRepository {

@@ -3,7 +3,7 @@ import { IsNotEmpty, Length } from 'class-validator';
 export class CreatePostDto {
   @IsNotEmpty()
   @Length(0, 30, {
-    message: 'Incorrect title length! Must be max 100 ch.',
+    message: 'Incorrect title length! Must be max 30 ch.',
   })
   title: string;
   @IsNotEmpty()
@@ -13,7 +13,7 @@ export class CreatePostDto {
   shortDescription: string;
   @IsNotEmpty()
   @Length(0, 1000, {
-    message: 'Incorrect content length! Must be max 100 ch.',
+    message: 'Incorrect content length! Must be max 1000 ch.',
   })
   content: string;
   @IsNotEmpty()

@@ -11,7 +11,7 @@ import {
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { LikeStatusDto } from './dto/like-status.dto';
-import { User } from '../users/schemas/user.schema';
+import { User } from '../users/infrastructure/schemas/user.schema';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../auth/roles/action.enum';
@@ -25,22 +25,9 @@ export class CommentsController {
   @Get(':id')
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.CREATE, subject: User })
-  async findOne(@Param('id') id: string) {
+  async findComment(@Param('id') id: string) {
     const currentUser = null;
-    return this.commentsService.getCommentById(id, currentUser);
-  }
-  @HttpCode(204)
-  @Put(':commentId/like-status')
-  async changeLikeStatusComment(
-    @Param('commentId') commentId: string,
-    @Body() likeStatusDto: LikeStatusDto,
-  ) {
-    const currentUser = new User();
-    return this.commentsService.changeLikeStatusComment(
-      commentId,
-      likeStatusDto,
-      currentUser,
-    );
+    return this.commentsService.findCommentById(id, currentUser);
   }
   @HttpCode(204)
   @Put(':commentId')
@@ -63,5 +50,18 @@ export class CommentsController {
     currentUser.orgId = OrgIdEnums.INCUBATOR;
     currentUser.roles = Role.User;
     return this.commentsService.removeComment(commentId, currentUser);
+  }
+  @HttpCode(204)
+  @Put(':commentId/like-status')
+  async changeLikeStatusComment(
+    @Param('commentId') commentId: string,
+    @Body() likeStatusDto: LikeStatusDto,
+  ) {
+    const currentUser = new User();
+    return this.commentsService.changeLikeStatusComment(
+      commentId,
+      likeStatusDto,
+      currentUser,
+    );
   }
 }

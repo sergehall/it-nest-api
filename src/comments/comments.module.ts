@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CommentsController } from './comments.controller';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
-import { commentsProviders } from './comments.providers';
+import { commentsProviders } from './infrastructure/comments.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { CaslModule } from '../ability/casl.module';
-import { CommentsRepository } from './comments.repository';
+import { CommentsRepository } from './infrastructure/comments.repository';
+import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -13,6 +14,7 @@ import { CommentsRepository } from './comments.repository';
   providers: [
     CommentsService,
     CommentsRepository,
+    LikeStatusCommentsRepository,
     Pagination,
     ...commentsProviders,
   ],

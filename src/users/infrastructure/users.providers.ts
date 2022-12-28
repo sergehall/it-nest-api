@@ -1,8 +1,8 @@
 import { UsersDocument, UsersSchema } from './schemas/user.schema';
-import { ProvidersEnums } from '../infrastructure/database/enums/providers.enums';
-import { ConnectionEnums } from '../infrastructure/database/enums/connection.enums';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
+import { ConnectionEnums } from '../../infrastructure/database/enums/connection.enums';
 import { Mongoose } from 'mongoose';
-import { NamesCollectionsEnums } from '../infrastructure/database/enums/names-collections.enums';
+import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
 
 export const usersProviders = [
   {

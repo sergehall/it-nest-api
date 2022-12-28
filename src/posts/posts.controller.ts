@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -22,7 +23,12 @@ import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { Role } from '../auth/roles/role.enum';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreateCommentDto } from '../comments/dto/create-comment.dto';
-import { currentUser } from '../current-user/current-user';
+import { currentUserInst } from '../current-user/current-user';
+import { AbilitiesGuard } from '../ability/abilities.guard';
+import { CheckAbilities } from '../ability/abilities.decorator';
+import { Action } from '../auth/roles/action.enum';
+import { User } from '../users/infrastructure/schemas/user.schema';
+import { LikeStatusDto } from './dto/like-status.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -33,6 +39,8 @@ export class PostsController {
   ) {}
 
   @Get()
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.READ, subject: User })
   async findPosts(@Query() query: any) {
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = {};
@@ -45,6 +53,8 @@ export class PostsController {
     return this.postsService.findPosts(queryPagination, [searchFilters]);
   }
   @Post()
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.READ, subject: User })
   async createPost(@Body() createPostDto: CreatePostDto) {
     const blog: BlogsEntity | null = await this.blogsService.findOne(
       createPostDto.blogId,
@@ -89,8 +99,10 @@ export class PostsController {
     );
   }
   @Get(':postId/comments')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.READ, subject: User })
   async findComments(@Param('postId') postId: string, @Query() query: any) {
-    const user: UsersEntity | null = currentUser;
+    const user: UsersEntity | null = currentUserInst;
     const paginationData = ParseQuery.getPaginationData(query);
     const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
@@ -109,6 +121,8 @@ export class PostsController {
     );
   }
   @Get(':postId')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.READ, subject: User })
   async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
     const post = await this.postsService.findPostById(postId);
     if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
@@ -128,5 +142,18 @@ export class PostsController {
   @Delete(':id')
   async removePost(@Param('id') id: string) {
     return await this.postsService.removePost(id);
+  }
+  @HttpCode(204)
+  @Put(':postId/like-status')
+  async changeLikeStatusComment(
+    @Param('postId') postId: string,
+    @Body() likeStatusDto: LikeStatusDto,
+  ) {
+    const currentUser = currentUserInst;
+    return this.postsService.changeLikeStatusPost(
+      postId,
+      likeStatusDto,
+      currentUser,
+    );
   }
 }
