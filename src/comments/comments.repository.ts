@@ -7,6 +7,7 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
 import { LikeStatusCommentDocument } from './schemas/like-status-comments.schema';
 import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsRepository {
@@ -103,6 +104,17 @@ export class CommentsRepository {
     }
     return filledComments;
   }
+  async updateComment(
+    commentId: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<boolean> {
+    const result = await this.commentsModel.updateOne(
+      { 'comments.id': commentId },
+      { $set: { 'comments.$.content': updateCommentDto.content } },
+    );
+
+    return result.modifiedCount !== 0 && result.matchedCount !== 0;
+  }
   async updateLikeStatusComment(likeStatusCommEntity: LikeStatusCommentEntity) {
     const result = await this.likeStatusModel
       .findOneAndUpdate(
@@ -125,5 +137,25 @@ export class CommentsRepository {
       .lean();
 
     return result !== null;
+  }
+  async removeComment(commentId: string): Promise<boolean> {
+    const resultDeleted = await this.commentsModel.findOneAndUpdate(
+      { 'comments.id': commentId },
+      {
+        $pull: {
+          comments: {
+            id: commentId,
+          },
+        },
+      },
+      { returnDocument: 'after' },
+    );
+    if (!resultDeleted) {
+      return false;
+    }
+    // check comment is deleted
+    return (
+      resultDeleted.comments.filter((i) => i.id === commentId).length === 0
+    );
   }
 }

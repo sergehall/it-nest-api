@@ -49,7 +49,7 @@ export class UsersController {
       ip: ip,
       userAgent: userAgent,
     };
-    const newUser = await this.usersService.newInstance(
+    const newUser = await this.usersService.createNewUser(
       createUserDto,
       registrationData,
     );
@@ -109,7 +109,6 @@ export class UsersController {
   @Delete(':id')
   async removeUserById(@Param('id') id: string) {
     // const currentUser = req.user;
-    // const currentUser = constUser;
     const currentUser = new User();
     currentUser.id = id;
     currentUser.orgId = OrgIdEnums.INCUBATOR;

@@ -48,7 +48,7 @@ export class UsersService {
     return await this.usersRepository.createUser(user);
   }
 
-  async newInstance(
+  async createNewUser(
     createUserDto: CreateUserDto,
     registrationData: RegDataDto,
   ): Promise<UsersDocument> {

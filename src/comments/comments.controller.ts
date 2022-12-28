@@ -2,22 +2,29 @@ import {
   Controller,
   Get,
   Body,
-  Patch,
   Param,
   Delete,
   Put,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { User } from '../users/schemas/user.schema';
+import { AbilitiesGuard } from '../ability/abilities.guard';
+import { CheckAbilities } from '../ability/abilities.decorator';
+import { Action } from '../auth/roles/action.enum';
+import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
+import { Role } from '../auth/roles/role.enum';
 
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Get(':id')
+  @UseGuards(AbilitiesGuard)
+  @CheckAbilities({ action: Action.CREATE, subject: User })
   async findOne(@Param('id') id: string) {
     const currentUser = null;
     return this.commentsService.getCommentById(id, currentUser);
@@ -35,17 +42,26 @@ export class CommentsController {
       currentUser,
     );
   }
-
-  @Patch(':id')
-  async update(
-    @Param('id') id: string,
+  @HttpCode(204)
+  @Put(':commentId')
+  async updateComment(
+    @Param('commentId') commentId: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    return this.commentsService.update(id, updateCommentDto);
+    const currentUser = new User();
+    return this.commentsService.updateComment(
+      commentId,
+      updateCommentDto,
+      currentUser,
+    );
   }
-
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.commentsService.remove(id);
+  @HttpCode(204)
+  @Delete(':commentId')
+  async removeComment(@Param('commentId') commentId: string) {
+    const currentUser = new User();
+    currentUser.id = 'c2b18894-8747-402e-9974-45fa4c7b41a40';
+    currentUser.orgId = OrgIdEnums.INCUBATOR;
+    currentUser.roles = Role.User;
+    return this.commentsService.removeComment(commentId, currentUser);
   }
 }

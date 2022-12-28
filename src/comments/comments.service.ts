@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
@@ -11,12 +11,16 @@ import { CommentsEntity } from './entities/comment.entity';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
 import { User } from '../users/schemas/user.schema';
+import { ForbiddenError } from '@casl/ability';
+import { Action } from '../auth/roles/action.enum';
+import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 
 @Injectable()
 export class CommentsService {
   constructor(
     protected pagination: Pagination,
     protected commentsRepository: CommentsRepository,
+    protected caslAbilityFactory: CaslAbilityFactory,
   ) {}
   async createComment(
     postId: string,
@@ -124,10 +128,10 @@ export class CommentsService {
     likeStatusDto: LikeStatusDto,
     currentUser: User,
   ): Promise<boolean> {
-    const findCommentInDB = await this.commentsRepository.findCommentById(
+    const findComment = await this.commentsRepository.findCommentById(
       commentId,
     );
-    if (!findCommentInDB) {
+    if (!findComment) {
       throw new HttpException({ message: ['Not found comment'] }, 404);
     }
     const likeStatusCommEntity: LikeStatusCommentEntity = {
@@ -144,11 +148,55 @@ export class CommentsService {
     return `This action returns a #${id} comment`;
   }
 
-  async update(id: string, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async updateComment(
+    commentId: string,
+    updateCommentDto: UpdateCommentDto,
+    currentUser: User,
+  ) {
+    currentUser.id = 'c2b18894-8747-402e-9974-45fa4c7b41a4';
+    const findComment = await this.commentsRepository.findCommentById(
+      commentId,
+    );
+    if (!findComment) {
+      throw new HttpException({ message: ['Not found comment'] }, 404);
+    }
+    try {
+      const ability = this.caslAbilityFactory.createForComments({
+        id: currentUser.id,
+      });
+      ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, {
+        id: findComment.userId,
+      });
+      return await this.commentsRepository.updateComment(
+        commentId,
+        updateCommentDto,
+      );
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 
-  async remove(id: string) {
-    return `This action removes a #${id} comment`;
+  async removeComment(commentId: string, currentUser: User) {
+    const findComment = await this.commentsRepository.findCommentById(
+      commentId,
+    );
+    if (!findComment) {
+      throw new HttpException({ message: ['Not found comment'] }, 404);
+    }
+    try {
+      const ability = this.caslAbilityFactory.createForComments({
+        id: currentUser.id,
+      });
+      ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, {
+        id: findComment.userId,
+      });
+      return this.commentsRepository.removeComment(commentId);
+    } catch (error) {
+      if (error instanceof ForbiddenError) {
+        throw new ForbiddenException(error.message);
+      }
+    }
   }
 }

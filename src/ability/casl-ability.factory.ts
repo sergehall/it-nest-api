@@ -10,6 +10,7 @@ import { Action } from '../auth/roles/action.enum';
 import { BlogIdType } from '../blogs/types/blogs.types';
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsIdType } from '../posts/types/posts.types';
+import { UserIdType } from '../comments/types/types';
 
 type AppAbility = PureAbility<AbilityTuple, MatchConditions>;
 const lambdaMatcher = (matchConditions: MatchConditions) => matchConditions;
@@ -49,6 +50,14 @@ export class CaslAbilityFactory {
     can(Action.CREATE, 'all');
     can(Action.UPDATE, 'all', ({ id }) => id === post.id);
     can(Action.DELETE, 'all', ({ id }) => id === post.id);
+    return build({ conditionsMatcher: lambdaMatcher });
+  }
+  createForComments(user: UserIdType) {
+    const { can, cannot, build } = new AbilityBuilder<AppAbility>(PureAbility);
+    can(Action.READ, 'all');
+    can(Action.CREATE, 'all');
+    can(Action.UPDATE, 'all', ({ id }) => id === user.id);
+    can(Action.DELETE, 'all', ({ id }) => id === user.id);
     return build({ conditionsMatcher: lambdaMatcher });
   }
 }
