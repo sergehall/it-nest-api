@@ -40,6 +40,7 @@ export class PostsController {
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findPosts(@Query() query: any) {
+    const currentUser: UsersEntity = currentUserInst;
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = {};
     const queryPagination: PaginationDto = {
@@ -48,7 +49,11 @@ export class PostsController {
       sortBy: paginationData.sortBy,
       sortDirection: paginationData.sortDirection,
     };
-    return this.postsService.findPosts(queryPagination, [searchFilters]);
+    return this.postsService.findPosts(
+      queryPagination,
+      [searchFilters],
+      currentUser,
+    );
   }
   @Post()
   @UseGuards(AbilitiesGuard)
@@ -68,22 +73,20 @@ export class PostsController {
     @Param('postId') postId: string,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    const user: UsersEntity = currentUserInst;
-    const post = await this.postsService.findPostById(postId);
-    if (!post) {
-      throw new HttpException({ message: ['Not found post'] }, 404);
-    }
+    const currentUser: UsersEntity = currentUserInst;
+    const post = await this.postsService.checkPostInDB(postId);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return await this.commentsService.createComment(
       postId,
       createCommentDto,
-      user,
+      currentUser,
     );
   }
   @Get(':postId/comments')
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findComments(@Param('postId') postId: string, @Query() query: any) {
-    const user: UsersEntity | null = currentUserInst;
+    const currentUser: UsersEntity | null = currentUserInst;
     const paginationData = ParseQuery.getPaginationData(query);
     const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
@@ -91,21 +94,20 @@ export class PostsController {
       sortBy: paginationData.sortBy,
       sortDirection: paginationData.sortDirection,
     };
-    const post = await this.postsService.findPostById(postId);
-    if (!post) {
-      throw new HttpException({ message: ['Not found post'] }, 404);
-    }
+    const post = await this.postsService.checkPostInDB(postId);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return await this.commentsService.findCommentsByPostId(
       queryPagination,
       postId,
-      user,
+      currentUser,
     );
   }
   @Get(':postId')
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
-    const post = await this.postsService.findPostById(postId);
+    const currentUser: User | null = new User();
+    const post = await this.postsService.findPostById(postId, currentUser);
     if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
     return post;
   }

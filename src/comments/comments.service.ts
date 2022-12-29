@@ -15,12 +15,14 @@ import { ForbiddenError } from '@casl/ability';
 import { Action } from '../auth/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
+import { PostsService } from '../posts/posts.service';
 
 @Injectable()
 export class CommentsService {
   constructor(
     protected pagination: Pagination,
     protected commentsRepository: CommentsRepository,
+    private readonly postsService: PostsService,
     protected caslAbilityFactory: CaslAbilityFactory,
     protected likeStatusCommentsRepository: LikeStatusCommentsRepository,
   ) {}
@@ -29,6 +31,10 @@ export class CommentsService {
     createCommentDto: CreateCommentDto,
     user: UsersEntity,
   ): Promise<CommentsEntity> {
+    const post = await this.postsService.checkPostInDB(postId);
+    if (!post) {
+      throw new HttpException({ message: ['Not found post'] }, 404);
+    }
     const newComment: CommentsEntity = {
       id: uuid4().toString(),
       content: createCommentDto.content,
@@ -61,6 +67,10 @@ export class CommentsService {
     postId: string,
     currentUser: UsersEntity | null,
   ) {
+    const post = await this.postsService.checkPostInDB(postId);
+    if (!post) {
+      throw new HttpException({ message: ['Not found post'] }, 404);
+    }
     const commentsDoc = await this.commentsRepository.findCommentsByPostId(
       postId,
     );

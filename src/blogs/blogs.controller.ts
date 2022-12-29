@@ -20,6 +20,7 @@ import { PaginationTypes } from '../infrastructure/common/pagination/types/pagin
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
+import { currentUserInst } from '../current-user/current-user';
 
 @Controller('blogs')
 export class BlogsController {
@@ -53,7 +54,7 @@ export class BlogsController {
 
   @Get(':blogId/posts')
   async getPostsByBlogId(@Query() query: any, @Param('blogId') blogId: string) {
-    const currentUser: UsersEntity | null = null;
+    const currentUser: UsersEntity | null = currentUserInst;
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
       throw new HttpException({ message: ['Not found blogger'] }, 404);
@@ -66,7 +67,11 @@ export class BlogsController {
       sortDirection: paginationData.sortDirection,
     };
     const filterBlogId = { blogId: blogId };
-    return await this.postsService.findPosts(dtoPagination, [filterBlogId]);
+    return await this.postsService.findPosts(
+      dtoPagination,
+      [filterBlogId],
+      currentUser,
+    );
   }
   @Post(':blogId/posts')
   async createPostByBlogId(

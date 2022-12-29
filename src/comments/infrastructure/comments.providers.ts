@@ -7,6 +7,14 @@ import {
   LikeStatusCommentDocument,
   LikeStatusCommentSchema,
 } from './schemas/like-status-comments.schema';
+import {
+  PostsDocument,
+  PostsSchema,
+} from '../../posts/infrastructure/schemas/posts.schema';
+import {
+  LikeStatusPostSchema,
+  LikeStatusPostsDocument,
+} from '../../posts/infrastructure/schemas/like-status-posts.schemas';
 
 export const commentsProviders = [
   {
@@ -26,6 +34,26 @@ export const commentsProviders = [
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
         LikeStatusCommentSchema,
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.POST_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<PostsDocument>(
+        'Posts',
+        PostsSchema,
+        NamesCollectionsEnums.POSTS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.LIKE_STATUS_POSTS,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<LikeStatusPostsDocument>(
+        NamesCollectionsEnums.LIKE_STATUS_POST,
+        LikeStatusPostSchema,
+        NamesCollectionsEnums.LIKE_STATUS_POST,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

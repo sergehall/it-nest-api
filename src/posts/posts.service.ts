@@ -60,7 +60,11 @@ export class PostsService {
     };
   }
 
-  async findPosts(queryPagination: PaginationDto, searchFilters: QueryArrType) {
+  async findPosts(
+    queryPagination: PaginationDto,
+    searchFilters: QueryArrType,
+    currentUser: UsersEntity,
+  ) {
     let field = 'createdAt';
     if (
       queryPagination.sortBy === 'title' ||
@@ -77,6 +81,11 @@ export class PostsService {
       pagination,
       searchFilters,
     );
+    const filledPost =
+      await this.likeStatusPostsRepository.preparationPostsForReturn(
+        posts,
+        currentUser,
+      );
     const pageNumber = queryPagination.pageNumber;
     const pageSize = pagination.pageSize;
     return {
@@ -84,12 +93,25 @@ export class PostsService {
       page: pageNumber,
       pageSize: pageSize,
       totalCount: totalCount,
-      items: posts,
+      items: filledPost,
     };
   }
 
-  async findPostById(postId: string): Promise<PostsEntity | null> {
-    return await this.postsRepository.findPostById(postId);
+  async findPostById(
+    postId: string,
+    currentUser: UsersEntity,
+  ): Promise<PostsEntity | null> {
+    const post = await this.postsRepository.findPostById(postId);
+    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    const filledPost =
+      await this.likeStatusPostsRepository.preparationPostsForReturn(
+        [post],
+        currentUser,
+      );
+    return filledPost[0];
+  }
+  async checkPostInDB(postId: string): Promise<PostsEntity | null> {
+    return await this.postsRepository.checkPostInDB(postId);
   }
 
   async updatePost(id: string, updatePostDto: CreatePostDto) {

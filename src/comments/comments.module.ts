@@ -7,6 +7,9 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
 import { CaslModule } from '../ability/casl.module';
 import { CommentsRepository } from './infrastructure/comments.repository';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
+import { PostsRepository } from '../posts/infrastructure/posts.repository';
+import { PostsService } from '../posts/posts.service';
+import { LikeStatusPostsRepository } from '../posts/infrastructure/like-status-posts.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -14,6 +17,9 @@ import { LikeStatusCommentsRepository } from './infrastructure/like-status-comme
   providers: [
     CommentsService,
     CommentsRepository,
+    PostsService,
+    PostsRepository,
+    LikeStatusPostsRepository,
     LikeStatusCommentsRepository,
     Pagination,
     ...commentsProviders,

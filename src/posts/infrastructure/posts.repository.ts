@@ -43,6 +43,17 @@ export class PostsRepository {
       },
     );
   }
+  async checkPostInDB(postId: string): Promise<PostsEntity | null> {
+    return await this.postsModel.findOne(
+      { id: postId },
+      {
+        _id: false,
+        __v: false,
+        'extendedLikesInfo._id': false,
+        'extendedLikesInfo.newestLikes._id': false,
+      },
+    );
+  }
   async createPost(postsEntity: PostsEntity): Promise<PostsEntity> {
     try {
       return await this.postsModel.create(postsEntity);
