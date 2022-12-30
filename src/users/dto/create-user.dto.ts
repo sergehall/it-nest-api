@@ -14,7 +14,7 @@ export class CreateUserDto {
   password: string;
   @IsNotEmpty()
   @Length(6, 20, {
-    message: 'Incorrect email length! Must be min 0, max 50 ch.',
+    message: 'Incorrect email length! Must be min 6, max 20 ch.',
   })
   @Matches('^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$')
   email: string;

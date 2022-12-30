@@ -17,8 +17,6 @@ export class AbilitiesGuard implements CanActivate {
     private caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const rules = this.reflector.get<RequiredRule[]>(
       CHECK_ABILITY,
@@ -41,5 +39,6 @@ export class AbilitiesGuard implements CanActivate {
         throw new ForbiddenException(error.message);
       }
     }
+    return false;
   }
 }

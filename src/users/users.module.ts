@@ -15,11 +15,11 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
   controllers: [UsersController],
   providers: [
     UsersService,
-    JwtService,
-    ConvertFiltersForDB,
     Pagination,
     AuthService,
     UsersRepository,
+    JwtService,
+    ConvertFiltersForDB,
     ...usersProviders,
   ],
   exports: [UsersService],

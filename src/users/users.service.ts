@@ -25,20 +25,10 @@ export class UsersService {
     protected caslAbilityFactory: CaslAbilityFactory,
     protected usersRepository: UsersRepository,
   ) {}
-  async findOne2(username: string) {
-    const users = [
-      {
-        userId: 1,
-        username: 'john',
-        password: 'changeme',
-      },
-      {
-        userId: 2,
-        username: 'maria',
-        password: 'guess',
-      },
-    ];
-    return users.find((user) => user.username === username);
+  async findUserByLoginOrEmail(
+    loginOrEmail: string,
+  ): Promise<UsersEntity | null> {
+    return await this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
   }
   async createUser(
     createUserDto: CreateUserDto,

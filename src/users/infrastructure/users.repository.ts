@@ -12,6 +12,13 @@ export class UsersRepository {
     @Inject(ProvidersEnums.USER_MODEL)
     private UsersModel: UsersModelsType,
   ) {}
+  async findUserByLoginOrEmail(
+    loginOrEmail: string,
+  ): Promise<UsersEntity | null> {
+    return await this.UsersModel.findOne({
+      $or: [{ login: { $eq: loginOrEmail } }, { email: { $eq: loginOrEmail } }],
+    });
+  }
   async createUser(user: UsersEntity): Promise<UsersEntity> {
     try {
       return await this.UsersModel.create(user);

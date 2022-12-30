@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { BlogsModule } from './blogs/blogs.module';
 import { PostsModule } from './posts/posts.module';
@@ -13,14 +14,17 @@ import { CommentsController } from './comments/comments.controller';
 import { EmailsController } from './emails/emails.controller';
 import { PostsController } from './posts/posts.controller';
 import { UsersController } from './users/users.controller';
-import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './ability/casl.module';
 import { ConfigModule } from '@nestjs/config';
+import { SecurityDevicesModule } from './security-devices/security-devices.module';
+import { SecurityDevicesController } from './security-devices/security-devices.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
+      load: [],
     }),
     UsersModule,
     BlogsModule,
@@ -30,6 +34,7 @@ import { ConfigModule } from '@nestjs/config';
     EmailsModule,
     AuthModule,
     CaslModule,
+    SecurityDevicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -44,6 +49,7 @@ export class AppModule implements NestModule {
         PostsController,
         UsersController,
         EmailsController,
+        SecurityDevicesController,
       );
   }
 }

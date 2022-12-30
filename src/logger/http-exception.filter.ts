@@ -20,7 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         errorsMessages: responseBody.message,
       });
     } else if (responseBody.message.length !== 0 && status === 401) {
-      response.status(status);
+      response.status(status).json();
     } else if (status === 404) {
       response.status(status).json();
     } else {
