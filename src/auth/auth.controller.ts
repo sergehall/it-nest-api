@@ -1,18 +1,27 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Request,
+  HttpCode,
+} from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
+  constructor(private authService: AuthService) {}
+  @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: any) {
-    console.log('login---');
-    return req.user;
+    return this.authService.login(req.user);
   }
   // @UseGuards(LocalAuthGuard)
   // @Post('login')
-  // async login(@Request() req: any, @Response({ passthrough: true }) res: any) {
+  // async login(@Request() req: any, @Res({ passthrough: true }) res: any) {
   //   const userData = req.user;
   //   console.log(userData);
   //   res.cookie('refreshToken', userData.refreshToken, {
@@ -23,7 +32,7 @@ export class AuthController {
   // }
 
   @UseGuards(JwtAuthGuard)
-  @Get('profile')
+  @Get('me')
   getProfile(@Request() req: any) {
     return req.user;
   }

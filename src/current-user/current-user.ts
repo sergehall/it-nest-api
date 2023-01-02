@@ -1,6 +1,6 @@
 import { UsersEntity } from '../users/entities/users.entity';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
-import { Role } from '../auth/roles/role.enum';
+import { Role } from '../ability/roles/role.enum';
 
 export const currentUserInst: UsersEntity = {
   id: 'c2b18894-8747-402e-9974-45fa4c7b41a4',

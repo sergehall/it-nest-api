@@ -5,8 +5,8 @@ import {
   MatchConditions,
   PureAbility,
 } from '@casl/ability';
-import { Role } from '../auth/roles/role.enum';
-import { Action } from '../auth/roles/action.enum';
+import { Role } from './roles/role.enum';
+import { Action } from './roles/action.enum';
 import { UserIdEntity } from '../comments/entities/userId.entity';
 import { PostsIdEntity } from '../posts/entities/postsId.entity';
 import { UsersEntity } from '../users/entities/users.entity';

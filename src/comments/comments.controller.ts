@@ -14,9 +14,9 @@ import { LikeStatusDto } from './dto/like-status.dto';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { CheckAbilities } from '../ability/abilities.decorator';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
-import { Role } from '../auth/roles/role.enum';
+import { Role } from '../ability/roles/role.enum';
 
 @Controller('comments')
 export class CommentsController {

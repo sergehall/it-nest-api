@@ -8,7 +8,7 @@ import { PostsRepository } from './infrastructure/posts.repository';
 import { PostsEntity } from './entities/posts.entity';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { StatusLike } from '../infrastructure/database/enums/like-status.enums';
 import { LikeStatusDto } from '../comments/dto/like-status.dto';

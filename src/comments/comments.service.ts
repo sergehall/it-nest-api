@@ -12,7 +12,7 @@ import { LikeStatusDto } from './dto/like-status.dto';
 import { LikeStatusCommentEntity } from './entities/like-status-comment.entity';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { ForbiddenError } from '@casl/ability';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 import { PostsService } from '../posts/posts.service';

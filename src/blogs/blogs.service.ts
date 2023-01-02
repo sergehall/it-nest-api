@@ -9,7 +9,7 @@ import { BlogsRepository } from './infrastructure/blogs.repository';
 import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 
 @Injectable()

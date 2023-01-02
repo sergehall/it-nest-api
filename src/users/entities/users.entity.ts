@@ -1,4 +1,4 @@
-import { Role } from '../../auth/roles/role.enum';
+import { Role } from '../../ability/roles/role.enum';
 import { Prop } from '@nestjs/mongoose';
 
 export class EmailConfirmation {

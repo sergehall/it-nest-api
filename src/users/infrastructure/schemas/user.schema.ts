@@ -1,4 +1,4 @@
-import { Role } from '../../../auth/roles/role.enum';
+import { Role } from '../../../ability/roles/role.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Model } from 'mongoose';
 import { CreateUserDto } from '../../dto/create-user.dto';
@@ -76,7 +76,7 @@ export class User {
     const makeInstance = await new userModel();
     makeInstance.id = id;
     makeInstance.login = createUserDto.login;
-    makeInstance.email = createUserDto.email;
+    makeInstance.email = createUserDto.email.toLowerCase();
     makeInstance.passwordHash = passwordHash;
     makeInstance.createdAt = createdAt;
     makeInstance.orgId = OrgIdEnums.INCUBATOR;

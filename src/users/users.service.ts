@@ -6,9 +6,9 @@ import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/co
 import * as bcrypt from 'bcrypt';
 import * as uuid4 from 'uuid4';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
-import { Role } from '../auth/roles/role.enum';
+import { Role } from '../ability/roles/role.enum';
 import { ForbiddenError } from '@casl/ability';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { UsersRepository } from './infrastructure/users.repository';
 import { RegDataDto } from './dto/reg-data.dto';

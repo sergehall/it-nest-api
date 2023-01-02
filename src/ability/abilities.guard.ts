@@ -8,7 +8,7 @@ import { Reflector } from '@nestjs/core';
 import { CaslAbilityFactory } from './casl-ability.factory';
 import { CHECK_ABILITY, RequiredRule } from './abilities.decorator';
 import { ForbiddenError } from '@casl/ability';
-import { Role } from '../auth/roles/role.enum';
+import { Role } from './roles/role.enum';
 
 @Injectable()
 export class AbilitiesGuard implements CanActivate {

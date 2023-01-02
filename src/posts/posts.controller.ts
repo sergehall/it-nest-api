@@ -24,7 +24,7 @@ import { CreateCommentDto } from '../comments/dto/create-comment.dto';
 import { currentUserInst } from '../current-user/current-user';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { CheckAbilities } from '../ability/abilities.decorator';
-import { Action } from '../auth/roles/action.enum';
+import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
 
