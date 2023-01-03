@@ -18,6 +18,7 @@ import { CaslModule } from './ability/casl.module';
 import { ConfigModule } from '@nestjs/config';
 import { SecurityDevicesModule } from './security-devices/security-devices.module';
 import { SecurityDevicesController } from './security-devices/security-devices.controller';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ export class AppModule implements NestModule {
     consumer
       .apply(LoggerMiddleware)
       .forRoutes(
+        AuthController,
         BlogsController,
         CommentsController,
         PostsController,

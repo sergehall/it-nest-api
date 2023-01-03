@@ -7,9 +7,13 @@ import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { Last10secReqRepository } from './infrastructure/last10sec-req..repository';
+import { last10secProviders } from './infrastructure/last10sec.providers';
+import { DatabaseModule } from '../infrastructure/database/database.module';
 
 @Module({
   imports: [
+    DatabaseModule,
     ConfigModule.forRoot(),
     UsersModule,
     PassportModule,
@@ -19,7 +23,13 @@ import { ConfigModule } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    Last10secReqRepository,
+    ...last10secProviders,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

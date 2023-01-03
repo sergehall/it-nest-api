@@ -11,7 +11,6 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
-
   async validatePassword(
     loginOrEmail: string,
     password: string,
