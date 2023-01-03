@@ -26,7 +26,7 @@ export class AuthService {
     const deviceId = uuid4().toString();
     const payload = { id: user.id, login: user.login, deviceId: deviceId };
     return {
-      access_token: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload),
     };
   }
 }
