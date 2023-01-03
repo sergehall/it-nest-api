@@ -20,6 +20,8 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     loginOrEmail: string,
     password: string,
   ): Promise<UsersEntity | null> {
+    console.log(loginOrEmail, 'loginOrEmail');
+    console.log(password, 'password');
     const messages = [];
     if (
       loginOrEmail.toString().length < 3 ||
