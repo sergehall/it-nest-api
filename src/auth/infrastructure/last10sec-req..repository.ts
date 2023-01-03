@@ -14,7 +14,6 @@ export class Last10secReqRepository {
     originalUrl: string,
     title: string,
   ): Promise<number> {
-    console.log(ip, originalUrl, title);
     await this.last10secModel.create({
       ip: ip,
       originalUrl: originalUrl,

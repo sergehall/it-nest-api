@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Last10secReqRepository } from '../infrastructure/last10sec-req..repository';
 import { Promise } from 'mongoose';
-import { statusCode } from '../../logger/status-code.constants';
-import { attempts } from '../count-attempts.constants';
+import { maxAttempts } from '../count-attempts.constants';
+import { statusCode } from '../../logger/status-code.enum';
 
 @Injectable()
 export class LimitReqGuard implements CanActivate {
@@ -17,7 +17,7 @@ export class LimitReqGuard implements CanActivate {
     const message = {
       message: [
         {
-          message: `More than 5 registration attempts from one IP-${request.ip} during 10 seconds.`,
+          message: `More than 5 attempts from one IP-${request.ip} during 10 seconds.`,
         },
       ],
     };
@@ -28,10 +28,10 @@ export class LimitReqGuard implements CanActivate {
         request.get('user-agent'),
       )
       .then((i) => {
-        if (i <= attempts) {
-          return true;
+        if (i > maxAttempts) {
+          throw new HttpException(message, statusCode.TOO_MANY_REQUESTS);
         }
-        throw new HttpException(message, statusCode.TOO_MANY_REQUESTS);
+        return true;
       });
   }
 }

@@ -26,12 +26,14 @@ import { AbilitiesGuard } from '../ability/abilities.guard';
 import * as uuid4 from 'uuid4';
 import { User } from './infrastructure/schemas/user.schema';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
+import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UseGuards(BaseAuthGuard)
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.CREATE, subject: User })
   async createUser(
@@ -39,9 +41,7 @@ export class UsersController {
     @Body() createUserDto: CreateUserDto,
     @Ip() ip: string,
   ) {
-    let userAgent = req.header('User-Agent')
-      ? req.header('User-Agent')
-      : 'None';
+    let userAgent = req.get('user-agent');
     if (!userAgent) {
       userAgent = 'None';
     }

@@ -9,7 +9,7 @@ import {
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { LimitReqGuard } from './guards/last10sec-req-validate.guards';
+import { LimitReqGuard } from './guards/last10sec-req.guards';
 
 @Controller('auth')
 export class AuthController {

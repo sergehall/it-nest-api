@@ -1,1 +1,1 @@
-export const attempts = 5;
+export const maxAttempts = 5;
