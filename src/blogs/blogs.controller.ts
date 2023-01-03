@@ -9,6 +9,7 @@ import {
   Query,
   HttpException,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
@@ -21,6 +22,7 @@ import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
 import { currentUserInst } from '../current-user/current-user';
+import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -43,6 +45,7 @@ export class BlogsController {
   }
 
   @Post()
+  @UseGuards(BaseAuthGuard)
   async createBlog(@Body() createBlogDto: CreateBlogsDto) {
     const blogDto = {
       name: createBlogDto.name,
@@ -74,6 +77,7 @@ export class BlogsController {
     );
   }
   @Post(':blogId/posts')
+  @UseGuards(BaseAuthGuard)
   async createPostByBlogId(
     @Param('blogId') blogId: string,
     @Body() createPostByBlogIdDto: CreatePostByBlogIdDto,
@@ -97,6 +101,7 @@ export class BlogsController {
     return blog;
   }
   @HttpCode(204)
+  @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updateBlog(
     @Param('id') id: string,
@@ -105,6 +110,7 @@ export class BlogsController {
     return this.blogsService.updateBlog(id, updateBlogDto);
   }
   @HttpCode(204)
+  @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removeBlog(@Param('id') id: string) {
     return await this.blogsService.removeBlog(id);

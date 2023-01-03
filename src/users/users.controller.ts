@@ -62,6 +62,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(BaseAuthGuard)
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findAll(@Query() query: any) {
@@ -106,6 +107,7 @@ export class UsersController {
     return result;
   }
   @HttpCode(204)
+  @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removeUserById(@Param('id') id: string) {
     // const currentUser = req.user;

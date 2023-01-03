@@ -27,6 +27,7 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
+import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -56,6 +57,7 @@ export class PostsController {
     );
   }
   @Post()
+  @UseGuards(BaseAuthGuard)
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async createPost(@Body() createPostDto: CreatePostDto) {
@@ -112,6 +114,7 @@ export class PostsController {
     return post;
   }
   @HttpCode(204)
+  @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updatePost(
     @Param('id') id: string,
@@ -122,6 +125,7 @@ export class PostsController {
     return post;
   }
   @HttpCode(204)
+  @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removePost(@Param('id') id: string) {
     return await this.postsService.removePost(id);
