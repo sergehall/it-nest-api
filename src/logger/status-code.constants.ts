@@ -1,0 +1,7 @@
+export const statusCode = {
+  BAD_REQUEST: 400,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  TOO_MANY_REQUESTS: 429,
+  UNAUTHORIZED: 401,
+};

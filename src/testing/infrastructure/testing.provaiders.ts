@@ -26,6 +26,10 @@ import {
   CommentsDocument,
   CommentsSchema,
 } from '../../comments/infrastructure/schemas/comments.schema';
+import {
+  Last10secDocument,
+  Last10secSchema,
+} from '../../auth/infrastructure/schemas/last10sec.schemas';
 
 export const testingProviders = [
   {
@@ -85,6 +89,16 @@ export const testingProviders = [
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
         LikeStatusCommentSchema,
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.LAST_10SEC,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<Last10secDocument>(
+        'Last10sec',
+        Last10secSchema,
+        NamesCollectionsEnums.LAST_10SEC,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

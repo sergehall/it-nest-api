@@ -7,6 +7,7 @@ import { ProvidersEnums } from '../../infrastructure/database/enums/providers.en
 import { LikeStatusPostsDocument } from '../../posts/infrastructure/schemas/like-status-posts.schemas';
 import { LikeStatusCommentDocument } from '../../comments/infrastructure/schemas/like-status-comments.schema';
 import { CommentsDocument } from '../../comments/infrastructure/schemas/comments.schema';
+import { Last10secDocument } from '../../auth/infrastructure/schemas/last10sec.schemas';
 
 @Injectable()
 export class TestingRepository {
@@ -23,6 +24,8 @@ export class TestingRepository {
     private likeStatusCommentModel: Model<LikeStatusCommentDocument>,
     @Inject(ProvidersEnums.COMMENT_MODEL)
     private commentsModel: Model<CommentsDocument>,
+    @Inject(ProvidersEnums.LAST_10SEC)
+    private last10secModel: Model<Last10secDocument>,
   ) {}
   async delAllData(): Promise<boolean> {
     // delete all Collections
@@ -32,19 +35,11 @@ export class TestingRepository {
     await this.commentsModel.deleteMany({});
     await this.likeStatusPostModel.deleteMany({});
     await this.likeStatusCommentModel.deleteMany({});
+    await this.last10secModel.deleteMany({});
     // await this.myModelEmailsConfirmCode.deleteMany({});
     // await this.myModelEmailsRecoveryCode.deleteMany({});
-    // await MyModelBlogs.deleteMany({});
-    // await MyModelPosts.deleteMany({});
     // await MyModelDevicesSchema.deleteMany({});
-    // await MyModelLikeStatusPostsId.deleteMany({});
-    // await MyModelLikeStatusCommentId.deleteMany({});
     // await MyModelBlackListIP.deleteMany({});
-    // await MyModeLast10secRegConf.deleteMany({});
-    // await MyModeLast10secReg.deleteMany({});
-    // await MyModeLast10secLog.deleteMany({});
-    // await MyModeLast10secRedEmailRes.deleteMany({});
-    // await MyModelComments.deleteMany({});
     // await MyModelBlackListRefreshTokenJWT.deleteMany({});
     return true;
   }

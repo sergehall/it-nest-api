@@ -33,6 +33,7 @@ export class AuthController {
   //   return { accessToken: req.user.data.accessToken };
   // }
 
+  @UseGuards(LimitReqGuard)
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
