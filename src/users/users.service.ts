@@ -46,7 +46,6 @@ export class UsersService {
       createUserDto,
       registrationData,
     );
-    console.log(newInstance);
     await this.usersRepository.save(newInstance);
     return newInstance;
   }
