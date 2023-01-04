@@ -4,8 +4,8 @@ import { ConnectionEnums } from '../../infrastructure/database/enums/connection.
 import { Mongoose } from 'mongoose';
 import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
 import {
-  EmailConfimCodeDocument,
-  EmailsConfimCodeSchema,
+  EmailsConfirmCodeDocument,
+  EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 
 export const usersProviders = [
@@ -22,9 +22,9 @@ export const usersProviders = [
   {
     provide: ProvidersEnums.CONFIRM_CODE,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<EmailConfimCodeDocument>(
+      mongoose.model<EmailsConfirmCodeDocument>(
         'EmailsConfirmCodes',
-        EmailsConfimCodeSchema,
+        EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],

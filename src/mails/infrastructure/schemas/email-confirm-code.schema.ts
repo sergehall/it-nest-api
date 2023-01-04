@@ -1,9 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type EmailConfimCodeDocument = HydratedDocument<EmailConfimCode>;
+export type EmailsConfirmCodeDocument = HydratedDocument<EmailsConfirmCode>;
 @Schema()
-export class EmailConfimCode {
+export class EmailsConfirmCode {
   @Prop({ required: true })
   email: string;
   @Prop({ required: true })
@@ -12,5 +12,5 @@ export class EmailConfimCode {
   createdAt: string;
 }
 
-export const EmailsConfimCodeSchema =
-  SchemaFactory.createForClass(EmailConfimCode);
+export const EmailsConfirmCodeSchema =
+  SchemaFactory.createForClass(EmailsConfirmCode);
