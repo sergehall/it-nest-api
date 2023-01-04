@@ -9,6 +9,7 @@ import { CaslModule } from '../ability/casl.module';
 import { UsersRepository } from './infrastructure/users.repository';
 import { usersProviders } from './infrastructure/users.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
+import { MailsRepository } from '../mails/infrastructure/mails.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -20,6 +21,7 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
     UsersRepository,
     JwtService,
     ConvertFiltersForDB,
+    MailsRepository,
     ...usersProviders,
   ],
   exports: [UsersService],

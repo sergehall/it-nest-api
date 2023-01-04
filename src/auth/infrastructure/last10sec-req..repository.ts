@@ -32,4 +32,9 @@ export class Last10secReqRepository {
       ],
     });
   }
+  async cleanup() {
+    return this.last10secModel.deleteMany({
+      createdAt: { $lt: new Date(Date.now() - 1000 * 10).toISOString() },
+    });
+  }
 }

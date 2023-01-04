@@ -8,6 +8,7 @@ import { LikeStatusPostsDocument } from '../../posts/infrastructure/schemas/like
 import { LikeStatusCommentDocument } from '../../comments/infrastructure/schemas/like-status-comments.schema';
 import { CommentsDocument } from '../../comments/infrastructure/schemas/comments.schema';
 import { Last10secDocument } from '../../auth/infrastructure/schemas/last10sec.schemas';
+import { EmailConfimCodeDocument } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 
 @Injectable()
 export class TestingRepository {
@@ -26,6 +27,8 @@ export class TestingRepository {
     private commentsModel: Model<CommentsDocument>,
     @Inject(ProvidersEnums.LAST_10SEC)
     private last10secModel: Model<Last10secDocument>,
+    @Inject(ProvidersEnums.CONFIRM_CODE)
+    private EmailComfirmModel: Model<EmailConfimCodeDocument>,
   ) {}
   async delAllData(): Promise<boolean> {
     // delete all Collections
@@ -36,6 +39,7 @@ export class TestingRepository {
     await this.likeStatusPostModel.deleteMany({});
     await this.likeStatusCommentModel.deleteMany({});
     await this.last10secModel.deleteMany({});
+    await this.EmailComfirmModel.deleteMany({});
     // await this.myModelEmailsConfirmCode.deleteMany({});
     // await this.myModelEmailsRecoveryCode.deleteMany({});
     // await MyModelDevicesSchema.deleteMany({});

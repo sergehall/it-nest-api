@@ -16,6 +16,8 @@ import { User, UsersDocument } from './infrastructure/schemas/user.schema';
 import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
 import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
+import { MailsRepository } from '../mails/infrastructure/mails.repository';
+import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
 
 @Injectable()
 export class UsersService {
@@ -24,11 +26,15 @@ export class UsersService {
     protected pagination: Pagination,
     protected caslAbilityFactory: CaslAbilityFactory,
     protected usersRepository: UsersRepository,
+    protected mailsRepository: MailsRepository,
   ) {}
   async findUserByLoginOrEmail(
     loginOrEmail: string,
   ): Promise<UsersEntity | null> {
     return await this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
+  }
+  async userAlreadyExist(login: string, email: string): Promise<boolean> {
+    return await this.usersRepository.userAlreadyExist(login, email);
   }
   async createUser(
     createUserDto: CreateUserDto,
@@ -47,6 +53,25 @@ export class UsersService {
       registrationData,
     );
     await this.usersRepository.save(newInstance);
+    return newInstance;
+  }
+
+  async createUserRegistration(
+    createUserDto: CreateUserDto,
+    registrationData: RegDataDto,
+  ): Promise<UsersDocument> {
+    const newInstance = await this.usersRepository.makeInstanceUser(
+      createUserDto,
+      registrationData,
+    );
+    await this.usersRepository.save(newInstance);
+
+    const newConfirmationCode: EmailConfimCodeEntity = {
+      email: newInstance.email,
+      confirmationCode: newInstance.emailConfirmation.confirmationCode,
+      createdAt: new Date().toISOString(),
+    };
+    await this.mailsRepository.insertEmailConfirmCode(newConfirmationCode);
     return newInstance;
   }
 

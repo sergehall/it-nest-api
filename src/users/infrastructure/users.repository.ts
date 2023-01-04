@@ -19,6 +19,12 @@ export class UsersRepository {
       $or: [{ login: { $eq: loginOrEmail } }, { email: { $eq: loginOrEmail } }],
     });
   }
+  async userAlreadyExist(login: string, email: string): Promise<boolean> {
+    const result = await this.UsersModel.findOne({
+      $or: [{ login: { $eq: login } }, { email: { $eq: email } }],
+    });
+    return result !== null;
+  }
   async createUser(user: UsersEntity): Promise<UsersEntity> {
     try {
       return await this.UsersModel.create(user);

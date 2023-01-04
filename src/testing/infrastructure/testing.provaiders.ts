@@ -30,6 +30,10 @@ import {
   Last10secDocument,
   Last10secSchema,
 } from '../../auth/infrastructure/schemas/last10sec.schemas';
+import {
+  EmailConfimCodeDocument,
+  EmailsConfimCodeSchema,
+} from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 
 export const testingProviders = [
   {
@@ -99,6 +103,16 @@ export const testingProviders = [
         'Last10sec',
         Last10secSchema,
         NamesCollectionsEnums.LAST_10SEC,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.CONFIRM_CODE,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<EmailConfimCodeDocument>(
+        'EmailsConfirmCodes',
+        EmailsConfimCodeSchema,
+        NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
