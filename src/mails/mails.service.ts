@@ -13,7 +13,7 @@ export class MailsService {
         to: emailAndCode.email,
         from: process.env.NODEMAILER_EMAIL,
         subject: 'Registration by confirmation code',
-        template: 'index',
+        template: 'src/mails/templates/index.hbs',
         text: 'welcome', // plaintext body
         html: `<h1 style="color: dimgrey">Click on the link below to confirm your email address</h1>
                 <div><a style="font-size: 20px; text-decoration-line: underline" href=\"https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}\"> Push to confirm. /registration-confirmation?code=${emailAndCode.confirmationCode}</a></div>`,
