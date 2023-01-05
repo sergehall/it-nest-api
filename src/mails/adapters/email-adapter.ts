@@ -5,7 +5,7 @@ import { EmailConfirmCodeType, EmailRecoveryCodeType } from '../../types/types';
 import { User } from '../../users/infrastructure/schemas/user.schema';
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: process.env.MAIL_HOST,
   auth: {
     user: process.env.NODEMAILER_EMAIL,
     pass: process.env.NODEMAILER_APP_PASSWORD,

@@ -20,15 +20,41 @@ import { AuthController } from './auth/auth.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DemonsModule } from './demons/demons.module';
 import { MailsModule } from './mails/mails.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import * as process from 'process';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
       load: [],
     }),
+    MailerModule.forRootAsync({
+      useFactory: () => ({
+        transport: {
+          host: process.env.MAIL_HOST,
+          secure: false,
+          auth: {
+            user: process.env.NODEMAILER_EMAIL,
+            pass: process.env.NODEMAILER_APP_PASSWORD,
+          },
+        },
+        defaults: {
+          from: '"No Reply" <noreply@example.com>',
+        },
+        template: {
+          dir: join(__dirname, 'templates'),
+          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          options: {
+            strict: true,
+          },
+        },
+      }),
+    }),
+    ScheduleModule.forRoot(),
     UsersModule,
     BlogsModule,
     PostsModule,

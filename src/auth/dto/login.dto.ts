@@ -8,8 +8,8 @@ export class LoginDto {
   @Matches('^[a-zA-Z0-9_-]*$')
   login: string;
   @IsNotEmpty()
-  @Length(6, 20, {
-    message: 'Incorrect shortDescription length! Must be min 6,max 20 ch.',
+  @Length(6, 30, {
+    message: 'Incorrect shortDescription length! Must be min 6,max 30 ch.',
   })
   password: string;
   @IsNotEmpty()
