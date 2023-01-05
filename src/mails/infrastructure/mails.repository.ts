@@ -24,8 +24,6 @@ export class MailsRepository {
       .sort({ createdAt: 1 })
       .limit(1)
       .lean();
-    // const email = await this.EmailsConfirmCodeModel.findOne({});
-    console.log(email, 'findEmail');
     if (email.length === 0) {
       return null;
     }

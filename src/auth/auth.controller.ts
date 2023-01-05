@@ -56,7 +56,10 @@ export class AuthController {
       throw new HttpException(
         {
           message: [
-            { message: 'Email or login already exists', field: 'email' },
+            {
+              message: `${userExist} already exists`,
+              field: userExist,
+            },
           ],
         },
         400,

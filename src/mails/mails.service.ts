@@ -15,8 +15,10 @@ export class MailsService {
         subject: 'Registration by confirmation code',
         template: 'index',
         text: 'welcome', // plaintext body
-        html: `<h1 style="color: dimgrey">Click on the link below to confirm your email address</h1>
-                <div><a style="font-size: 20px; text-decoration-line: underline" href=\"https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}\"> Push to confirm. /registration-confirmation?code=${emailAndCode.confirmationCode}</a></div>`,
+        html: `
+      <h1 style="color: dimgrey">Click on the link below to confirm your email address</h1>
+       <div><a style="font-size: 20px; text-decoration-line: underline" href=\"https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}\"> Push to confirm. /registration-confirmation?code=${emailAndCode.confirmationCode}</a></div>
+      `,
         context: {
           // ✏️ filling curly brackets with content
           name: emailAndCode.createdAt,

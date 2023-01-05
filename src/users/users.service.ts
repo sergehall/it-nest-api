@@ -33,7 +33,7 @@ export class UsersService {
   ): Promise<UsersEntity | null> {
     return await this.usersRepository.findUserByLoginOrEmail(loginOrEmail);
   }
-  async userAlreadyExist(login: string, email: string): Promise<boolean> {
+  async userAlreadyExist(login: string, email: string): Promise<string | null> {
     return await this.usersRepository.userAlreadyExist(login, email);
   }
   async createUser(

@@ -19,11 +19,16 @@ export class UsersRepository {
       $or: [{ login: { $eq: loginOrEmail } }, { email: { $eq: loginOrEmail } }],
     });
   }
-  async userAlreadyExist(login: string, email: string): Promise<boolean> {
-    const result = await this.UsersModel.findOne({
-      $or: [{ login: { $eq: login } }, { email: { $eq: email } }],
-    });
-    return result !== null;
+  async userAlreadyExist(login: string, email: string): Promise<string | null> {
+    const findLogin = await this.UsersModel.findOne({ login: { $eq: login } });
+    const findEmail = await this.UsersModel.findOne({ email: { $eq: email } });
+    if (findLogin) {
+      return 'login';
+    }
+    if (findEmail) {
+      return 'email';
+    }
+    return null;
   }
   async createUser(user: UsersEntity): Promise<UsersEntity> {
     try {
