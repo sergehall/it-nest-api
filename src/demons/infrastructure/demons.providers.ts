@@ -10,8 +10,22 @@ import {
   EmailsConfirmCodeDocument,
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
+import {
+  UsersDocument,
+  UsersSchema,
+} from '../../users/infrastructure/schemas/user.schema';
 
 export const demonsProviders = [
+  {
+    provide: ProvidersEnums.USER_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<UsersDocument>(
+        'Users',
+        UsersSchema,
+        NamesCollectionsEnums.USERS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
   {
     provide: ProvidersEnums.LAST_10SEC,
     useFactory: (mongoose: Mongoose) =>

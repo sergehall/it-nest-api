@@ -99,4 +99,11 @@ export class UsersRepository {
     const result = await this.UsersModel.deleteOne({ id: id });
     return result.acknowledged && result.deletedCount === 1;
   }
+
+  async addSentEmailTime(email: string, currentTime: string) {
+    return await this.UsersModel.findOneAndUpdate(
+      { email: email },
+      { $push: { 'emailConfirmation.sentEmail': currentTime } },
+    );
+  }
 }

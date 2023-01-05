@@ -4,27 +4,25 @@ import { mailsProviders } from './infrastructure/mails.provaiders';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { MailsRepository } from './infrastructure/mails.repository';
 import { MailerModule } from '@nestjs-modules/mailer';
-import * as process from 'process';
 import { join } from 'path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-      load: [],
-    }),
+    ConfigModule,
     DatabaseModule,
     MailerModule.forRootAsync({
-      useFactory: () => ({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
         transport: {
-          host: process.env.MAIL_HOST,
-          secure: false,
+          host: configService.get('MAIL_HOST'),
+          port: configService.get('EMAIL_PORT'),
+          ignoreTLS: true,
+          secure: true,
           auth: {
-            user: process.env.NODEMAILER_EMAIL,
-            pass: process.env.NODEMAILER_APP_PASSWORD,
+            user: configService.get('NODEMAILER_EMAIL'),
+            pass: configService.get('NODEMAILER_APP_PASSWORD'),
           },
         },
         defaults: {
@@ -32,12 +30,13 @@ import { ConfigModule } from '@nestjs/config';
         },
         template: {
           dir: join(__dirname, 'templates'),
-          adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+          adapter: new HandlebarsAdapter(),
           options: {
             strict: true,
           },
         },
       }),
+      inject: [ConfigService],
     }),
   ],
   providers: [MailsService, MailsRepository, ...mailsProviders],

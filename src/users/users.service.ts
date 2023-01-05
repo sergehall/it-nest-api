@@ -140,6 +140,11 @@ export class UsersService {
     }
   }
 
+  async addSentEmailTime(email: string) {
+    const currentTime = new Date().toISOString();
+    return await this.usersRepository.addSentEmailTime(email, currentTime);
+  }
+
   async removeUserById(id: string, currentUser: User) {
     const userToDelete = await this.usersRepository.findUserByUserId(id);
     if (!userToDelete)

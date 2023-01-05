@@ -1,11 +1,11 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
-import { EmailConfirmCodeType } from '../types/types';
+import { EmailConfimCodeEntity } from './entities/email-confim-code.entity';
 
 @Injectable()
 export class MailsService {
   constructor(private mailerService: MailerService) {}
-  sendCodeByRegistration(emailAndCode: EmailConfirmCodeType) {
+  sendCodeByRegistration(emailAndCode: EmailConfimCodeEntity) {
     const url = `https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}`;
 
     this.mailerService
@@ -13,7 +13,7 @@ export class MailsService {
         to: emailAndCode.email,
         from: process.env.NODEMAILER_EMAIL,
         subject: 'Registration by confirmation code',
-        template: 'src/mails/templates/index.hbs',
+        template: 'index',
         text: 'welcome', // plaintext body
         html: `<h1 style="color: dimgrey">Click on the link below to confirm your email address</h1>
                 <div><a style="font-size: 20px; text-decoration-line: underline" href=\"https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}\"> Push to confirm. /registration-confirmation?code=${emailAndCode.confirmationCode}</a></div>`,
@@ -31,15 +31,19 @@ export class MailsService {
       });
   }
   // async sendCodeByRegistration(emailAndCode: EmailConfirmCodeType) {
-  //   await this.mailerService.sendMail({
-  //     to: emailAndCode.email,
-  //     from: 'Email confirmation message <process.env.NODEMAILER_EMAIL>',
-  //     subject: 'Registration by confirmation code',
-  //     html: `
+  //   try {
+  //     await this.mailerService.sendMail({
+  //       to: emailAndCode.email,
+  //       from: 'Email confirmation message <process.env.NODEMAILER_EMAIL>',
+  //       subject: 'Registration by confirmation code',
+  //       html: `
   //     <h1 style="color: dimgrey">Click on the link below to confirm your email address</h1>
   //      <div><a style="font-size: 20px; text-decoration-line: underline" href=\"https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}\"> Push to confirm. /registration-confirmation?code=${emailAndCode.confirmationCode}</a></div>
   //     `,
-  //   });
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
   // }
 
   // async sendUserConfirmation(emailAndCode: EmailConfirmCodeType) {

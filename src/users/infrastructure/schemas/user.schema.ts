@@ -61,6 +61,7 @@ export class User {
     const salt = await bcrypt.genSalt(saltRounds);
     this.passwordHash = await bcrypt.hash(password, salt);
   }
+
   static async makeInstanceUser(
     createUserDto: CreateUserDto,
     registrationData: RegistrationData,

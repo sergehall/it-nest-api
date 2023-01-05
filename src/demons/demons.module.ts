@@ -6,14 +6,23 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
 import { Last10secReqRepository } from '../auth/infrastructure/last10sec-req..repository';
 import { MailsModule } from '../mails/mails.module';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
+import { UsersService } from '../users/users.service';
+import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
+import { Pagination } from '../infrastructure/common/pagination/pagination';
+import { CaslModule } from '../ability/casl.module';
+import { UsersRepository } from '../users/infrastructure/users.repository';
 
 @Module({
-  imports: [DatabaseModule, MailsModule],
+  imports: [DatabaseModule, MailsModule, CaslModule],
   controllers: [DemonsController],
   providers: [
     DemonsService,
     Last10secReqRepository,
     MailsRepository,
+    UsersService,
+    Pagination,
+    ConvertFiltersForDB,
+    UsersRepository,
     ...demonsProviders,
   ],
 })
