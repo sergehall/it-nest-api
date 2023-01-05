@@ -67,6 +67,7 @@ export class UsersService {
     await this.usersRepository.save(newInstance);
 
     const newConfirmationCode: EmailConfimCodeEntity = {
+      id: uuid4().toString(),
       email: newInstance.email,
       confirmationCode: newInstance.emailConfirmation.confirmationCode,
       createdAt: new Date().toISOString(),

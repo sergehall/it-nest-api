@@ -25,4 +25,7 @@ export class MailsRepository {
     }
     return findEmail[0];
   }
+  async removeEmailById(id: string): Promise<boolean> {
+    return await this.EmailsConfirmCodeModel.remove({ id: id });
+  }
 }

@@ -2,6 +2,11 @@ import { IsNotEmpty, Length, Matches } from 'class-validator';
 
 export class EmailConfimCodeEntity {
   @IsNotEmpty()
+  @Length(0, 50, {
+    message: 'Incorrect id length! Must be min 0, max 50 ch.',
+  })
+  id: string;
+  @IsNotEmpty()
   @Length(6, 20, {
     message: 'Incorrect email length! Must be min 6, max 20 ch.',
   })

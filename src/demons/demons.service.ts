@@ -18,9 +18,10 @@ export class DemonsService {
   }
   @Cron('0 */1 * * * *')
   async sendAndDeleteConfirmationCode() {
-    const emailAndCode = await this.mailsRepository.findEmailByOldestDate();
+    // const emailAndCode = await this.mailsRepository.findEmailByOldestDate();
     // if (emailAndCode) {
     //   await this.mailService.sendCodeByRegistration(emailAndCode);
+    //   await this.mailsRepository.removeEmailById(emailAndCode.id);
     // }
     console.log('0 */1 * * * * : sendAndDeleteConfirmationCode');
   }
