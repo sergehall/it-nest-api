@@ -19,7 +19,7 @@ export class DemonsService {
     console.log('0 */5 * * * * : clearingIpOlder10Sec');
   }
 
-  @Cron('30 * * * * *')
+  @Cron('5 * * * * *')
   async sendAndDeleteConfirmationCode() {
     const emailAndCode = await this.mailsRepository.findEmailByOldestDate();
     if (emailAndCode) {
@@ -27,6 +27,6 @@ export class DemonsService {
       await this.usersService.addSentEmailTime(emailAndCode.email);
       await this.mailsRepository.removeEmailById(emailAndCode.id);
     }
-    console.log('30 * * * * * : sendAndDeleteConfirmationCode');
+    console.log('5 * * * * * : sendAndDeleteConfirmationCode');
   }
 }
