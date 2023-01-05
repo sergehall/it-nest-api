@@ -2,7 +2,10 @@ import { ForbiddenException, Inject } from '@nestjs/common';
 import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 import { EmailConfimCodeEntity } from '../entities/email-confim-code.entity';
 import { Model } from 'mongoose';
-import { EmailsConfirmCodeDocument } from './schemas/email-confirm-code.schema';
+import {
+  EmailsConfirmCode,
+  EmailsConfirmCodeDocument,
+} from './schemas/email-confirm-code.schema';
 
 export class MailsRepository {
   constructor(
@@ -16,14 +19,17 @@ export class MailsRepository {
       throw new ForbiddenException(error.message);
     }
   }
-  async findEmailByOldestDate(): Promise<EmailConfimCodeEntity | null> {
-    const findEmail = await this.EmailsConfirmCodeModel.find({}, { _id: false })
+  async findEmailByOldestDate(): Promise<EmailsConfirmCode | null> {
+    const email = await this.EmailsConfirmCodeModel.find({}, { _id: false })
       .sort({ createdAt: 1 })
-      .limit(1);
-    if (findEmail.length === 0) {
+      .limit(1)
+      .lean();
+    // const email = await this.EmailsConfirmCodeModel.findOne({});
+    console.log(email, 'findEmail');
+    if (email.length === 0) {
       return null;
     }
-    return findEmail[0];
+    return email[0];
   }
   async removeEmailById(id: string): Promise<boolean> {
     const result = await this.EmailsConfirmCodeModel.deleteOne({ id: id });

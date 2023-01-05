@@ -20,6 +20,7 @@ import { AuthController } from './auth/auth.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DemonsModule } from './demons/demons.module';
 import { MailsModule } from './mails/mails.module';
+import { TestingController } from './testing/testing.controller';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ export class AppModule implements NestModule {
         PostsController,
         UsersController,
         SecurityDevicesController,
+        TestingController,
       );
   }
 }

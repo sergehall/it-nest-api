@@ -22,7 +22,7 @@ export class LoggerMiddleware implements NestMiddleware {
     // console.log('body: ', body);
     // console.log('params: ', params);
     // console.log('query: ', query);
-    console.log(this.logger);
+    console.log('Logger', method, originalUrl);
     next();
   }
 }
