@@ -15,6 +15,7 @@ import { LikeStatusDto } from '../comments/dto/like-status.dto';
 import { LikeStatusPostEntity } from './entities/like-status-post.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { LikeStatusPostsRepository } from './infrastructure/like-status-posts.repository';
+import { statusCode } from '../logger/status-code.enum';
 
 @Injectable()
 export class PostsService {
@@ -102,7 +103,11 @@ export class PostsService {
     currentUser: UsersEntity,
   ): Promise<PostsEntity | null> {
     const post = await this.postsRepository.findPostById(postId);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     const filledPost =
       await this.likeStatusPostsRepository.preparationPostsForReturn(
         [post],
@@ -118,7 +123,10 @@ export class PostsService {
     const postToUpdate: PostsEntity | null =
       await this.postsRepository.findPostById(id);
     if (!postToUpdate)
-      throw new HttpException({ message: ['Not found post'] }, 404);
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     const ability = this.caslAbilityFactory.createForPost({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
@@ -142,7 +150,10 @@ export class PostsService {
   async removePost(id: string) {
     const postToDelete = await this.postsRepository.findPostById(id);
     if (!postToDelete)
-      throw new HttpException({ message: ['Not found post'] }, 404);
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     const ability = this.caslAbilityFactory.createForPost({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
@@ -161,7 +172,11 @@ export class PostsService {
     currentUser: UsersEntity,
   ) {
     const post = await this.postsRepository.findPostById(postId);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     const likeStatusPostEntity: LikeStatusPostEntity = {
       postId: postId,
       userId: currentUser.id,

@@ -28,6 +28,7 @@ import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
+import { statusCode } from '../logger/status-code.enum';
 
 @Controller('posts')
 export class PostsController {
@@ -69,7 +70,6 @@ export class PostsController {
     }
     return this.postsService.createPost(createPostDto, blog.name);
   }
-  @HttpCode(201)
   @Post(':postId/comments')
   async createComment(
     @Param('postId') postId: string,
@@ -77,7 +77,11 @@ export class PostsController {
   ) {
     const currentUser: UsersEntity = currentUserInst;
     const post = await this.postsService.checkPostInDB(postId);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     return await this.commentsService.createComment(
       postId,
       createCommentDto,
@@ -97,7 +101,11 @@ export class PostsController {
       sortDirection: paginationData.sortDirection,
     };
     const post = await this.postsService.checkPostInDB(postId);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     return await this.commentsService.findCommentsByPostId(
       queryPagination,
       postId,
@@ -110,10 +118,14 @@ export class PostsController {
   async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
     const currentUser: User | null = new User();
     const post = await this.postsService.findPostById(postId, currentUser);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     return post;
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updatePost(
@@ -121,16 +133,20 @@ export class PostsController {
     @Body() updatePostDto: CreatePostDto,
   ) {
     const post = await this.postsService.updatePost(id, updatePostDto);
-    if (!post) throw new HttpException({ message: ['Not found post'] }, 404);
+    if (!post)
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     return post;
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removePost(@Param('id') id: string) {
     return await this.postsService.removePost(id);
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @Put(':postId/like-status')
   async changeLikeStatusComment(
     @Param('postId') postId: string,

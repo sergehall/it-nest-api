@@ -23,6 +23,7 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
 import { currentUserInst } from '../current-user/current-user';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
+import { statusCode } from '../logger/status-code.enum';
 
 @Controller('blogs')
 export class BlogsController {
@@ -60,7 +61,10 @@ export class BlogsController {
     const currentUser: UsersEntity | null = currentUserInst;
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
-      throw new HttpException({ message: ['Not found blogger'] }, 404);
+      throw new HttpException(
+        { message: ['Not found blogger'] },
+        statusCode.NOT_FOUND,
+      );
     }
     const paginationData = ParseQuery.getPaginationData(query);
     const dtoPagination: QueryPaginationType = {
@@ -84,7 +88,10 @@ export class BlogsController {
   ) {
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
-      throw new HttpException({ message: ['Not found blogger'] }, 404);
+      throw new HttpException(
+        { message: ['Not found blogger'] },
+        statusCode.NOT_FOUND,
+      );
     }
     const createPostDto = {
       title: createPostByBlogIdDto.title,
@@ -97,10 +104,14 @@ export class BlogsController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<BlogsEntity | null> {
     const blog = await this.blogsService.findOne(id);
-    if (!blog) throw new HttpException({ message: ['Not found blogger'] }, 404);
+    if (!blog)
+      throw new HttpException(
+        { message: ['Not found blogger'] },
+        statusCode.NOT_FOUND,
+      );
     return blog;
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updateBlog(
@@ -109,7 +120,7 @@ export class BlogsController {
   ) {
     return this.blogsService.updateBlog(id, updateBlogDto);
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removeBlog(@Param('id') id: string) {

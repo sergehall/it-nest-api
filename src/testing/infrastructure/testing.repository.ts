@@ -30,7 +30,7 @@ export class TestingRepository {
     @Inject(ProvidersEnums.CONFIRM_CODE)
     private EmailsConfirmModel: Model<EmailsConfirmCodeDocument>,
   ) {}
-  async delAllData(): Promise<boolean> {
+  async removeAllCollections(): Promise<boolean> {
     // delete all Collections
     await this.usersModel.deleteMany({});
     await this.blogsModel.deleteMany({});

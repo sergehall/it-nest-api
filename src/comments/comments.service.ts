@@ -16,6 +16,7 @@ import { Action } from '../ability/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 import { PostsService } from '../posts/posts.service';
+import { statusCode } from '../logger/status-code.enum';
 
 @Injectable()
 export class CommentsService {
@@ -33,7 +34,10 @@ export class CommentsService {
   ): Promise<CommentsEntity> {
     const post = await this.postsService.checkPostInDB(postId);
     if (!post) {
-      throw new HttpException({ message: ['Not found post'] }, 404);
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     }
     const newComment: CommentsEntity = {
       id: uuid4().toString(),
@@ -53,7 +57,10 @@ export class CommentsService {
   async findCommentById(commentId: string, currentUser: UsersEntity | null) {
     const comment = await this.commentsRepository.findCommentById(commentId);
     if (!comment)
-      throw new HttpException({ message: ['Not found comment'] }, 404);
+      throw new HttpException(
+        { message: ['Not found comment'] },
+        statusCode.NOT_FOUND,
+      );
     const filledComments =
       await this.likeStatusCommentsRepository.preparationCommentsForReturn(
         [comment],
@@ -69,7 +76,10 @@ export class CommentsService {
   ) {
     const post = await this.postsService.checkPostInDB(postId);
     if (!post) {
-      throw new HttpException({ message: ['Not found post'] }, 404);
+      throw new HttpException(
+        { message: ['Not found post'] },
+        statusCode.NOT_FOUND,
+      );
     }
     const commentsDoc = await this.commentsRepository.findCommentsByPostId(
       postId,
@@ -144,7 +154,10 @@ export class CommentsService {
       commentId,
     );
     if (!findComment) {
-      throw new HttpException({ message: ['Not found comment'] }, 404);
+      throw new HttpException(
+        { message: ['Not found comment'] },
+        statusCode.NOT_FOUND,
+      );
     }
     const likeStatusCommEntity: LikeStatusCommentEntity = {
       commentId: commentId,
@@ -170,7 +183,10 @@ export class CommentsService {
       commentId,
     );
     if (!findComment) {
-      throw new HttpException({ message: ['Not found comment'] }, 404);
+      throw new HttpException(
+        { message: ['Not found comment'] },
+        statusCode.NOT_FOUND,
+      );
     }
     try {
       const ability = this.caslAbilityFactory.createForComments({
@@ -195,7 +211,10 @@ export class CommentsService {
       commentId,
     );
     if (!findComment) {
-      throw new HttpException({ message: ['Not found comment'] }, 404);
+      throw new HttpException(
+        { message: ['Not found comment'] },
+        statusCode.NOT_FOUND,
+      );
     }
     try {
       const ability = this.caslAbilityFactory.createForComments({

@@ -11,6 +11,7 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../ability/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
+import { statusCode } from '../logger/status-code.enum';
 
 @Injectable()
 export class BlogsService {
@@ -84,7 +85,10 @@ export class BlogsService {
     const blogToUpdate: BlogsEntity | null =
       await this.blogsRepository.findBlogById(id);
     if (!blogToUpdate)
-      throw new HttpException({ message: ['Not found user'] }, 404);
+      throw new HttpException(
+        { message: ['Not found user'] },
+        statusCode.NOT_FOUND,
+      );
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
@@ -108,7 +112,10 @@ export class BlogsService {
   async removeBlog(id: string) {
     const blogToUpdate = await this.blogsRepository.findBlogById(id);
     if (!blogToUpdate)
-      throw new HttpException({ message: ['Not found user'] }, 404);
+      throw new HttpException(
+        { message: ['Not found user'] },
+        statusCode.NOT_FOUND,
+      );
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {

@@ -200,7 +200,10 @@ export class UsersService {
   async removeUserById(id: string, currentUser: User) {
     const userToDelete = await this.usersRepository.findUserByUserId(id);
     if (!userToDelete)
-      throw new HttpException({ message: ['Not found user'] }, 404);
+      throw new HttpException(
+        { message: ['Not found user'] },
+        statusCode.NOT_FOUND,
+      );
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);
       ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, userToDelete);
