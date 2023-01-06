@@ -78,21 +78,8 @@ export class UsersService {
   }
   async updateAndSentConfirmationCodeByEmail(email: string): Promise<boolean> {
     const user = await this.findUserByLoginOrEmail(email);
-    if (!user) {
-      throw new HttpException(
-        {
-          message: [
-            {
-              message: 'User not exists',
-              field: 'email',
-            },
-          ],
-        },
-        statusCode.BAD_REQUEST,
-      );
-    }
     const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
-    if (!user.emailConfirmation.isConfirmed) {
+    if (user && !user.emailConfirmation.isConfirmed) {
       if (user.emailConfirmation.expirationDate > new Date().toISOString()) {
         user.emailConfirmation.confirmationCode = uuid4().toString();
         user.emailConfirmation.expirationDate = expirationDate;
@@ -110,8 +97,20 @@ export class UsersService {
           newEmailConfirmationCode,
         );
       }
+      return true;
+    } else {
+      throw new HttpException(
+        {
+          message: [
+            {
+              message: 'User not exists',
+              field: 'email',
+            },
+          ],
+        },
+        statusCode.BAD_REQUEST,
+      );
     }
-    return true;
   }
 
   async findAll(

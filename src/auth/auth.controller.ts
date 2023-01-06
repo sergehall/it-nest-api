@@ -25,7 +25,6 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
-  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -106,7 +105,7 @@ export class AuthController {
             {
               message:
                 'Confirmation code is incorrect, expired or already been applied',
-              field: 'email',
+              field: 'code',
             },
           ],
         },
