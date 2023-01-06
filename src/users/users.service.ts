@@ -75,6 +75,43 @@ export class UsersService {
     await this.mailsRepository.insertEmailConfirmCode(newConfirmationCode);
     return newInstance;
   }
+  async updateAndSentConfirmationCodeByEmail(email: string): Promise<boolean> {
+    const user = await this.findUserByLoginOrEmail(email);
+    if (!user) {
+      throw new HttpException(
+        {
+          message: [
+            {
+              message: 'User not exists',
+              field: 'email',
+            },
+          ],
+        },
+        400,
+      );
+    }
+    const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
+    if (!user.emailConfirmation.isConfirmed) {
+      if (user.emailConfirmation.expirationDate > new Date().toISOString()) {
+        user.emailConfirmation.confirmationCode = uuid4().toString();
+        user.emailConfirmation.expirationDate = expirationDate;
+        // update user
+        await this.usersRepository.updateUserConfirmationCode(user);
+
+        const newEmailConfirmationCode = {
+          id: uuid4().toString(),
+          email: user.email,
+          confirmationCode: user.emailConfirmation.confirmationCode,
+          createdAt: new Date().toISOString(),
+        };
+        // add Email to emailsToSentRepository
+        await this.mailsRepository.insertEmailConfirmCode(
+          newEmailConfirmationCode,
+        );
+      }
+    }
+    return true;
+  }
 
   async findAll(
     queryPagination: PaginationDto,

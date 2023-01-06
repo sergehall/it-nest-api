@@ -15,6 +15,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { LimitReqGuard } from './guards/last10sec-req.guards';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
+import { EmailDto } from './dto/email.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -82,6 +83,14 @@ export class AuthController {
       login: newUser.login,
       email: newUser.email,
     };
+  }
+  @HttpCode(204)
+  @UseGuards(LimitReqGuard)
+  @Post('registration-email-resending')
+  async registrationEmailResending(@Body() emailDto: EmailDto) {
+    return await this.usersService.updateAndSentConfirmationCodeByEmail(
+      emailDto.email,
+    );
   }
   @UseGuards(LimitReqGuard)
   @UseGuards(JwtAuthGuard)

@@ -12,7 +12,9 @@ export class MailsRepository {
     @Inject(ProvidersEnums.CONFIRM_CODE)
     private EmailsConfirmCodeModel: Model<EmailsConfirmCodeDocument>,
   ) {}
-  async insertEmailConfirmCode(newConfirmationCode: EmailConfimCodeEntity) {
+  async insertEmailConfirmCode(
+    newConfirmationCode: EmailConfimCodeEntity,
+  ): Promise<EmailConfimCodeEntity> {
     try {
       return await this.EmailsConfirmCodeModel.create(newConfirmationCode);
     } catch (error) {
