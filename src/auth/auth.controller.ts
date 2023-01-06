@@ -103,7 +103,8 @@ export class AuthController {
         {
           message: [
             {
-              message: 'User not exists',
+              message:
+                'Confirmation code is incorrect, expired or already been applied',
               field: 'email',
             },
           ],

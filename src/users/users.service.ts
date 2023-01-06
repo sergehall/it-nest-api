@@ -72,7 +72,7 @@ export class UsersService {
       confirmationCode: newInstance.emailConfirmation.confirmationCode,
       createdAt: new Date().toISOString(),
     };
-    await this.mailsRepository.insertEmailConfirmCode(newConfirmationCode);
+    await this.mailsRepository.createEmailConfirmCode(newConfirmationCode);
     return newInstance;
   }
   async updateAndSentConfirmationCodeByEmail(email: string): Promise<boolean> {
@@ -105,7 +105,7 @@ export class UsersService {
           createdAt: new Date().toISOString(),
         };
         // add Email to emailsToSentRepository
-        await this.mailsRepository.insertEmailConfirmCode(
+        await this.mailsRepository.createEmailConfirmCode(
           newEmailConfirmationCode,
         );
       }
