@@ -4,10 +4,12 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './logger/http-exception.filter';
+import { TrimPipe } from './pipes/TrimPipe';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.useGlobalPipes(
+    new TrimPipe(),
     new ValidationPipe({
       transform: true,
       stopAtFirstError: false,

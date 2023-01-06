@@ -26,6 +26,6 @@ export class DemonsService {
       await this.usersService.addSentEmailTime(emailAndCode.email);
       await this.mailsRepository.removeEmailById(emailAndCode.id);
     }
-    console.log('8 * * * * * : sendAndDeleteConfirmationCode');
+    // console.log('* * * * * * : sendAndDeleteConfirmationCode');
   }
 }

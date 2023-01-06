@@ -15,7 +15,7 @@ import { LikeStatusDto } from '../comments/dto/like-status.dto';
 import { LikeStatusPostEntity } from './entities/like-status-post.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { LikeStatusPostsRepository } from './infrastructure/like-status-posts.repository';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class PostsService {
@@ -106,7 +106,7 @@ export class PostsService {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const filledPost =
       await this.likeStatusPostsRepository.preparationPostsForReturn(
@@ -125,7 +125,7 @@ export class PostsService {
     if (!postToUpdate)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const ability = this.caslAbilityFactory.createForPost({ id: id });
     try {
@@ -152,7 +152,7 @@ export class PostsService {
     if (!postToDelete)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const ability = this.caslAbilityFactory.createForPost({ id: id });
     try {
@@ -175,7 +175,7 @@ export class PostsService {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const likeStatusPostEntity: LikeStatusPostEntity = {
       postId: postId,

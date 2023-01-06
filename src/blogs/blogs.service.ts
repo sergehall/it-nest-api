@@ -11,7 +11,7 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../ability/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class BlogsService {
@@ -87,7 +87,7 @@ export class BlogsService {
     if (!blogToUpdate)
       throw new HttpException(
         { message: ['Not found user'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {
@@ -114,7 +114,7 @@ export class BlogsService {
     if (!blogToUpdate)
       throw new HttpException(
         { message: ['Not found user'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {

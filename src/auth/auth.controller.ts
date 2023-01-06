@@ -17,7 +17,7 @@ import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +25,7 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
-  @HttpCode(statusCode.OK)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(LimitReqGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -43,7 +43,7 @@ export class AuthController {
   //   });
   //   return { accessToken: req.user.data.accessToken };
   // }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration')
   async registration(
@@ -65,7 +65,7 @@ export class AuthController {
             },
           ],
         },
-        statusCode.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST,
       );
     }
     let userAgent = req.get('user-agent');
@@ -86,7 +86,7 @@ export class AuthController {
       email: newUser.email,
     };
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
@@ -94,7 +94,7 @@ export class AuthController {
       emailDto.email,
     );
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration-confirmation')
   async registrationConfirmation(@Body() codeDto: CodeDto) {
@@ -110,7 +110,7 @@ export class AuthController {
             },
           ],
         },
-        statusCode.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST,
       );
     }
     return true;

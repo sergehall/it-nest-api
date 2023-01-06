@@ -17,7 +17,7 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { Role } from '../ability/roles/role.enum';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('comments')
 export class CommentsController {
@@ -30,7 +30,7 @@ export class CommentsController {
     const currentUser = null;
     return this.commentsService.findCommentById(id, currentUser);
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId')
   async updateComment(
     @Param('commentId') commentId: string,
@@ -43,7 +43,7 @@ export class CommentsController {
       currentUser,
     );
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':commentId')
   async removeComment(@Param('commentId') commentId: string) {
     const currentUser = new User();
@@ -52,7 +52,7 @@ export class CommentsController {
     currentUser.roles = Role.User;
     return this.commentsService.removeComment(commentId, currentUser);
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async changeLikeStatusComment(
     @Param('commentId') commentId: string,

@@ -7,7 +7,7 @@ import {
 import { Last10secReqRepository } from '../infrastructure/last10sec-req..repository';
 import { Promise } from 'mongoose';
 import { maxAttempts } from '../count-attempts.constants';
-import { statusCode } from '../../logger/status-code.enum';
+import { HttpStatus } from '../../logger/status-code.enum';
 
 @Injectable()
 export class LimitReqGuard implements CanActivate {
@@ -29,7 +29,7 @@ export class LimitReqGuard implements CanActivate {
       )
       .then((i) => {
         if (i > maxAttempts) {
-          throw new HttpException(message, statusCode.TOO_MANY_REQUESTS);
+          throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
         }
         return true;
       });

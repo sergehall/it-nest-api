@@ -6,8 +6,8 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { statusCode } from '../../logger/status-code.enum';
 import * as process from 'process';
+import { HttpStatus } from '../../logger/status-code.enum';
 
 @Injectable()
 export class BaseAuthGuard implements CanActivate {
@@ -29,7 +29,7 @@ export class BaseAuthGuard implements CanActivate {
               },
             ],
           },
-          statusCode.UNAUTHORIZED,
+          HttpStatus.UNAUTHORIZED,
         );
       }
       return true;

@@ -28,7 +28,7 @@ import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('posts')
 export class PostsController {
@@ -80,7 +80,7 @@ export class PostsController {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return await this.commentsService.createComment(
       postId,
@@ -104,7 +104,7 @@ export class PostsController {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return await this.commentsService.findCommentsByPostId(
       queryPagination,
@@ -121,11 +121,11 @@ export class PostsController {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return post;
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updatePost(
@@ -136,17 +136,17 @@ export class PostsController {
     if (!post)
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return post;
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removePost(@Param('id') id: string) {
     return await this.postsService.removePost(id);
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async changeLikeStatusComment(
     @Param('postId') postId: string,

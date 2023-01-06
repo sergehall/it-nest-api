@@ -23,7 +23,7 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
 import { currentUserInst } from '../current-user/current-user';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('blogs')
 export class BlogsController {
@@ -63,7 +63,7 @@ export class BlogsController {
     if (!blog) {
       throw new HttpException(
         { message: ['Not found blogger'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     const paginationData = ParseQuery.getPaginationData(query);
@@ -90,7 +90,7 @@ export class BlogsController {
     if (!blog) {
       throw new HttpException(
         { message: ['Not found blogger'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     const createPostDto = {
@@ -107,11 +107,11 @@ export class BlogsController {
     if (!blog)
       throw new HttpException(
         { message: ['Not found blogger'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return blog;
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Put(':id')
   async updateBlog(
@@ -120,7 +120,7 @@ export class BlogsController {
   ) {
     return this.blogsService.updateBlog(id, updateBlogDto);
   }
-  @HttpCode(statusCode.NO_CONTENT)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(BaseAuthGuard)
   @Delete(':id')
   async removeBlog(@Param('id') id: string) {

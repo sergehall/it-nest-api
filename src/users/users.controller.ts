@@ -27,7 +27,7 @@ import * as uuid4 from 'uuid4';
 import { User } from './infrastructure/schemas/user.schema';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('users')
 export class UsersController {
@@ -107,7 +107,7 @@ export class UsersController {
     if (!result)
       throw new HttpException(
         { message: ['Not found user'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     return result;
   }

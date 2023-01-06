@@ -18,7 +18,7 @@ import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class UsersService {
@@ -108,7 +108,7 @@ export class UsersService {
             },
           ],
         },
-        statusCode.BAD_REQUEST,
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
@@ -202,7 +202,7 @@ export class UsersService {
     if (!userToDelete)
       throw new HttpException(
         { message: ['Not found user'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);

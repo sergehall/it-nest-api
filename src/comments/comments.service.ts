@@ -16,7 +16,7 @@ import { Action } from '../ability/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 import { PostsService } from '../posts/posts.service';
-import { statusCode } from '../logger/status-code.enum';
+import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class CommentsService {
@@ -36,7 +36,7 @@ export class CommentsService {
     if (!post) {
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     const newComment: CommentsEntity = {
@@ -59,7 +59,7 @@ export class CommentsService {
     if (!comment)
       throw new HttpException(
         { message: ['Not found comment'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     const filledComments =
       await this.likeStatusCommentsRepository.preparationCommentsForReturn(
@@ -78,7 +78,7 @@ export class CommentsService {
     if (!post) {
       throw new HttpException(
         { message: ['Not found post'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     const commentsDoc = await this.commentsRepository.findCommentsByPostId(
@@ -156,7 +156,7 @@ export class CommentsService {
     if (!findComment) {
       throw new HttpException(
         { message: ['Not found comment'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     const likeStatusCommEntity: LikeStatusCommentEntity = {
@@ -185,7 +185,7 @@ export class CommentsService {
     if (!findComment) {
       throw new HttpException(
         { message: ['Not found comment'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     try {
@@ -213,7 +213,7 @@ export class CommentsService {
     if (!findComment) {
       throw new HttpException(
         { message: ['Not found comment'] },
-        statusCode.NOT_FOUND,
+        HttpStatus.NOT_FOUND,
       );
     }
     try {
