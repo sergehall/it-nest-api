@@ -25,6 +25,7 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
+  @HttpCode(statusCode.OK)
   @UseGuards(LimitReqGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
