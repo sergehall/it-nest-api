@@ -17,6 +17,7 @@ import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
+import { statusCode } from '../logger/status-code.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
-  @HttpCode(200)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -42,7 +43,7 @@ export class AuthController {
   //   });
   //   return { accessToken: req.user.data.accessToken };
   // }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration')
   async registration(
@@ -64,7 +65,7 @@ export class AuthController {
             },
           ],
         },
-        400,
+        statusCode.BAD_REQUEST,
       );
     }
     let userAgent = req.get('user-agent');
@@ -85,7 +86,7 @@ export class AuthController {
       email: newUser.email,
     };
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
@@ -93,7 +94,7 @@ export class AuthController {
       emailDto.email,
     );
   }
-  @HttpCode(204)
+  @HttpCode(statusCode.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration-confirmation')
   async registrationConfirmation(@Body() codeDto: CodeDto) {
@@ -109,7 +110,7 @@ export class AuthController {
             },
           ],
         },
-        400,
+        statusCode.BAD_REQUEST,
       );
     }
     return true;

@@ -18,6 +18,7 @@ import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
+import { statusCode } from '../logger/status-code.enum';
 
 @Injectable()
 export class UsersService {
@@ -87,7 +88,7 @@ export class UsersService {
             },
           ],
         },
-        400,
+        statusCode.BAD_REQUEST,
       );
     }
     const expirationDate = new Date(Date.now() + 65 * 60 * 1000).toISOString();
