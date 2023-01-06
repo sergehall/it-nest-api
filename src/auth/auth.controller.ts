@@ -16,6 +16,7 @@ import { LimitReqGuard } from './guards/last10sec-req.guards';
 import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
+import { CodeDto } from './dto/code.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -91,6 +92,26 @@ export class AuthController {
     return await this.usersService.updateAndSentConfirmationCodeByEmail(
       emailDto.email,
     );
+  }
+  @HttpCode(204)
+  @UseGuards(LimitReqGuard)
+  @Post('registration-confirmation')
+  async registrationConfirmation(@Body() codeDto: CodeDto) {
+    const result = await this.usersService.confirmByCodeInParams(codeDto.code);
+    if (!result) {
+      throw new HttpException(
+        {
+          message: [
+            {
+              message: 'User not exists',
+              field: 'email',
+            },
+          ],
+        },
+        400,
+      );
+    }
+    return true;
   }
   @UseGuards(LimitReqGuard)
   @UseGuards(JwtAuthGuard)

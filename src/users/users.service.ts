@@ -152,6 +152,21 @@ export class UsersService {
     return await this.usersRepository.findUserByUserId(userId);
   }
 
+  async confirmByCodeInParams(code: string): Promise<boolean> {
+    const user = await this.usersRepository.findUserByConfirmationCode(code);
+    if (user) {
+      if (!user.emailConfirmation.isConfirmed) {
+        if (user.emailConfirmation.expirationDate > new Date().toISOString()) {
+          user.emailConfirmation.isConfirmed = true;
+          user.emailConfirmation.isConfirmedDate = new Date().toISOString();
+          await this.usersRepository.updateUser(user);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   async updateUser(
     id: string,
     updateUserDto: UpdateUserDto,

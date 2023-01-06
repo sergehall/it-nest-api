@@ -102,6 +102,14 @@ export class UsersRepository {
       { $set: user },
     );
   }
+  async findUserByConfirmationCode(code: string): Promise<UsersEntity | null> {
+    return await this.UsersModel.findOne({
+      'emailConfirmation.confirmationCode': code,
+    });
+  }
+  async updateUser(user: UsersEntity) {
+    return await this.UsersModel.updateOne({ id: user.id }, { $set: user });
+  }
 
   async removeUserById(id: string): Promise<boolean> {
     const result = await this.UsersModel.deleteOne({ id: id });
