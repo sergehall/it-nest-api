@@ -1,4 +1,9 @@
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
@@ -16,7 +21,6 @@ import { Action } from '../ability/roles/action.enum';
 import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { LikeStatusCommentsRepository } from './infrastructure/like-status-comments.repository';
 import { PostsService } from '../posts/posts.service';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class CommentsService {

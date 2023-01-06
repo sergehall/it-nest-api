@@ -8,6 +8,7 @@ import {
   Body,
   HttpException,
   Ip,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
@@ -17,7 +18,6 @@ import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('auth')
 export class AuthController {

@@ -4,10 +4,10 @@ import {
   ExecutionContext,
   UnauthorizedException,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import * as process from 'process';
-import { HttpStatus } from '../../logger/status-code.enum';
 
 @Injectable()
 export class BaseAuthGuard implements CanActivate {

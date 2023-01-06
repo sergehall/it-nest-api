@@ -10,6 +10,7 @@ import {
   Query,
   HttpCode,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -28,7 +29,6 @@ import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('posts')
 export class PostsController {

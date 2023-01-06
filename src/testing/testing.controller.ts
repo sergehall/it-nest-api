@@ -1,6 +1,5 @@
-import { Controller, Delete, HttpCode } from '@nestjs/common';
+import { Controller, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { TestingService } from './testing.service';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('testing')
 export class TestingController {

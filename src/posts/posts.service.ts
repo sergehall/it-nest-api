@@ -1,4 +1,9 @@
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import * as uuid4 from 'uuid4';
@@ -15,7 +20,6 @@ import { LikeStatusDto } from '../comments/dto/like-status.dto';
 import { LikeStatusPostEntity } from './entities/like-status-post.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { LikeStatusPostsRepository } from './infrastructure/like-status-posts.repository';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class PostsService {

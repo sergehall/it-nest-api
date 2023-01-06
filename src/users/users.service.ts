@@ -1,4 +1,9 @@
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
@@ -18,7 +23,6 @@ import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class UsersService {

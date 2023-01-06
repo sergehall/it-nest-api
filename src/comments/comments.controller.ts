@@ -7,6 +7,7 @@ import {
   Put,
   HttpCode,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -17,7 +18,6 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { Role } from '../ability/roles/role.enum';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('comments')
 export class CommentsController {

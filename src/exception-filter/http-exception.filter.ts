@@ -3,9 +3,9 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { HttpStatus } from './status-code.enum';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {

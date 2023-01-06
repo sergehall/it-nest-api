@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
-import { HttpExceptionFilter } from './logger/http-exception.filter';
+import { HttpExceptionFilter } from './exception-filter/http-exception.filter';
 import { TrimPipe } from './pipes/TrimPipe';
 
 async function bootstrap() {

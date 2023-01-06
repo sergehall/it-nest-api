@@ -10,6 +10,7 @@ import {
   HttpException,
   HttpCode,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
@@ -23,7 +24,6 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
 import { currentUserInst } from '../current-user/current-user';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Controller('blogs')
 export class BlogsController {

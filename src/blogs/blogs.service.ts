@@ -1,5 +1,10 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
-import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 import { Pagination } from '../infrastructure/common/pagination/pagination';
@@ -11,7 +16,6 @@ import { CaslAbilityFactory } from '../ability/casl-ability.factory';
 import { ForbiddenError } from '@casl/ability';
 import { Action } from '../ability/roles/action.enum';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
-import { HttpStatus } from '../logger/status-code.enum';
 
 @Injectable()
 export class BlogsService {
