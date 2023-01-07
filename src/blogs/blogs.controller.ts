@@ -11,6 +11,7 @@ import {
   HttpCode,
   UseGuards,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
@@ -22,8 +23,8 @@ import { PaginationTypes } from '../infrastructure/common/pagination/types/pagin
 import { BlogsEntity } from './entities/blogs.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
-import { currentUserInst } from '../current-user/current-user';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
+import { NoneStatusGuard } from '../auth/guards/none-status.guard';
 
 @Controller('blogs')
 export class BlogsController {
@@ -57,8 +58,13 @@ export class BlogsController {
   }
 
   @Get(':blogId/posts')
-  async getPostsByBlogId(@Query() query: any, @Param('blogId') blogId: string) {
-    const currentUser: UsersEntity | null = currentUserInst;
+  @UseGuards(NoneStatusGuard)
+  async getPostsByBlogId(
+    @Request() req: any,
+    @Query() query: any,
+    @Param('blogId') blogId: string,
+  ) {
+    const currentUser: UsersEntity | null = req.user;
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
       throw new HttpException(

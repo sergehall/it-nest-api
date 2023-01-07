@@ -10,6 +10,11 @@ import { blogsProviders } from './infrastructure/blogs.providers';
 import { CaslModule } from '../ability/casl.module';
 import { PostsRepository } from '../posts/infrastructure/posts.repository';
 import { LikeStatusPostsRepository } from '../posts/infrastructure/like-status-posts.repository';
+import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { UsersRepository } from '../users/infrastructure/users.repository';
+import { MailsRepository } from '../mails/infrastructure/mails.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -19,8 +24,13 @@ import { LikeStatusPostsRepository } from '../posts/infrastructure/like-status-p
     PostsService,
     ConvertFiltersForDB,
     BlogsRepository,
+    AuthService,
+    UsersService,
+    JwtService,
     Pagination,
     PostsRepository,
+    UsersRepository,
+    MailsRepository,
     LikeStatusPostsRepository,
     ...blogsProviders,
   ],
