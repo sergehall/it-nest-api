@@ -11,6 +11,7 @@ import {
   HttpCode,
   UseGuards,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -29,6 +30,8 @@ import { Action } from '../ability/roles/action.enum';
 import { User } from '../users/infrastructure/schemas/user.schema';
 import { LikeStatusDto } from './dto/like-status.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { NoneStatusGuard } from '../auth/guards/none-status.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -40,9 +43,10 @@ export class PostsController {
 
   @Get()
   @UseGuards(AbilitiesGuard)
+  @UseGuards(NoneStatusGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
-  async findPosts(@Query() query: any) {
-    const currentUser: UsersEntity = currentUserInst;
+  async findPosts(@Request() req: any, @Query() query: any) {
+    const currentUser: UsersEntity | null = req.user;
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = {};
     const queryPagination: PaginationDto = {
@@ -90,9 +94,14 @@ export class PostsController {
   }
   @Get(':postId/comments')
   @UseGuards(AbilitiesGuard)
+  @UseGuards(NoneStatusGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
-  async findComments(@Param('postId') postId: string, @Query() query: any) {
-    const currentUser: UsersEntity | null = currentUserInst;
+  async findComments(
+    @Request() req: any,
+    @Param('postId') postId: string,
+    @Query() query: any,
+  ) {
+    const currentUser: UsersEntity | null = req.user;
     const paginationData = ParseQuery.getPaginationData(query);
     const queryPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
@@ -114,9 +123,13 @@ export class PostsController {
   }
   @Get(':postId')
   @UseGuards(AbilitiesGuard)
+  @UseGuards(NoneStatusGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
-  async findPostById(@Param('postId') postId: string): Promise<PostsEntity> {
-    const currentUser: User | null = new User();
+  async findPostById(
+    @Request() req: any,
+    @Param('postId') postId: string,
+  ): Promise<PostsEntity> {
+    const currentUser: UsersEntity | null = req.user;
     const post = await this.postsService.findPostById(postId, currentUser);
     if (!post)
       throw new HttpException(
@@ -147,12 +160,14 @@ export class PostsController {
     return await this.postsService.removePost(id);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
   @Put(':postId/like-status')
   async changeLikeStatusComment(
+    @Request() req: any,
     @Param('postId') postId: string,
     @Body() likeStatusDto: LikeStatusDto,
   ) {
-    const currentUser = currentUserInst;
+    const currentUser = req.user;
     return this.postsService.changeLikeStatusPost(
       postId,
       likeStatusDto,

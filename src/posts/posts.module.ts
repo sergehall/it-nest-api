@@ -13,17 +13,27 @@ import { PostsRepository } from './infrastructure/posts.repository';
 import { CommentsRepository } from '../comments/infrastructure/comments.repository';
 import { LikeStatusPostsRepository } from './infrastructure/like-status-posts.repository';
 import { LikeStatusCommentsRepository } from '../comments/infrastructure/like-status-comments.repository';
+import { UsersRepository } from '../users/infrastructure/users.repository';
+import { AuthService } from '../auth/auth.service';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { MailsRepository } from '../mails/infrastructure/mails.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
   controllers: [PostsController],
   providers: [
+    AuthService,
+    JwtService,
     PostsService,
     CommentsService,
+    MailsRepository,
     CommentsRepository,
     ConvertFiltersForDB,
     BlogsService,
     BlogsRepository,
+    UsersService,
+    UsersRepository,
     Pagination,
     PostsRepository,
     LikeStatusPostsRepository,

@@ -32,24 +32,13 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Request() req: any, @Res({ passthrough: true }) res: Response) {
-    const token = await this.authService.createRefreshJWT(req.user);
+    const token = await this.authService.signRefreshJWT(req.user);
     res.cookie('refreshToken', token.refreshToken, {
       httpOnly: true,
       secure: true,
     });
-    return this.authService.createAccessJWT(req.user);
+    return this.authService.signAccessJWT(req.user);
   }
-  // @UseGuards(LocalAuthGuard)
-  // @Post('login')
-  // async login(@Request() req: any, @Res({ passthrough: true }) res: any) {
-  //   const userData = req.user;
-  //   console.log(userData);
-  //   res.cookie('refreshToken', userData.refreshToken, {
-  //     httpOnly: true,
-  //     secure: true,
-  //   });
-  //   return { accessToken: req.user.data.accessToken };
-  // }
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
   @Post('registration')

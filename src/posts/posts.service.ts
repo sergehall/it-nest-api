@@ -68,7 +68,7 @@ export class PostsService {
   async findPosts(
     queryPagination: PaginationDto,
     searchFilters: QueryArrType,
-    currentUser: UsersEntity,
+    currentUser: UsersEntity | null,
   ) {
     let field = 'createdAt';
     if (
@@ -104,7 +104,7 @@ export class PostsService {
 
   async findPostById(
     postId: string,
-    currentUser: UsersEntity,
+    currentUser: UsersEntity | null,
   ): Promise<PostsEntity | null> {
     const post = await this.postsRepository.findPostById(postId);
     if (!post)

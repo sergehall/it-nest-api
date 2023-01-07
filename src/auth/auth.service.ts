@@ -22,7 +22,7 @@ export class AuthService {
     return null;
   }
 
-  async createAccessJWT(user: UsersEntity) {
+  async signAccessJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
     const payload = { id: user.id, login: user.login, deviceId: deviceId };
     return {
@@ -33,7 +33,7 @@ export class AuthService {
     };
   }
 
-  async createRefreshJWT(user: UsersEntity) {
+  async signRefreshJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
     const payload = {
       id: user.id,
@@ -46,5 +46,15 @@ export class AuthService {
         expiresIn: process.env.EXP_REF_TIME,
       }),
     };
+  }
+  async validAccessJWT(JWT: string): Promise<UsersEntity | null> {
+    try {
+      const result = await this.jwtService.verify(JWT, {
+        secret: process.env.ACCESS_SECRET_KEY,
+      });
+      return result;
+    } catch (err) {
+      return null;
+    }
   }
 }

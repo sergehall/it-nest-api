@@ -44,7 +44,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         400,
       );
     }
-
     const user = await this.authService.validatePassword(
       loginOrEmail,
       password,

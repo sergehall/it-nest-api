@@ -6,8 +6,12 @@ import {
   Last10secDocument,
   Last10secSchema,
 } from './schemas/last10sec.schemas';
+import {
+  UsersDocument,
+  UsersSchema,
+} from '../../users/infrastructure/schemas/user.schema';
 
-export const last10secProviders = [
+export const authProviders = [
   {
     provide: ProvidersEnums.LAST_10SEC,
     useFactory: (mongoose: Mongoose) =>
@@ -15,6 +19,16 @@ export const last10secProviders = [
         'Last10sec',
         Last10secSchema,
         NamesCollectionsEnums.LAST_10SEC,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.USER_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<UsersDocument>(
+        'Users',
+        UsersSchema,
+        NamesCollectionsEnums.USERS,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
