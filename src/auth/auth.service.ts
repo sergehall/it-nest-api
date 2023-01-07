@@ -22,11 +22,29 @@ export class AuthService {
     return null;
   }
 
-  async login(user: UsersEntity) {
+  async createAccessJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
     const payload = { id: user.id, login: user.login, deviceId: deviceId };
     return {
-      accessToken: this.jwtService.sign(payload),
+      accessToken: this.jwtService.sign(payload, {
+        secret: process.env.ACCESS_SECRET_KEY,
+        expiresIn: process.env.EXP_ACC_TIME,
+      }),
+    };
+  }
+
+  async createRefreshJWT(user: UsersEntity) {
+    const deviceId = uuid4().toString();
+    const payload = {
+      id: user.id,
+      login: user.login,
+      deviceId: deviceId,
+    };
+    return {
+      refreshToken: this.jwtService.sign(payload, {
+        secret: process.env.REFRESH_SECRET_KEY,
+        expiresIn: process.env.EXP_REF_TIME,
+      }),
     };
   }
 }

@@ -9,6 +9,7 @@ import {
   HttpException,
   Ip,
   HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AuthService } from './auth.service';
@@ -18,6 +19,7 @@ import { LoginDto } from './dto/login.dto';
 import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -29,8 +31,13 @@ export class AuthController {
   @UseGuards(LimitReqGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req: any) {
-    return this.authService.login(req.user);
+  async login(@Request() req: any, @Res({ passthrough: true }) res: Response) {
+    const token = await this.authService.createRefreshJWT(req.user);
+    res.cookie('refreshToken', token.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    return this.authService.createAccessJWT(req.user);
   }
   // @UseGuards(LocalAuthGuard)
   // @Post('login')
