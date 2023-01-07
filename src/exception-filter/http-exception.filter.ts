@@ -29,16 +29,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       (status === HttpStatus.UNAUTHORIZED || status === HttpStatus.NOT_FOUND)
     ) {
       response.status(status).json();
-    } else if (
-      responseBody.message.length !== 0 &&
-      status === HttpStatus.FORBIDDEN
-    ) {
-      response.status(status).json({
-        errorsMessages: {
-          message: responseBody.message,
-          field: responseBody.message.split('{')[1].split(':')[0],
-        },
-      });
     } else {
       response.status(status).json({
         statusCode: status,
