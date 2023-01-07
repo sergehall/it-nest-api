@@ -8,6 +8,7 @@ import {
   HttpCode,
   UseGuards,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -16,8 +17,8 @@ import { User } from '../users/infrastructure/schemas/user.schema';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
-import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
-import { Role } from '../ability/roles/role.enum';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { NoneStatusGuard } from '../auth/guards/none-status.guard';
 
 @Controller('comments')
 export class CommentsController {
@@ -25,44 +26,46 @@ export class CommentsController {
 
   @Get(':id')
   @UseGuards(AbilitiesGuard)
+  @UseGuards(NoneStatusGuard)
   @CheckAbilities({ action: Action.CREATE, subject: User })
-  async findComment(@Param('id') id: string) {
-    const currentUser = null;
-    return this.commentsService.findCommentById(id, currentUser);
+  async findComment(@Request() req: any, @Param('id') id: string) {
+    return this.commentsService.findCommentById(id, req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId')
+  @UseGuards(JwtAuthGuard)
   async updateComment(
+    @Request() req: any,
     @Param('commentId') commentId: string,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
-    const currentUser = new User();
     return this.commentsService.updateComment(
       commentId,
       updateCommentDto,
-      currentUser,
+      req.user,
     );
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
   @Delete(':commentId')
-  async removeComment(@Param('commentId') commentId: string) {
-    const currentUser = new User();
-    currentUser.id = 'c2b18894-8747-402e-9974-45fa4c7b41a40';
-    currentUser.orgId = OrgIdEnums.INCUBATOR;
-    currentUser.roles = Role.User;
-    return this.commentsService.removeComment(commentId, currentUser);
+  async removeComment(
+    @Request() req: any,
+    @Param('commentId') commentId: string,
+  ) {
+    return this.commentsService.removeComment(commentId, req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtAuthGuard)
   @Put(':commentId/like-status')
   async changeLikeStatusComment(
+    @Request() req: any,
     @Param('commentId') commentId: string,
     @Body() likeStatusDto: LikeStatusDto,
   ) {
-    const currentUser = new User();
     return this.commentsService.changeLikeStatusComment(
       commentId,
       likeStatusDto,
-      currentUser,
+      req.user,
     );
   }
 }

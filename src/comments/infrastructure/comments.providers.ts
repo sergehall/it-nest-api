@@ -15,6 +15,14 @@ import {
   LikeStatusPostSchema,
   LikeStatusPostsDocument,
 } from '../../posts/infrastructure/schemas/like-status-posts.schemas';
+import {
+  UsersDocument,
+  UsersSchema,
+} from '../../users/infrastructure/schemas/user.schema';
+import {
+  EmailsConfirmCodeDocument,
+  EmailsConfirmCodeSchema,
+} from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 
 export const commentsProviders = [
   {
@@ -54,6 +62,26 @@ export const commentsProviders = [
         NamesCollectionsEnums.LIKE_STATUS_POST,
         LikeStatusPostSchema,
         NamesCollectionsEnums.LIKE_STATUS_POST,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.USER_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<UsersDocument>(
+        'Users',
+        UsersSchema,
+        NamesCollectionsEnums.USERS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.CONFIRM_CODE,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<EmailsConfirmCodeDocument>(
+        'EmailsConfirmCodes',
+        EmailsConfirmCodeSchema,
+        NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
