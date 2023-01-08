@@ -16,7 +16,10 @@ export class UsersRepository {
     loginOrEmail: string,
   ): Promise<UsersEntity | null> {
     return await this.UsersModel.findOne({
-      $or: [{ login: { $eq: loginOrEmail } }, { email: { $eq: loginOrEmail } }],
+      $or: [
+        { login: { $eq: loginOrEmail } },
+        { email: { $eq: loginOrEmail.toLowerCase() } },
+      ],
     });
   }
   async userAlreadyExist(login: string, email: string): Promise<string | null> {

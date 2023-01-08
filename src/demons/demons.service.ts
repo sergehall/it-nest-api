@@ -4,6 +4,7 @@ import { Last10secReqRepository } from '../auth/infrastructure/last10sec-req..re
 import { MailsService } from '../mails/mails.service';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { UsersService } from '../users/users.service';
+import { BlacklistRefreshJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
 
 @Injectable()
 export class DemonsService {
@@ -12,6 +13,7 @@ export class DemonsService {
     private mailService: MailsService,
     private mailsRepository: MailsRepository,
     private usersService: UsersService,
+    private blacklistRefreshJwtRepository: BlacklistRefreshJwtRepository,
   ) {}
   @Cron('0 */5 * * * *')
   async clearingIpOlder10Sec() {
@@ -27,5 +29,10 @@ export class DemonsService {
       await this.mailsRepository.removeEmailById(emailAndCode.id);
     }
     // console.log('* * * * * * : sendAndDeleteConfirmationCode');
+  }
+  @Cron('0 */5 * * * *')
+  async clearingInvalidJWTFromBlackList() {
+    await this.blacklistRefreshJwtRepository.clearingInvalidJWTFromBlackList();
+    console.log('0 */5 * * * * : clearingInvalidJWTFromBlackList');
   }
 }

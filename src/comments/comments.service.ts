@@ -182,7 +182,6 @@ export class CommentsService {
     updateCommentDto: UpdateCommentDto,
     currentUser: User,
   ) {
-    currentUser.id = 'c2b18894-8747-402e-9974-45fa4c7b41a4';
     const findComment = await this.commentsRepository.findCommentById(
       commentId,
     );

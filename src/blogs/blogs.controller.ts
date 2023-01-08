@@ -16,7 +16,6 @@ import {
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import { ParseQuery } from '../infrastructure/common/parse-query/parse-query';
-import { QueryPaginationType } from '../types/types';
 import { PostsService } from '../posts/posts.service';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
 import { PaginationTypes } from '../infrastructure/common/pagination/types/pagination.types';
@@ -73,7 +72,7 @@ export class BlogsController {
       );
     }
     const paginationData = ParseQuery.getPaginationData(query);
-    const dtoPagination: QueryPaginationType = {
+    const dtoPagination: PaginationDto = {
       pageNumber: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       sortBy: paginationData.sortBy,

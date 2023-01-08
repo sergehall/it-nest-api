@@ -1,8 +1,9 @@
 import nodemailer from 'nodemailer';
 import * as process from 'process';
 import { Injectable } from '@nestjs/common';
-import { EmailConfirmCodeType, EmailRecoveryCodeType } from '../../types/types';
 import { User } from '../../users/infrastructure/schemas/user.schema';
+import { MailsRecoveryCodeDto } from './dto/mails-recovery-code.dto';
+import { MailsConfirmationCodeDto } from './dto/mails-confirm-code.dto';
 
 const transporter = nodemailer.createTransport({
   service: process.env.MAIL_HOST,
@@ -14,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 @Injectable()
 export class EmailsAdapter {
-  async sendCodeByRegistration(emailAndCode: EmailConfirmCodeType) {
+  async sendCodeByRegistration(emailAndCode: MailsConfirmationCodeDto) {
     return await transporter.sendMail({
       from: 'Email confirmation message <ck.NODEMAILER_EMAIL>',
       to: emailAndCode.email,
@@ -26,7 +27,7 @@ export class EmailsAdapter {
     });
   }
 
-  async sendCodeByPasswordRecovery(emailAndCode: EmailRecoveryCodeType) {
+  async sendCodeByPasswordRecovery(emailAndCode: MailsRecoveryCodeDto) {
     return await transporter.sendMail({
       from: 'Serge Nodemailer <ck.NODEMAILER_EMAIL>',
       to: emailAndCode.email,

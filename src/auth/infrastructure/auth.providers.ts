@@ -10,6 +10,10 @@ import {
   UsersDocument,
   UsersSchema,
 } from '../../users/infrastructure/schemas/user.schema';
+import {
+  BlackListRefreshJWTDocument,
+  BlackListRefreshJWTSchema,
+} from './schemas/jwt-blacklist.schema';
 
 export const authProviders = [
   {
@@ -29,6 +33,16 @@ export const authProviders = [
         'Users',
         UsersSchema,
         NamesCollectionsEnums.USERS,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.BL_REFRESH_JWT,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<BlackListRefreshJWTDocument>(
+        'BlackListRefreshJWT',
+        BlackListRefreshJWTSchema,
+        NamesCollectionsEnums.BL_REFRESH_JWT,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

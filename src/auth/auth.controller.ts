@@ -20,6 +20,7 @@ import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
 import { Response } from 'express';
+import { CurrentJwtToBlacklist } from './guards/current-jwt-to-blacklist';
 
 @Controller('auth')
 export class AuthController {
@@ -33,10 +34,11 @@ export class AuthController {
   @Post('login')
   async login(@Request() req: any, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signRefreshJWT(req.user);
-    res.cookie('refreshToken', token.refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
+    res.cookie('refreshToken', token.refreshToken);
+    // res.cookie('refreshToken', token.refreshToken, {
+    //   httpOnly: true,
+    //   secure: true,
+    // });
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -84,6 +86,7 @@ export class AuthController {
   }
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
+  @UseGuards(CurrentJwtToBlacklist)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
     return await this.usersService.updateAndSentConfirmationCodeByEmail(
