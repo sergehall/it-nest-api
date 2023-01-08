@@ -15,6 +15,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../users/infrastructure/users.repository';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
+import { UserExistsRule } from '../pipes/user-exists-validation.decorator';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
@@ -32,6 +33,7 @@ import { MailsRepository } from '../mails/infrastructure/mails.repository';
     UsersRepository,
     MailsRepository,
     LikeStatusPostsRepository,
+    UserExistsRule,
     ...blogsProviders,
   ],
 })

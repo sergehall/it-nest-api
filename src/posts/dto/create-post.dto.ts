@@ -1,4 +1,5 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, Validate } from 'class-validator';
+import { UserExistsRule } from '../../pipes/user-exists-validation.decorator';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -17,6 +18,7 @@ export class CreatePostDto {
   })
   content: string;
   @IsNotEmpty()
+  @Validate(UserExistsRule)
   @Length(0, 100, {
     message: 'Incorrect blogId length! Must be max 100 ch.',
   })

@@ -5,9 +5,11 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './exception-filter/http-exception.filter';
 import { TrimPipe } from './pipes/trim-pipe';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
     new TrimPipe(),
     new ValidationPipe({
