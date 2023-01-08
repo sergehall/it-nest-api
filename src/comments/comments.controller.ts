@@ -52,6 +52,7 @@ export class CommentsController {
     @Request() req: any,
     @Param('commentId') commentId: string,
   ) {
+    console.log(req.user);
     return this.commentsService.removeComment(commentId, req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)

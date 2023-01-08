@@ -23,7 +23,6 @@ import { BlogsEntity } from '../blogs/entities/blogs.entity';
 import { PostsEntity } from './entities/posts.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { CreateCommentDto } from '../comments/dto/create-comment.dto';
-import { currentUserInst } from '../current-user/current-user';
 import { AbilitiesGuard } from '../ability/abilities.guard';
 import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
@@ -75,11 +74,13 @@ export class PostsController {
     return this.postsService.createPost(createPostDto, blog.name);
   }
   @Post(':postId/comments')
+  @UseGuards(JwtAuthGuard)
   async createComment(
+    @Request() req: any,
     @Param('postId') postId: string,
     @Body() createCommentDto: CreateCommentDto,
   ) {
-    const currentUser: UsersEntity = currentUserInst;
+    const currentUser: UsersEntity = req.user;
     const post = await this.postsService.checkPostInDB(postId);
     if (!post)
       throw new HttpException(
