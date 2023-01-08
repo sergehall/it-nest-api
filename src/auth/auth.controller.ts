@@ -34,11 +34,11 @@ export class AuthController {
   @Post('login')
   async login(@Request() req: any, @Res({ passthrough: true }) res: Response) {
     const token = await this.authService.signRefreshJWT(req.user);
-    res.cookie('refreshToken', token.refreshToken);
-    // res.cookie('refreshToken', token.refreshToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    // });
+    // res.cookie('refreshToken', token.refreshToken);
+    res.cookie('refreshToken', token.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
