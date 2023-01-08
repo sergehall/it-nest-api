@@ -6,12 +6,15 @@ import { UsersEntity } from '../users/entities/users.entity';
 import * as uuid4 from 'uuid4';
 import jwt_decode from 'jwt-decode';
 import { JWTPayloadDto } from './dto/payload.dto';
+import { BlacklistJwtRepository } from './infrastructure/blacklist-refresh-jwt.repository';
+import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private blacklistJwtRepository: BlacklistJwtRepository,
   ) {}
   async validatePassword(
     loginOrEmail: string,
@@ -71,5 +74,8 @@ export class AuthService {
   }
   async decode(JWT: string): Promise<JWTPayloadDto> {
     return jwt_decode(JWT);
+  }
+  async addRefreshTokenToBl(currentToken: JwtBlacklistDto): Promise<boolean> {
+    return await this.blacklistJwtRepository.addJWT(currentToken);
   }
 }

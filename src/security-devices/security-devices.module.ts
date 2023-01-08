@@ -9,8 +9,8 @@ import { DatabaseModule } from '../infrastructure/database/database.module';
   imports: [DatabaseModule],
   controllers: [SecurityDevicesController],
   providers: [
-    SecurityDevicesService,
     SecurityDevicesRepository,
+    SecurityDevicesService,
     ...devicesProviders,
   ],
 })

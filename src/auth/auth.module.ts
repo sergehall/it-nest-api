@@ -18,6 +18,7 @@ import { BlacklistJwtRepository } from './infrastructure/blacklist-refresh-jwt.r
   imports: [DatabaseModule, UsersModule, PassportModule, JwtModule],
   controllers: [AuthController],
   providers: [
+    BlacklistJwtRepository,
     SecurityDevicesRepository,
     UsersRepository,
     AuthService,
@@ -25,7 +26,6 @@ import { BlacklistJwtRepository } from './infrastructure/blacklist-refresh-jwt.r
     LocalStrategy,
     JwtStrategy,
     Last10secReqRepository,
-    BlacklistJwtRepository,
     ...authProviders,
   ],
   exports: [AuthService],

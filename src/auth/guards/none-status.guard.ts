@@ -6,8 +6,8 @@ import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.
 @Injectable()
 export class NoneStatusGuard implements CanActivate {
   constructor(
-    private AuthService: AuthService,
-    private BlacklistJwtRepository: BlacklistJwtRepository,
+    private authService: AuthService,
+    private blacklistJwtRepository: BlacklistJwtRepository,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -15,9 +15,9 @@ export class NoneStatusGuard implements CanActivate {
       return true;
     }
     const token = request.headers.authorization.split(' ')[1];
-    const checkInBL = this.BlacklistJwtRepository.findJWT(token);
+    const checkInBL = this.blacklistJwtRepository.findJWT(token);
     if (!checkInBL) {
-      request.user = await this.AuthService.validAccessJWT(token);
+      request.user = await this.authService.validAccessJWT(token);
     }
     return true;
   }

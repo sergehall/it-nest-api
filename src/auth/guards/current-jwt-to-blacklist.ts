@@ -6,7 +6,7 @@ import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.
 
 @Injectable()
 export class CurrentJwtToBlacklist implements CanActivate {
-  constructor(private BlacklistJwtRepository: BlacklistJwtRepository) {}
+  constructor(private blacklistJwtRepository: BlacklistJwtRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.['refreshToken'];
@@ -17,7 +17,7 @@ export class CurrentJwtToBlacklist implements CanActivate {
           refreshToken: token,
           expirationDate: new Date(payload.exp * 1000).toISOString(),
         };
-        await this.BlacklistJwtRepository.addJWT(jwtBlacklistDto);
+        await this.blacklistJwtRepository.addJWT(jwtBlacklistDto);
       }
       return true;
     }

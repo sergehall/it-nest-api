@@ -7,6 +7,10 @@ import {
   EmailsConfirmCodeDocument,
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
+import {
+  BlackListRefreshJWTDocument,
+  BlackListRefreshJWTSchema,
+} from '../../auth/infrastructure/schemas/jwt-blacklist.schema';
 
 export const usersProviders = [
   {
@@ -26,6 +30,16 @@ export const usersProviders = [
         'EmailsConfirmCodes',
         EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<BlackListRefreshJWTDocument>(
+        'BlackListRefreshJWT',
+        BlackListRefreshJWTSchema,
+        NamesCollectionsEnums.BL_REFRESH_JWT,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
