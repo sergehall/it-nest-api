@@ -8,9 +8,9 @@ import {
 import { JwtBlacklistDto } from '../dto/jwt-blacklist.dto';
 
 @Injectable()
-export class BlacklistRefreshJwtRepository {
+export class BlacklistJwtRepository {
   constructor(
-    @Inject(ProvidersEnums.BL_REFRESH_JWT)
+    @Inject(ProvidersEnums.BL_REFRESH_JWT_MODEL)
     private BlackListRefreshModel: Model<BlackListRefreshJWTDocument>,
   ) {}
   async findJWT(refreshToken: string): Promise<BlackListRefreshJWT | null> {

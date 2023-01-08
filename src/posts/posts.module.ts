@@ -18,12 +18,14 @@ import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
   controllers: [PostsController],
   providers: [
     AuthService,
+    BlacklistJwtRepository,
     JwtService,
     PostsService,
     CommentsService,

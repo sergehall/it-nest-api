@@ -16,12 +16,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '../users/infrastructure/users.repository';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { UserExistsRule } from '../pipes/user-exists-validation.decorator';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
   controllers: [BlogsController],
   providers: [
     BlogsService,
+    BlacklistJwtRepository,
     PostsService,
     ConvertFiltersForDB,
     BlogsRepository,

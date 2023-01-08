@@ -4,6 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../users/entities/users.entity';
 import * as uuid4 from 'uuid4';
+import jwt_decode from 'jwt-decode';
+import { JWTPayloadDto } from './dto/payload.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +26,7 @@ export class AuthService {
 
   async signAccessJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
-    const payload = { id: user.id, login: user.login, deviceId: deviceId };
+    const payload = { userId: user.id, login: user.login, deviceId: deviceId };
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: process.env.ACCESS_SECRET_KEY,
@@ -36,7 +38,7 @@ export class AuthService {
   async signRefreshJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
     const payload = {
-      id: user.id,
+      userId: user.id,
       login: user.login,
       deviceId: deviceId,
     };
@@ -56,5 +58,18 @@ export class AuthService {
     } catch (err) {
       return null;
     }
+  }
+  async validRefreshJWT(JWT: string): Promise<UsersEntity | null> {
+    try {
+      const result = await this.jwtService.verify(JWT, {
+        secret: process.env.REFRESH_SECRET_KEY,
+      });
+      return result;
+    } catch (err) {
+      return null;
+    }
+  }
+  async decode(JWT: string): Promise<JWTPayloadDto> {
+    return jwt_decode(JWT);
   }
 }

@@ -6,7 +6,7 @@ import { Last10secDocument } from './schemas/last10sec.schemas';
 @Injectable()
 export class Last10secReqRepository {
   constructor(
-    @Inject(ProvidersEnums.LAST_10SEC)
+    @Inject(ProvidersEnums.LAST_10SEC_MODEL)
     private last10secModel: Model<Last10secDocument>,
   ) {}
   async addAndCountByIpAndTimeLog(

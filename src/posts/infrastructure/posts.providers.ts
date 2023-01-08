@@ -27,8 +27,22 @@ import {
   EmailsConfirmCodeDocument,
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
+import {
+  BlackListRefreshJWTDocument,
+  BlackListRefreshJWTSchema,
+} from '../../auth/infrastructure/schemas/jwt-blacklist.schema';
 
 export const postsProviders = [
+  {
+    provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<BlackListRefreshJWTDocument>(
+        'BlackListRefreshJWT',
+        BlackListRefreshJWTSchema,
+        NamesCollectionsEnums.BL_REFRESH_JWT,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
   {
     provide: ProvidersEnums.POST_MODEL,
     useFactory: (mongoose: Mongoose) =>
@@ -60,7 +74,7 @@ export const postsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LIKE_STATUS_COMMENTS,
+    provide: ProvidersEnums.LIKE_STATUS_COMMENTS_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<LikeStatusCommentDocument>(
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
@@ -70,7 +84,7 @@ export const postsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LIKE_STATUS_POSTS,
+    provide: ProvidersEnums.LIKE_STATUS_POSTS_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<LikeStatusPostsDocument>(
         NamesCollectionsEnums.LIKE_STATUS_POST,
@@ -90,7 +104,7 @@ export const postsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.CONFIRM_CODE,
+    provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
         'EmailsConfirmCodes',

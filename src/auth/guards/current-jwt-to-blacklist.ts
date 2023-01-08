@@ -1,12 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { BlacklistRefreshJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
 import jwt_decode from 'jwt-decode';
 import { JWTPayloadDto } from '../dto/payload.dto';
 import { JwtBlacklistDto } from '../dto/jwt-blacklist.dto';
+import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
 
 @Injectable()
 export class CurrentJwtToBlacklist implements CanActivate {
-  constructor(private blacklistJWT: BlacklistRefreshJwtRepository) {}
+  constructor(private BlacklistJwtRepository: BlacklistJwtRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.['refreshToken'];
@@ -17,7 +17,7 @@ export class CurrentJwtToBlacklist implements CanActivate {
           refreshToken: token,
           expirationDate: new Date(payload.exp * 1000).toISOString(),
         };
-        await this.blacklistJWT.addJWT(jwtBlacklistDto);
+        await this.BlacklistJwtRepository.addJWT(jwtBlacklistDto);
       }
       return true;
     }

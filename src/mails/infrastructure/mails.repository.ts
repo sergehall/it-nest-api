@@ -9,7 +9,7 @@ import {
 
 export class MailsRepository {
   constructor(
-    @Inject(ProvidersEnums.CONFIRM_CODE)
+    @Inject(ProvidersEnums.CONFIRM_CODE_MODEL)
     private EmailsConfirmCodeModel: Model<EmailsConfirmCodeDocument>,
   ) {}
   async createEmailConfirmCode(

@@ -4,11 +4,12 @@ import { Model } from 'mongoose';
 import { BlogsDocument } from './schemas/blogs.schema';
 import { QueryArrType } from '../../infrastructure/common/convert-filters/types/convert-filter.types';
 import { PaginationDBType } from '../../infrastructure/common/pagination/types/pagination.types';
+import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 
 @Injectable()
 export class BlogsRepository {
   constructor(
-    @Inject('BLOG_MODEL')
+    @Inject(ProvidersEnums.BLOG_MODEL)
     private blogsModel: Model<BlogsDocument>,
   ) {}
 

@@ -31,7 +31,7 @@ export const demonsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LAST_10SEC,
+    provide: ProvidersEnums.LAST_10SEC_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<Last10secDocument>(
         'Last10sec',
@@ -41,7 +41,7 @@ export const demonsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.CONFIRM_CODE,
+    provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
         'EmailsConfirmCodes',
@@ -51,7 +51,7 @@ export const demonsProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.BL_REFRESH_JWT,
+    provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<BlackListRefreshJWTDocument>(
         'BlackListRefreshJWT',

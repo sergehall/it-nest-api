@@ -10,7 +10,7 @@ import { StatusLike } from '../../infrastructure/database/enums/like-status.enum
 @Injectable()
 export class LikeStatusPostsRepository {
   constructor(
-    @Inject(ProvidersEnums.LIKE_STATUS_POSTS)
+    @Inject(ProvidersEnums.LIKE_STATUS_POSTS_MODEL)
     private likeStatusPostModel: Model<LikeStatusPostsDocument>,
   ) {}
   async updateLikeStatusPost(

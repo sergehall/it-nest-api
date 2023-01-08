@@ -9,7 +9,7 @@ import {
 
 export const mailsProviders = [
   {
-    provide: ProvidersEnums.CONFIRM_CODE,
+    provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
         'EmailsConfirmCodes',

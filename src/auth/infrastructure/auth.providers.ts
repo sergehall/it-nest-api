@@ -14,10 +14,14 @@ import {
   BlackListRefreshJWTDocument,
   BlackListRefreshJWTSchema,
 } from './schemas/jwt-blacklist.schema';
+import {
+  DevicesDocument,
+  DevicesSchema,
+} from '../../security-devices/infrastructure/schemas/devices.schema';
 
 export const authProviders = [
   {
-    provide: ProvidersEnums.LAST_10SEC,
+    provide: ProvidersEnums.LAST_10SEC_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<Last10secDocument>(
         'Last10sec',
@@ -37,12 +41,22 @@ export const authProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.BL_REFRESH_JWT,
+    provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<BlackListRefreshJWTDocument>(
         'BlackListRefreshJWT',
         BlackListRefreshJWTSchema,
         NamesCollectionsEnums.BL_REFRESH_JWT,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.DEVICES_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<DevicesDocument>(
+        'Devices',
+        DevicesSchema,
+        NamesCollectionsEnums.DEVICES,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

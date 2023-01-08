@@ -11,7 +11,7 @@ import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/co
 import { Pagination } from '../infrastructure/common/pagination/pagination';
 import { CaslModule } from '../ability/casl.module';
 import { UsersRepository } from '../users/infrastructure/users.repository';
-import { BlacklistRefreshJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, MailsModule, CaslModule],
@@ -24,7 +24,7 @@ import { BlacklistRefreshJwtRepository } from '../auth/infrastructure/blacklist-
     Pagination,
     ConvertFiltersForDB,
     UsersRepository,
-    BlacklistRefreshJwtRepository,
+    BlacklistJwtRepository,
     ...demonsProviders,
   ],
 })

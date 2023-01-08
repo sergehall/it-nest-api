@@ -34,6 +34,14 @@ import {
   EmailsConfirmCodeDocument,
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
+import {
+  BlackListRefreshJWTDocument,
+  BlackListRefreshJWTSchema,
+} from '../../auth/infrastructure/schemas/jwt-blacklist.schema';
+import {
+  DevicesDocument,
+  DevicesSchema,
+} from '../../security-devices/infrastructure/schemas/devices.schema';
 
 export const testingProviders = [
   {
@@ -77,7 +85,7 @@ export const testingProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LIKE_STATUS_POSTS,
+    provide: ProvidersEnums.LIKE_STATUS_POSTS_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<LikeStatusPostsDocument>(
         NamesCollectionsEnums.LIKE_STATUS_POST,
@@ -87,7 +95,7 @@ export const testingProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LIKE_STATUS_COMMENTS,
+    provide: ProvidersEnums.LIKE_STATUS_COMMENTS_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<LikeStatusCommentDocument>(
         NamesCollectionsEnums.LIKE_STATUS_COMMENTS,
@@ -97,7 +105,7 @@ export const testingProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LAST_10SEC,
+    provide: ProvidersEnums.LAST_10SEC_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<Last10secDocument>(
         'Last10sec',
@@ -107,12 +115,32 @@ export const testingProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.CONFIRM_CODE,
+    provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
         'EmailsConfirmCodes',
         EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<BlackListRefreshJWTDocument>(
+        'BlackListRefreshJWT',
+        BlackListRefreshJWTSchema,
+        NamesCollectionsEnums.BL_REFRESH_JWT,
+      ),
+    inject: [ConnectionEnums.ASYNC_CONNECTION],
+  },
+  {
+    provide: ProvidersEnums.DEVICES_MODEL,
+    useFactory: (mongoose: Mongoose) =>
+      mongoose.model<DevicesDocument>(
+        'Devices',
+        DevicesSchema,
+        NamesCollectionsEnums.DEVICES,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

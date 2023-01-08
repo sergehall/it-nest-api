@@ -16,12 +16,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { UsersRepository } from '../users/infrastructure/users.repository';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],
   controllers: [CommentsController],
   providers: [
     CommentsService,
+    BlacklistJwtRepository,
     JwtService,
     CommentsRepository,
     PostsService,
