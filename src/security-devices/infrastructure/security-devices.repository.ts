@@ -82,7 +82,7 @@ export class SecurityDevicesRepository {
         deviceId: payload.deviceId,
       }).lean();
       console.log(findByDeviceId?.userId, payload.userId);
-      if (!findByDeviceId) {
+      if (!findByDeviceId || !findByDeviceId.deviceId) {
         return '404';
       } else if (findByDeviceId && findByDeviceId.userId !== payload.userId) {
         return '403';
