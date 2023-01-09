@@ -76,14 +76,15 @@ export class SecurityDevicesRepository {
       return false;
     }
   }
-  async removeDeviceByDeviceId(payload: JWTPayloadDto): Promise<string> {
+  async removeDeviceByDeviceId(
+    deviceId: string,
+    payload: JWTPayloadDto,
+  ): Promise<string> {
     try {
       const findByDeviceId = await this.MyModelDevicesSchema.findOne({
-        deviceId: payload.deviceId,
+        deviceId: deviceId,
       }).lean();
-      console.log(findByDeviceId, 'findByDeviceId');
-      console.log(findByDeviceId?.userId, payload.userId);
-      if (!findByDeviceId || !findByDeviceId.deviceId) {
+      if (!findByDeviceId) {
         return '404';
       } else if (findByDeviceId && findByDeviceId.userId !== payload.userId) {
         return '403';

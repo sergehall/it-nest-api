@@ -48,17 +48,12 @@ export class SecurityDevicesController {
     @Request() req: any,
     @Param('deviceId') deviceId: string,
   ) {
-    if (!deviceId) {
-      throw new HttpException(
-        { message: ['Not found device'] },
-        HttpStatus.NOT_FOUND,
-      );
-    }
     const refreshToken = req.cookies.refreshToken;
     const currentPayload: JWTPayloadDto = await this.authService.decode(
       refreshToken,
     );
     const result = await this.securityDevicesService.removeDeviceByDeviceId(
+      deviceId,
       currentPayload,
     );
     if (result === '204') {

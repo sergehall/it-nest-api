@@ -42,8 +42,12 @@ export class SecurityDevicesService {
       currentPayload,
     );
   }
-  async removeDeviceByDeviceId(currentPayload: JWTPayloadDto) {
+  async removeDeviceByDeviceId(
+    deviceId: string,
+    currentPayload: JWTPayloadDto,
+  ) {
     return await this.securityDevicesRepository.removeDeviceByDeviceId(
+      deviceId,
       currentPayload,
     );
   }
