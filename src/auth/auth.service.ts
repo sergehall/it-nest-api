@@ -101,4 +101,7 @@ export class AuthService {
   async addRefreshTokenToBl(currentToken: JwtBlacklistDto): Promise<boolean> {
     return await this.blacklistJwtRepository.addJWT(currentToken);
   }
+  async checkRefreshTokenInBl(currentToken: JwtBlacklistDto): Promise<boolean> {
+    return await this.blacklistJwtRepository.addJWT(currentToken);
+  }
 }
