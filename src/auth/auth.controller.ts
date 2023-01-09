@@ -49,11 +49,11 @@ export class AuthController {
       userAgent = 'None';
     }
     await this.securityDevicesService.createDevices(newPayload, ip, userAgent);
-    res.cookie('refreshToken', token.refreshToken);
-    // res.cookie('refreshToken', token.refreshToken, {
-    //   httpOnly: true,
-    //   secure: true,
-    // });
+    // res.cookie('refreshToken', token.refreshToken);
+    res.cookie('refreshToken', token.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
