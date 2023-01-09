@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import jwt_decode from 'jwt-decode';
 import { JWTPayloadDto } from '../dto/payload.dto';
 import { JwtBlacklistDto } from '../dto/jwt-blacklist.dto';
-import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from '../infrastructure/blacklist-jwt.repository';
 
 @Injectable()
 export class RefreshTokenToBlacklist implements CanActivate {

@@ -10,7 +10,7 @@ import { UsersRepository } from './infrastructure/users.repository';
 import { usersProviders } from './infrastructure/users.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
-import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, CaslModule],

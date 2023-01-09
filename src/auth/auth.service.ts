@@ -6,8 +6,8 @@ import { UsersEntity } from '../users/entities/users.entity';
 import * as uuid4 from 'uuid4';
 import jwt_decode from 'jwt-decode';
 import { JWTPayloadDto } from './dto/payload.dto';
-import { BlacklistJwtRepository } from './infrastructure/blacklist-refresh-jwt.repository';
 import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
+import { BlacklistJwtRepository } from './infrastructure/blacklist-jwt.repository';
 
 @Injectable()
 export class AuthService {

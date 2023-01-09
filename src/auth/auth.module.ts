@@ -12,7 +12,7 @@ import { UsersRepository } from '../users/infrastructure/users.repository';
 import { authProviders } from './infrastructure/auth.providers';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { SecurityDevicesRepository } from '../security-devices/infrastructure/security-devices.repository';
-import { BlacklistJwtRepository } from './infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from './infrastructure/blacklist-jwt.repository';
 
 @Module({
   imports: [DatabaseModule, UsersModule, PassportModule, JwtModule],

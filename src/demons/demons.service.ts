@@ -4,7 +4,7 @@ import { Last10secReqRepository } from '../auth/infrastructure/last10sec-req..re
 import { MailsService } from '../mails/mails.service';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { UsersService } from '../users/users.service';
-import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-jwt.repository';
 
 @Injectable()
 export class DemonsService {
@@ -13,7 +13,7 @@ export class DemonsService {
     private mailService: MailsService,
     private mailsRepository: MailsRepository,
     private usersService: UsersService,
-    private BlacklistJwtRepository: BlacklistJwtRepository,
+    private blacklistJwtRepository: BlacklistJwtRepository,
   ) {}
   @Cron('0 */5 * * * *')
   async clearingIpOlder10Sec() {
@@ -32,7 +32,7 @@ export class DemonsService {
   }
   @Cron('0 */5 * * * *')
   async clearingInvalidJWTFromBlackList() {
-    await this.BlacklistJwtRepository.clearingInvalidJWTFromBlackList();
+    await this.blacklistJwtRepository.clearingInvalidJWTFromBlackList();
     console.log('0 */5 * * * * : clearingInvalidJWTFromBlackList');
   }
 }

@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 import { AuthService } from '../auth.service';
-import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
+import { BlacklistJwtRepository } from '../infrastructure/blacklist-jwt.repository';
 
 @Injectable()
 export class NoneStatusGuard implements CanActivate {
