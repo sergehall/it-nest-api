@@ -1,1 +1,3 @@
-export const maxAttempts = 5;
+export enum maxAttempts {
+  FIVE = 5,
+}
