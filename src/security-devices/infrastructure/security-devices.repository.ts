@@ -58,9 +58,6 @@ export class SecurityDevicesRepository {
           __v: false,
           userId: false,
           expirationDate: false,
-          lastActiveDate: false,
-          title: false,
-          ip: false,
         },
       );
     } catch (e) {
