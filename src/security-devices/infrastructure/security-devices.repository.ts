@@ -81,6 +81,7 @@ export class SecurityDevicesRepository {
       const findByDeviceId = await this.MyModelDevicesSchema.findOne({
         deviceId: payload.deviceId,
       }).lean();
+      console.log(findByDeviceId, 'findByDeviceId');
       console.log(findByDeviceId?.userId, payload.userId);
       if (!findByDeviceId || !findByDeviceId.deviceId) {
         return '404';
