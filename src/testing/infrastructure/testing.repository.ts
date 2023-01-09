@@ -9,8 +9,8 @@ import { LikeStatusCommentDocument } from '../../comments/infrastructure/schemas
 import { CommentsDocument } from '../../comments/infrastructure/schemas/comments.schema';
 import { Last10secDocument } from '../../auth/infrastructure/schemas/last10sec.schemas';
 import { EmailsConfirmCodeDocument } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
-import { BlackListRefreshJWTDocument } from '../../auth/infrastructure/schemas/jwt-blacklist.schema';
 import { DevicesDocument } from '../../security-devices/infrastructure/schemas/devices.schema';
+import { JwtRefreshBlacklistDocument } from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
 
 @Injectable()
 export class TestingRepository {
@@ -32,7 +32,7 @@ export class TestingRepository {
     @Inject(ProvidersEnums.CONFIRM_CODE_MODEL)
     private EmailsConfirmModel: Model<EmailsConfirmCodeDocument>,
     @Inject(ProvidersEnums.BL_REFRESH_JWT_MODEL)
-    private BlackListRefreshModel: Model<BlackListRefreshJWTDocument>,
+    private JwtRefreshBlacklist: Model<JwtRefreshBlacklistDocument>,
     @Inject(ProvidersEnums.DEVICES_MODEL)
     private MyModelDevicesSchema: Model<DevicesDocument>,
   ) {}
@@ -46,7 +46,7 @@ export class TestingRepository {
     await this.LikeStatusCommentModel.deleteMany({});
     await this.Last10secModel.deleteMany({});
     await this.EmailsConfirmModel.deleteMany({});
-    await this.BlackListRefreshModel.deleteMany({});
+    await this.JwtRefreshBlacklist.deleteMany({});
     await this.MyModelDevicesSchema.deleteMany({});
     return true;
   }

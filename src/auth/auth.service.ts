@@ -29,7 +29,19 @@ export class AuthService {
 
   async signAccessJWT(user: UsersEntity) {
     const deviceId = uuid4().toString();
-    const payload = { userId: user.id, login: user.login, deviceId: deviceId };
+    const payload = { userId: user.id, email: user.email, deviceId: deviceId };
+    return {
+      accessToken: this.jwtService.sign(payload, {
+        secret: process.env.ACCESS_SECRET_KEY,
+        expiresIn: process.env.EXP_ACC_TIME,
+      }),
+    };
+  }
+  async updateAccessJWT(currentPayload: JWTPayloadDto) {
+    const payload = {
+      userId: currentPayload.userId,
+      deviceId: currentPayload.deviceId,
+    };
     return {
       accessToken: this.jwtService.sign(payload, {
         secret: process.env.ACCESS_SECRET_KEY,
@@ -42,8 +54,19 @@ export class AuthService {
     const deviceId = uuid4().toString();
     const payload = {
       userId: user.id,
-      login: user.login,
       deviceId: deviceId,
+    };
+    return {
+      refreshToken: this.jwtService.sign(payload, {
+        secret: process.env.REFRESH_SECRET_KEY,
+        expiresIn: process.env.EXP_REF_TIME,
+      }),
+    };
+  }
+  async updateRefreshJWT(currentPayload: JWTPayloadDto) {
+    const payload = {
+      userId: currentPayload.userId,
+      deviceId: currentPayload.deviceId,
     };
     return {
       refreshToken: this.jwtService.sign(payload, {

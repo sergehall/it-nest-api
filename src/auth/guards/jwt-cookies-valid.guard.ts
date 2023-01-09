@@ -9,7 +9,7 @@ import { AuthService } from '../auth.service';
 import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
 
 @Injectable()
-export class RefreshJwtValidGuard implements CanActivate {
+export class JwtCookiesValidGuard implements CanActivate {
   constructor(
     private blacklistJwtRepository: BlacklistJwtRepository,
     private authService: AuthService,

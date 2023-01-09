@@ -5,7 +5,7 @@ import { JwtBlacklistDto } from '../dto/jwt-blacklist.dto';
 import { BlacklistJwtRepository } from '../infrastructure/blacklist-refresh-jwt.repository';
 
 @Injectable()
-export class CurrentJwtToBlacklist implements CanActivate {
+export class RefreshTokenToBlacklist implements CanActivate {
   constructor(private blacklistJwtRepository: BlacklistJwtRepository) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -19,7 +19,6 @@ export class CurrentJwtToBlacklist implements CanActivate {
         };
         await this.blacklistJwtRepository.addJWT(jwtBlacklistDto);
       }
-      return true;
     }
     return true;
   }

@@ -61,7 +61,7 @@ export class PostsController {
     );
   }
   @Post()
-  @UseGuards(BaseAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @UseGuards(AbilitiesGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async createPost(@Body() createPostDto: CreatePostDto) {

@@ -28,18 +28,18 @@ import {
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 import {
-  BlackListRefreshJWTDocument,
-  BlackListRefreshJWTSchema,
-} from '../../auth/infrastructure/schemas/jwt-blacklist.schema';
+  JwtRefreshBlacklistDocument,
+  JwtRefreshBlacklistSchema,
+} from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
 
 export const postsProviders = [
   {
     provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<BlackListRefreshJWTDocument>(
-        'BlackListRefreshJWT',
-        BlackListRefreshJWTSchema,
-        NamesCollectionsEnums.BL_REFRESH_JWT,
+      mongoose.model<JwtRefreshBlacklistDocument>(
+        'JwtRefreshBlacklist',
+        JwtRefreshBlacklistSchema,
+        NamesCollectionsEnums.BL_JWT_REF,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

@@ -22,7 +22,7 @@ import { CodeDto } from './dto/code.dto';
 import { Response } from 'express';
 import { JWTPayloadDto } from './dto/payload.dto';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
-import { RefreshJwtValidGuard } from './guards/refresh-jwt-valid.guard';
+import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -49,11 +49,11 @@ export class AuthController {
       userAgent = 'None';
     }
     await this.securityDevicesService.createDevices(newPayload, ip, userAgent);
-    // res.cookie('refreshToken', token.refreshToken);
-    res.cookie('refreshToken', token.refreshToken, {
-      httpOnly: true,
-      secure: true,
-    });
+    res.cookie('refreshToken', token.refreshToken);
+    // res.cookie('refreshToken', token.refreshToken, {
+    //   httpOnly: true,
+    //   secure: true,
+    // });
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -107,9 +107,42 @@ export class AuthController {
       emailDto.email,
     );
   }
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LimitReqGuard)
+  @UseGuards(JwtCookiesValidGuard)
+  @Post('refresh-token')
+  async refreshToken(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+    @Ip() ip: string,
+  ) {
+    const refreshToken = req.cookies.refreshToken;
+    const currentPayload: JWTPayloadDto = await this.authService.decode(
+      refreshToken,
+    );
+    const jwtBlackList = {
+      refreshToken: refreshToken,
+      expirationDate: new Date(currentPayload.exp * 1000).toISOString(),
+    };
+    await this.authService.addRefreshTokenToBl(jwtBlackList);
+    const newRefreshToken = await this.authService.updateRefreshJWT(
+      currentPayload,
+    );
+    const newPayload: JWTPayloadDto = await this.authService.decode(
+      newRefreshToken.refreshToken,
+    );
+    const userAgent = req.get('user-agent');
+    await this.securityDevicesService.createDevices(newPayload, ip, userAgent);
+    res.cookie('refreshToken', newRefreshToken.refreshToken);
+    // res.cookie('refreshToken', token.refreshToken, {
+    //   httpOnly: true,
+    //   secure: true,
+    // });
+    return await this.authService.updateAccessJWT(currentPayload);
+  }
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(LimitReqGuard)
-  @UseGuards(RefreshJwtValidGuard)
+  @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
   async logout(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
@@ -146,6 +179,7 @@ export class AuthController {
     return true;
   }
   @UseGuards(LimitReqGuard)
+  @UseGuards(JwtCookiesValidGuard)
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {

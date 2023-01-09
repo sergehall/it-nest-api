@@ -7,6 +7,6 @@ export enum NamesCollectionsEnums {
   LIKE_STATUS_POST = 'LikeStatusPosts',
   LAST_10SEC = 'Last10secReq',
   EMAILS_CONFIRM_CODES = 'EmailsConfirmationCode',
-  BL_REFRESH_JWT = 'BlackListRefreshJWT',
+  BL_JWT_REF = 'BlackListJWT',
   DEVICES = 'SecurityDevices',
 }

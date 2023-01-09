@@ -1,15 +1,15 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type BlackListRefreshJWTDocument = HydratedDocument<BlackListRefreshJWT>;
+export type JwtRefreshBlacklistDocument = HydratedDocument<JwtRefreshBlacklist>;
 
 @Schema()
-export class BlackListRefreshJWT {
+export class JwtRefreshBlacklist {
   @Prop({ required: true })
   refreshToken: string;
   @Prop({ required: true })
   expirationDate: string;
 }
 
-export const BlackListRefreshJWTSchema =
-  SchemaFactory.createForClass(BlackListRefreshJWT);
+export const JwtRefreshBlacklistSchema =
+  SchemaFactory.createForClass(JwtRefreshBlacklist);
