@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   HttpException,
+  Param,
 } from '@nestjs/common';
 import { SecurityDevicesService } from './security-devices.service';
 import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
@@ -43,7 +44,16 @@ export class SecurityDevicesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Delete('/devices/:deviceId')
-  async removeDeviceByDeviceId(@Request() req: any) {
+  async removeDeviceByDeviceId(
+    @Request() req: any,
+    @Param('deviceId') deviceId: string,
+  ) {
+    if (!deviceId) {
+      throw new HttpException(
+        { message: ['Not found device'] },
+        HttpStatus.NOT_FOUND,
+      );
+    }
     const refreshToken = req.cookies.refreshToken;
     const currentPayload: JWTPayloadDto = await this.authService.decode(
       refreshToken,
