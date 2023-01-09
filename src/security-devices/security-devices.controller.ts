@@ -1,18 +1,72 @@
-import { Controller, Get, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Delete,
+  UseGuards,
+  Request,
+  HttpCode,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { SecurityDevicesService } from './security-devices.service';
+import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
+import { JWTPayloadDto } from '../auth/dto/payload.dto';
+import { AuthService } from '../auth/auth.service';
 
-@Controller('security-devices')
+@Controller('security')
 export class SecurityDevicesController {
   constructor(
     private readonly securityDevicesService: SecurityDevicesService,
+    private authService: AuthService,
   ) {}
-
-  @Get()
-  findAll() {
-    return this.securityDevicesService.findAll();
+  @UseGuards(JwtCookiesValidGuard)
+  @Get('devices')
+  async findDevices(@Request() req: any) {
+    const refreshToken = req.cookies.refreshToken;
+    const currentPayload: JWTPayloadDto = await this.authService.decode(
+      refreshToken,
+    );
+    return this.securityDevicesService.findDevices(currentPayload);
   }
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.securityDevicesService.remove(+id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtCookiesValidGuard)
+  @Delete('devices')
+  async removeDevicesExceptCurrent(@Request() req: any) {
+    const refreshToken = req.cookies.refreshToken;
+    const currentPayload: JWTPayloadDto = await this.authService.decode(
+      refreshToken,
+    );
+    return this.securityDevicesService.removeDevicesExceptCurrent(
+      currentPayload,
+    );
+  }
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(JwtCookiesValidGuard)
+  @Delete('/devices/:deviceId')
+  async removeDeviceByDeviceId(@Request() req: any) {
+    const refreshToken = req.cookies.refreshToken;
+    const currentPayload: JWTPayloadDto = await this.authService.decode(
+      refreshToken,
+    );
+    const result = await this.securityDevicesService.removeDeviceByDeviceId(
+      currentPayload,
+    );
+    if (result === '204') {
+      return true;
+    }
+    if (result === '404') {
+      throw new HttpException(
+        { message: ['Not found device'] },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    if (result === '403') {
+      throw new HttpException(
+        {
+          message: ['FORBIDDEN. You try to delete the deviceId of other user'],
+        },
+        HttpStatus.FORBIDDEN,
+      );
+    }
   }
 }

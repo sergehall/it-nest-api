@@ -34,10 +34,17 @@ export class SecurityDevicesService {
     );
   }
 
-  findAll() {
-    return `This action returns all securityDevices`;
+  async findDevices(currentPayload: JWTPayloadDto) {
+    return await this.securityDevicesRepository.findDevices(currentPayload);
   }
-  remove(id: number) {
-    return `This action removes a #${id} securityDevice`;
+  async removeDevicesExceptCurrent(currentPayload: JWTPayloadDto) {
+    return await this.securityDevicesRepository.removeDevicesExceptCurrent(
+      currentPayload,
+    );
+  }
+  async removeDeviceByDeviceId(currentPayload: JWTPayloadDto) {
+    return await this.securityDevicesRepository.removeDeviceByDeviceId(
+      currentPayload,
+    );
   }
 }
