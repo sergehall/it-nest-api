@@ -15,26 +15,27 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-    if (request.headers || request.headers.authorization) {
-      const token = request.headers.authorization.split(' ')[1];
-      const checkInBL = this.blacklistJwtRepository.findJWT(token);
-      checkInBL.then((success) => {
-        if (success) {
-          throw new HttpException(
-            {
-              message: [
-                {
-                  message:
-                    'JWT refreshToken inside headers.authorization is missing, expired or incorrect',
-                  field: 'JWT',
-                },
-              ],
-            },
-            HttpStatus.UNAUTHORIZED,
-          );
-        }
-      });
+    if (!request.headers || !request.headers.authorization) {
+      return super.canActivate(context);
     }
+    const token = request.headers.authorization.split(' ')[1];
+    const checkInBL = this.blacklistJwtRepository.findJWT(token);
+    checkInBL.then((success) => {
+      if (success) {
+        throw new HttpException(
+          {
+            message: [
+              {
+                message:
+                  'JWT refreshToken inside headers.authorization is missing, expired or incorrect',
+                field: 'JWT',
+              },
+            ],
+          },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+    });
     return super.canActivate(context);
   }
 
