@@ -56,9 +56,6 @@ export class SecurityDevicesController {
       deviceId,
       currentPayload,
     );
-    if (result === '204') {
-      return true;
-    }
     if (result === '404') {
       throw new HttpException(
         { message: ['Not found device'] },
@@ -73,5 +70,6 @@ export class SecurityDevicesController {
         HttpStatus.FORBIDDEN,
       );
     }
+    return true;
   }
 }

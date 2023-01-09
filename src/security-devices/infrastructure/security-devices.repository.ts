@@ -48,14 +48,19 @@ export class SecurityDevicesRepository {
     try {
       return await this.MyModelDevicesSchema.find(
         {
-          userId: payload.userId,
-          expirationDate: { $gt: new Date().toISOString() },
+          $and: [
+            { userId: payload.userId },
+            { expirationDate: { $gt: new Date().toISOString() } },
+          ],
         },
         {
           _id: false,
           __v: false,
           userId: false,
           expirationDate: false,
+          lastActiveDate: false,
+          title: false,
+          ip: false,
         },
       );
     } catch (e) {
