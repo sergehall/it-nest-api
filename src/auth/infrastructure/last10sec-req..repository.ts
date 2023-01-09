@@ -28,7 +28,7 @@ export class Last10secReqRepository {
         { ip: { $eq: ip } },
         { originalUrl: { $eq: originalUrl } },
         { title: { $eq: title } },
-        { createdAt: { $gte: currentTimeMinus10sec } },
+        { createdAt: { $gt: currentTimeMinus10sec } },
       ],
     });
   }
