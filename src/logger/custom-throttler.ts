@@ -25,8 +25,10 @@ export class CustomThrottler implements NestMiddleware {
         originalUrl,
         userAgent,
       );
-      console.log(count, 'count');
-      if (count > maxAttempts.FIVE) {
+      console.log('-------------------------------------------');
+      console.log(count);
+      console.log('-------------------------------------------');
+      if (count >= maxAttempts.FIVE) {
         throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
       }
     }
