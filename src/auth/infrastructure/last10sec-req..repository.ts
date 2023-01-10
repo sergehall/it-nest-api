@@ -9,27 +9,30 @@ export class Last10secReqRepository {
     @Inject(ProvidersEnums.LAST_10SEC_MODEL)
     private last10secModel: Model<Last10secDocument>,
   ) {}
-  async addAndCountByIpAndTimeLog(
+  async countIpLast10Sec(
+    ip: string | null,
+    originalUrl: string,
+  ): Promise<number> {
+    return await this.last10secModel.countDocuments({
+      $and: [
+        { ip: { $eq: ip } },
+        { originalUrl: { $eq: originalUrl } },
+        { createdAt: { $gte: new Date(Date.now() - 1000 * 10).toISOString() } },
+      ],
+    });
+  }
+  async addIpLast10Sec(
     ip: string | null,
     originalUrl: string,
     title: string,
-  ): Promise<number> {
-    await this.last10secModel.create({
+  ): Promise<boolean> {
+    const add = await this.last10secModel.create({
       ip: ip,
       originalUrl: originalUrl,
       title: title,
       createdAt: new Date().toISOString(),
     });
-    const currentTimeMinus10sec = new Date(
-      Date.now() - 1000 * 10,
-    ).toISOString();
-    return await this.last10secModel.countDocuments({
-      $and: [
-        { ip: { $eq: ip } },
-        { originalUrl: { $eq: originalUrl } },
-        { createdAt: { $gte: currentTimeMinus10sec } },
-      ],
-    });
+    return add !== null;
   }
   async cleanup() {
     return this.last10secModel.deleteMany({
