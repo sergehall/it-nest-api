@@ -18,14 +18,10 @@ export class CustomThrottler implements NestMiddleware {
     const { ip, originalUrl } = req;
     if (originalUrl.slice(0, 5) === '/auth') {
       const userAgent = req.get('user-agent') || '';
-      await this.last10secReqRepository.addIpLast10Sec(
+      const count = await this.last10secReqRepository.addAndCountIpLast10Sec(
         ip,
         originalUrl,
         userAgent,
-      );
-      const count = await this.last10secReqRepository.countIpLast10Sec(
-        ip,
-        originalUrl,
       );
       console.log('-------------------------------------------');
       console.log(originalUrl);
