@@ -19,14 +19,8 @@ import {
   JwtRefreshBlacklistDocument,
   JwtRefreshBlacklistSchema,
 } from './schemas/jwtRefresh-blacklist.schema';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 
 export const authProviders = [
-  {
-    provide: APP_GUARD,
-    useClass: ThrottlerGuard,
-  },
   {
     provide: ProvidersEnums.LAST_10SEC_MODEL,
     useFactory: (mongoose: Mongoose) =>
