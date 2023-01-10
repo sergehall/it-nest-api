@@ -91,7 +91,7 @@ export class SecurityDevicesRepository {
       } else if (findByDeviceId && findByDeviceId.userId !== payload.userId) {
         return '403';
       }
-      await this.MyModelDevicesSchema.deleteOne({ deviceId: payload.deviceId });
+      await this.MyModelDevicesSchema.deleteOne({ deviceId: deviceId });
       return '204';
     } catch (e: any) {
       return e.toString();
