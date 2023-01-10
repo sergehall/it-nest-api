@@ -12,7 +12,7 @@ export class Last10sec {
   @Prop({ required: true })
   title: string;
   @Prop({ required: true })
-  createdAt: string;
+  createdAt: number;
 }
 
 export const Last10secSchema = SchemaFactory.createForClass(Last10sec);

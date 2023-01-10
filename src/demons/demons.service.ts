@@ -15,7 +15,7 @@ export class DemonsService {
   ) {}
   @Cron('0 */1 * * * *')
   async clearingIpOlder10Sec() {
-    await this.last10secReqRepository.cleanup();
+    // await this.last10secReqRepository.cleanup();
     console.log('0 */1 * * * * : clearingIpOlder10Sec');
   }
   @Cron('* * * * * *')

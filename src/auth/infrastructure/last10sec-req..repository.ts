@@ -17,7 +17,7 @@ export class Last10secReqRepository {
       $and: [
         { ip: { $eq: ip } },
         { originalUrl: { $eq: originalUrl } },
-        { createdAt: { $gte: new Date(Date.now() - 1000 * 10).toISOString() } },
+        { createdAt: { $gte: Date.now() - 1000 * 10 } },
       ],
     });
   }
@@ -30,13 +30,13 @@ export class Last10secReqRepository {
       ip: ip,
       originalUrl: originalUrl,
       title: title,
-      createdAt: new Date().toISOString(),
+      createdAt: Date.now(),
     });
-    return add !== null;
+    return add.id;
   }
   async cleanup() {
     return this.last10secModel.deleteMany({
-      createdAt: { $lt: new Date(Date.now() - 1000 * 10).toISOString() },
+      createdAt: { $lt: new Date(Date.now() - 1000 * 10) },
     });
   }
 }
