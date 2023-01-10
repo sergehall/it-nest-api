@@ -13,11 +13,12 @@ export class Last10secReqRepository {
     ip: string | null,
     originalUrl: string,
   ): Promise<number> {
+    const timeMinus10sec = Date.now() - 1000 * 10;
     return await this.last10secModel.countDocuments({
       $and: [
         { ip: { $eq: ip } },
         { originalUrl: { $eq: originalUrl } },
-        { createdAt: { $gte: Date.now() - 1000 * 10 } },
+        { createdAt: { $gte: timeMinus10sec } },
       ],
     });
   }
@@ -36,7 +37,7 @@ export class Last10secReqRepository {
   }
   async cleanup() {
     return this.last10secModel.deleteMany({
-      createdAt: { $lt: new Date(Date.now() - 1000 * 10) },
+      createdAt: { $lt: Date.now() - 1000 * 10 },
     });
   }
 }
