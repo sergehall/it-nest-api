@@ -16,24 +16,41 @@ export class CustomThrottler implements NestMiddleware {
   constructor(private last10secReqRepository: Last10secReqRepository) {}
   async use(req: Request, res: Response, next: NextFunction) {
     const { ip, originalUrl } = req;
-    if (originalUrl.slice(0, 5) === '/auth') {
-      const userAgent = req.get('user-agent') || '';
-      const count = await this.last10secReqRepository.addAndCountIpLast10Sec(
-        ip,
-        originalUrl,
-        userAgent,
+    const userAgent = req.get('user-agent') || '';
+    const count = await this.last10secReqRepository.addAndCountIpLast10Sec(
+      ip,
+      originalUrl,
+      userAgent,
+    );
+    console.log('-------------------------------------------');
+    console.log(originalUrl);
+    console.log(count);
+    console.log('-------------------------------------------');
+    if (count > maxAttempts.FIVE) {
+      throw new HttpException(
+        `More than 5 attempts from one IP<${ip}> during 10 seconds.`,
+        HttpStatus.TOO_MANY_REQUESTS,
       );
-      console.log('-------------------------------------------');
-      console.log(originalUrl);
-      console.log(count);
-      console.log('-------------------------------------------');
-      if (count > maxAttempts.FIVE) {
-        throw new HttpException(
-          `More than 5 attempts from one IP<${ip}> during 10 seconds.`,
-          HttpStatus.TOO_MANY_REQUESTS,
-        );
-      }
     }
+
+    // if (originalUrl.slice(0, 5) === '/auth') {
+    //   const userAgent = req.get('user-agent') || '';
+    //   const count = await this.last10secReqRepository.addAndCountIpLast10Sec(
+    //     ip,
+    //     originalUrl,
+    //     userAgent,
+    //   );
+    //   console.log('-------------------------------------------');
+    //   console.log(originalUrl);
+    //   console.log(count);
+    //   console.log('-------------------------------------------');
+    //   if (count > maxAttempts.FIVE) {
+    //     throw new HttpException(
+    //       `More than 5 attempts from one IP<${ip}> during 10 seconds.`,
+    //       HttpStatus.TOO_MANY_REQUESTS,
+    //     );
+    //   }
+    // }
     next();
   }
 }
