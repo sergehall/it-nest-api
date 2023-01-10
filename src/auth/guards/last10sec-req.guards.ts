@@ -21,6 +21,7 @@ export class LimitReqGuard implements CanActivate {
         },
       ],
     };
+    console.log(request.originalUrl, 'request.originalUrl');
     return this.last10secReqRepository
       .addAndCountByIpAndTimeLog(
         request.ip,
@@ -28,7 +29,8 @@ export class LimitReqGuard implements CanActivate {
         request.get('user-agent'),
       )
       .then((i) => {
-        if (i >= maxAttempts.FIVE) {
+        console.log(i, 'i----', request.originalUrl, 'request.originalUrl2');
+        if (i > maxAttempts.FIVE) {
           console.log(i, 'maxAttempts.FIVE');
           throw new HttpException(message, HttpStatus.TOO_MANY_REQUESTS);
         }

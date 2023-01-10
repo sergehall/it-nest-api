@@ -23,6 +23,7 @@ import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +33,7 @@ export class AuthController {
     private securityDevicesService: SecurityDevicesService,
   ) {}
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -41,6 +42,7 @@ export class AuthController {
     @Ip() ip: string,
   ) {
     const token = await this.authService.signRefreshJWT(req.user);
+    console.log(token !== null, 'token');
     const newPayload: PayloadDto = await this.authService.decode(
       token.refreshToken,
     );
@@ -57,7 +59,7 @@ export class AuthController {
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration')
   async registration(
     @Request() req: any,
@@ -100,7 +102,7 @@ export class AuthController {
     };
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
     return await this.usersService.updateAndSentConfirmationCodeByEmail(
@@ -108,7 +110,7 @@ export class AuthController {
     );
   }
   @HttpCode(HttpStatus.OK)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
   async refreshToken(
@@ -141,7 +143,7 @@ export class AuthController {
     return await this.authService.updateAccessJWT(currentPayload);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
   async logout(@Request() req: any) {
@@ -158,7 +160,7 @@ export class AuthController {
     return true;
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(LimitReqGuard)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-confirmation')
   async registrationConfirmation(@Body() codeDto: CodeDto) {
     const result = await this.usersService.confirmByCodeInParams(codeDto.code);

@@ -1,4 +1,8 @@
-import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { UsersDocument, UsersModelsType } from './schemas/user.schema';
 import { RegistrationData, UsersEntity } from '../entities/users.entity';
 import { QueryArrType } from '../../infrastructure/common/convert-filters/types/convert-filter.types';
@@ -55,7 +59,6 @@ export class UsersRepository {
     try {
       return await newInstance.save();
     } catch (error) {
-      console.log(error);
       throw new ForbiddenException(error.message);
     }
   }
