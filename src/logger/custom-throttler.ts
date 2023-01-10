@@ -17,7 +17,6 @@ export class CustomThrottler implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     const { ip, originalUrl } = req;
     if (originalUrl.slice(0, 5) === '/auth') {
-      console.log(originalUrl, 'originalUrl');
       const userAgent = req.get('user-agent') || '';
       const message = `More than 5 attempts from one IP<${ip}> during 10 seconds.`;
       const count = await this.last10secReqRepository.addAndCountByIpAndTimeLog(
@@ -26,6 +25,7 @@ export class CustomThrottler implements NestMiddleware {
         userAgent,
       );
       console.log('-------------------------------------------');
+      console.log(originalUrl);
       console.log(count);
       console.log('-------------------------------------------');
       if (count >= maxAttempts.FIVE) {
