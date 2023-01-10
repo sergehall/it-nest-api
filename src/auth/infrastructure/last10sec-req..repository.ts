@@ -14,14 +14,13 @@ export class Last10secReqRepository {
     originalUrl: string,
     title: string,
   ): Promise<number> {
-    const time = Date.now();
     await this.last10secModel.create({
       ip: ip,
       originalUrl: originalUrl,
       title: title,
-      createdAt: time,
+      createdAt: Date.now(),
     });
-    const timeMinus10sec = time - 1000 * 10;
+    const timeMinus10sec = Date.now() - 1000 * 10;
     return await this.last10secModel.countDocuments({
       $and: [
         { ip: { $eq: ip } },
