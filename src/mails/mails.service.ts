@@ -9,8 +9,8 @@ export class MailsService {
     private emailsAdapter: MailsAdapter,
     private mailsRepository: MailsRepository,
   ) {}
-  sendCodeByRegistration(emailAndCode: EmailConfimCodeEntity) {
-    return this.emailsAdapter.sendCodeByRegistration(emailAndCode);
+  async sendCodeByRegistration(emailAndCode: EmailConfimCodeEntity) {
+    return await this.emailsAdapter.sendCodeByRegistration(emailAndCode);
   }
   async findEmailByOldestDate() {
     return await this.mailsRepository.findEmailByOldestDate();

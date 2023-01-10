@@ -5,10 +5,10 @@ import { MailerService } from '@nestjs-modules/mailer';
 @Injectable()
 export class MailsAdapter {
   constructor(private mailerService: MailerService) {}
-  sendCodeByRegistration(emailAndCode: EmailConfimCodeEntity) {
+  async sendCodeByRegistration(emailAndCode: EmailConfimCodeEntity) {
     const url = `https://it-express-api.herokuapp.com/auth/confirm-registration?code=${emailAndCode.confirmationCode}`;
 
-    this.mailerService
+    await this.mailerService
       .sendMail({
         to: emailAndCode.email,
         from: process.env.NODEMAILER_EMAIL,
