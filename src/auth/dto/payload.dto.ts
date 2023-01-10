@@ -1,16 +1,16 @@
 import { IsNotEmpty, IsNumber, IsString, Length } from 'class-validator';
 
-export class JWTPayloadDto {
+export class PayloadDto {
   @IsNotEmpty()
   @IsString()
-  @Length(3, 100, {
-    message: 'Incorrect refreshToken length! Must be max 100 ch.',
+  @Length(3, 50, {
+    message: 'Incorrect userId length! Must be max 50 ch.',
   })
   userId: string;
   @IsNotEmpty()
   @IsString()
-  @Length(3, 100, {
-    message: 'Incorrect refreshToken length! Must be max 100 ch.',
+  @Length(3, 50, {
+    message: 'Incorrect deviceId length! Must be max 50 ch.',
   })
   deviceId: string;
   @IsNotEmpty()

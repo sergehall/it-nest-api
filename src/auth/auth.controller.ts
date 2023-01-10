@@ -20,9 +20,9 @@ import { UsersService } from '../users/users.service';
 import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
 import { Response } from 'express';
-import { JWTPayloadDto } from './dto/payload.dto';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
+import { PayloadDto } from './dto/payload.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -41,7 +41,7 @@ export class AuthController {
     @Ip() ip: string,
   ) {
     const token = await this.authService.signRefreshJWT(req.user);
-    const newPayload: JWTPayloadDto = await this.authService.decode(
+    const newPayload: PayloadDto = await this.authService.decode(
       token.refreshToken,
     );
     let userAgent = req.get('user-agent');
@@ -117,7 +117,7 @@ export class AuthController {
     @Ip() ip: string,
   ) {
     const refreshToken = req.cookies.refreshToken;
-    const currentPayload: JWTPayloadDto = await this.authService.decode(
+    const currentPayload: PayloadDto = await this.authService.decode(
       refreshToken,
     );
     const jwtBlackList = {
@@ -128,7 +128,7 @@ export class AuthController {
     const newRefreshToken = await this.authService.updateRefreshJWT(
       currentPayload,
     );
-    const newPayload: JWTPayloadDto = await this.authService.decode(
+    const newPayload: PayloadDto = await this.authService.decode(
       newRefreshToken.refreshToken,
     );
     const userAgent = req.get('user-agent');
@@ -146,7 +146,7 @@ export class AuthController {
   @Post('logout')
   async logout(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
-    const payload: JWTPayloadDto = await this.authService.decode(refreshToken);
+    const payload: PayloadDto = await this.authService.decode(refreshToken);
     const currentJwt = {
       refreshToken: refreshToken,
       expirationDate: new Date(payload.exp * 1000).toISOString(),

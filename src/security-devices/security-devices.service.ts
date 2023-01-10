@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { JWTPayloadDto } from '../auth/dto/payload.dto';
 import { SessionDevicesEntity } from './entities/security-device.entity';
 import { SecurityDevicesRepository } from './infrastructure/security-devices.repository';
+import { PayloadDto } from '../auth/dto/payload.dto';
 
 @Injectable()
 export class SecurityDevicesService {
   constructor(private securityDevicesRepository: SecurityDevicesRepository) {}
   async createDevices(
-    newPayload: JWTPayloadDto,
+    newPayload: PayloadDto,
     clientIp: string,
     userAgent: string,
   ): Promise<boolean> {
@@ -27,25 +27,22 @@ export class SecurityDevicesService {
   }
 
   async deleteDeviceByDeviceIdAfterLogout(
-    payloadRefreshToken: JWTPayloadDto,
+    payload: PayloadDto,
   ): Promise<boolean> {
     return this.securityDevicesRepository.deleteDeviceByDeviceIdAfterLogout(
-      payloadRefreshToken,
+      payload,
     );
   }
 
-  async findDevices(currentPayload: JWTPayloadDto) {
+  async findDevices(currentPayload: PayloadDto) {
     return await this.securityDevicesRepository.findDevices(currentPayload);
   }
-  async removeDevicesExceptCurrent(currentPayload: JWTPayloadDto) {
+  async removeDevicesExceptCurrent(currentPayload: PayloadDto) {
     return await this.securityDevicesRepository.removeDevicesExceptCurrent(
       currentPayload,
     );
   }
-  async removeDeviceByDeviceId(
-    deviceId: string,
-    currentPayload: JWTPayloadDto,
-  ) {
+  async removeDeviceByDeviceId(deviceId: string, currentPayload: PayloadDto) {
     return await this.securityDevicesRepository.removeDeviceByDeviceId(
       deviceId,
       currentPayload,

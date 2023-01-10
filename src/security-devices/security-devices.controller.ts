@@ -11,8 +11,8 @@ import {
 } from '@nestjs/common';
 import { SecurityDevicesService } from './security-devices.service';
 import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
-import { JWTPayloadDto } from '../auth/dto/payload.dto';
 import { AuthService } from '../auth/auth.service';
+import { PayloadDto } from '../auth/dto/payload.dto';
 
 @Controller('security')
 export class SecurityDevicesController {
@@ -24,7 +24,7 @@ export class SecurityDevicesController {
   @Get('devices')
   async findDevices(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
-    const currentPayload: JWTPayloadDto = await this.authService.decode(
+    const currentPayload: PayloadDto = await this.authService.decode(
       refreshToken,
     );
     return this.securityDevicesService.findDevices(currentPayload);
@@ -34,7 +34,7 @@ export class SecurityDevicesController {
   @Delete('devices')
   async removeDevicesExceptCurrent(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
-    const currentPayload: JWTPayloadDto = await this.authService.decode(
+    const currentPayload: PayloadDto = await this.authService.decode(
       refreshToken,
     );
     return this.securityDevicesService.removeDevicesExceptCurrent(
@@ -48,9 +48,8 @@ export class SecurityDevicesController {
     @Request() req: any,
     @Param('deviceId') deviceId: string,
   ) {
-    const refreshToken = req.cookies.refreshToken;
-    const currentPayload: JWTPayloadDto = await this.authService.decode(
-      refreshToken,
+    const currentPayload: PayloadDto = await this.authService.decode(
+      req.cookies.refreshToken,
     );
     const result = await this.securityDevicesService.removeDeviceByDeviceId(
       deviceId,

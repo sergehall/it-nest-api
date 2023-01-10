@@ -5,9 +5,9 @@ import * as bcrypt from 'bcrypt';
 import { UsersEntity } from '../users/entities/users.entity';
 import * as uuid4 from 'uuid4';
 import jwt_decode from 'jwt-decode';
-import { JWTPayloadDto } from './dto/payload.dto';
 import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
 import { BlacklistJwtRepository } from './infrastructure/blacklist-jwt.repository';
+import { PayloadDto } from './dto/payload.dto';
 
 @Injectable()
 export class AuthService {
@@ -37,7 +37,7 @@ export class AuthService {
       }),
     };
   }
-  async updateAccessJWT(currentPayload: JWTPayloadDto) {
+  async updateAccessJWT(currentPayload: PayloadDto) {
     const payload = {
       userId: currentPayload.userId,
       deviceId: currentPayload.deviceId,
@@ -63,7 +63,7 @@ export class AuthService {
       }),
     };
   }
-  async updateRefreshJWT(currentPayload: JWTPayloadDto) {
+  async updateRefreshJWT(currentPayload: PayloadDto) {
     const payload = {
       userId: currentPayload.userId,
       deviceId: currentPayload.deviceId,
@@ -95,7 +95,7 @@ export class AuthService {
       return null;
     }
   }
-  async decode(JWT: string): Promise<JWTPayloadDto> {
+  async decode(JWT: string): Promise<PayloadDto> {
     return jwt_decode(JWT);
   }
   async addRefreshTokenToBl(currentToken: JwtBlacklistDto): Promise<boolean> {

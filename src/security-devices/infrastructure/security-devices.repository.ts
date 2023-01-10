@@ -4,7 +4,7 @@ import { SessionDevicesEntity } from '../entities/security-device.entity';
 import { Model } from 'mongoose';
 import { DevicesDocument } from './schemas/devices.schema';
 import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
-import { JWTPayloadDto } from '../../auth/dto/payload.dto';
+import { PayloadDto } from '../../auth/dto/payload.dto';
 
 @Injectable()
 export class SecurityDevicesRepository {
@@ -30,21 +30,18 @@ export class SecurityDevicesRepository {
     }
   }
   async deleteDeviceByDeviceIdAfterLogout(
-    payloadRefreshToken: JWTPayloadDto,
+    payload: PayloadDto,
   ): Promise<boolean> {
     try {
       const result = await this.MyModelDevicesSchema.deleteOne({
-        $and: [
-          { userId: payloadRefreshToken.userId },
-          { deviceId: payloadRefreshToken.deviceId },
-        ],
+        $and: [{ userId: payload.userId }, { deviceId: payload.deviceId }],
       });
       return result.deletedCount === 1;
     } catch (e: any) {
       return e.toString();
     }
   }
-  async findDevices(payload: JWTPayloadDto): Promise<SessionDevicesEntity[]> {
+  async findDevices(payload: PayloadDto): Promise<SessionDevicesEntity[]> {
     try {
       return await this.MyModelDevicesSchema.find(
         {
@@ -65,7 +62,7 @@ export class SecurityDevicesRepository {
       return [];
     }
   }
-  async removeDevicesExceptCurrent(payload: JWTPayloadDto): Promise<boolean> {
+  async removeDevicesExceptCurrent(payload: PayloadDto): Promise<boolean> {
     try {
       return await this.MyModelDevicesSchema.deleteMany({
         $and: [
@@ -80,7 +77,7 @@ export class SecurityDevicesRepository {
   }
   async removeDeviceByDeviceId(
     deviceId: string,
-    payload: JWTPayloadDto,
+    payload: PayloadDto,
   ): Promise<string> {
     try {
       const findByDeviceId = await this.MyModelDevicesSchema.findOne({
