@@ -32,25 +32,6 @@ export class CustomThrottler implements NestMiddleware {
         HttpStatus.TOO_MANY_REQUESTS,
       );
     }
-
-    // if (originalUrl.slice(0, 5) === '/auth') {
-    //   const userAgent = req.get('user-agent') || '';
-    //   const count = await this.last10secReqRepository.addAndCountIpLast10Sec(
-    //     ip,
-    //     originalUrl,
-    //     userAgent,
-    //   );
-    //   console.log('-------------------------------------------');
-    //   console.log(originalUrl);
-    //   console.log(count);
-    //   console.log('-------------------------------------------');
-    //   if (count > maxAttempts.FIVE) {
-    //     throw new HttpException(
-    //       `More than 5 attempts from one IP<${ip}> during 10 seconds.`,
-    //       HttpStatus.TOO_MANY_REQUESTS,
-    //     );
-    //   }
-    // }
     next();
   }
 }

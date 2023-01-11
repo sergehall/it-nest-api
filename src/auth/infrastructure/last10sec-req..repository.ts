@@ -20,12 +20,11 @@ export class Last10secReqRepository {
       title: title,
       createdAt: Date.now(),
     });
-    const timeMinus10sec = Date.now() - 1000 * 10;
     return await this.last10secModel.countDocuments({
       $and: [
-        { ip: { $eq: ip } },
-        { originalUrl: { $eq: originalUrl } },
-        { createdAt: { $gte: timeMinus10sec } },
+        { ip: ip },
+        { originalUrl: originalUrl },
+        { createdAt: { $gte: Date.now() - 1000 * 10 } },
       ],
     });
   }
