@@ -17,7 +17,20 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, PassportModule, JwtModule],
+  imports: [
+    DatabaseModule,
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        ttl: config.get('THROTTLE_TTL'),
+        limit: config.get('THROTTLE_LIMIT'),
+      }),
+    }),
+    UsersModule,
+    PassportModule,
+    JwtModule,
+  ],
   controllers: [AuthController],
   providers: [
     BlacklistJwtRepository,
