@@ -22,7 +22,7 @@ import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -107,6 +107,7 @@ export class AuthController {
       emailDto.email,
     );
   }
+  @SkipThrottle()
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
@@ -139,6 +140,7 @@ export class AuthController {
     });
     return await this.authService.updateAccessJWT(currentPayload);
   }
+  @SkipThrottle()
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
@@ -176,6 +178,7 @@ export class AuthController {
     }
     return true;
   }
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
