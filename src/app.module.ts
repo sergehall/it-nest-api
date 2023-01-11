@@ -21,14 +21,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DemonsModule } from './demons/demons.module';
 import { MailsModule } from './mails/mails.module';
 import { TestingController } from './testing/testing.controller';
-import { Last10secReqRepository } from './auth/infrastructure/last10sec-req..repository';
-import { appProviders } from './app.providers';
-import { DatabaseModule } from './infrastructure/database/database.module';
-import { CustomThrottler } from './logger/custom-throttler';
 
 @Module({
   imports: [
-    DatabaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -47,12 +42,12 @@ import { CustomThrottler } from './logger/custom-throttler';
     MailsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, Last10secReqRepository, ...appProviders],
+  providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(LoggerMiddleware, CustomThrottler)
+      .apply(LoggerMiddleware)
       .forRoutes(
         AuthController,
         BlogsController,
