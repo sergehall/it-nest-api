@@ -22,6 +22,7 @@ import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +31,7 @@ export class AuthController {
     private usersService: UsersService,
     private securityDevicesService: SecurityDevicesService,
   ) {}
+  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -55,6 +57,7 @@ export class AuthController {
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ThrottlerGuard)
   @Post('registration')
   async registration(
     @Request() req: any,
@@ -97,6 +100,7 @@ export class AuthController {
     };
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
     return await this.usersService.updateAndSentConfirmationCodeByEmail(
@@ -104,6 +108,7 @@ export class AuthController {
     );
   }
   @HttpCode(HttpStatus.OK)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
   async refreshToken(
@@ -136,6 +141,7 @@ export class AuthController {
     return await this.authService.updateAccessJWT(currentPayload);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
   async logout(@Request() req: any) {
@@ -171,6 +177,7 @@ export class AuthController {
     }
     return true;
   }
+  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
