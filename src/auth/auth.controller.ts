@@ -31,8 +31,8 @@ export class AuthController {
     private usersService: UsersService,
     private securityDevicesService: SecurityDevicesService,
   ) {}
-  @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.OK)
+  @UseGuards(ThrottlerGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -108,7 +108,6 @@ export class AuthController {
     );
   }
   @HttpCode(HttpStatus.OK)
-  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
   async refreshToken(
@@ -141,7 +140,6 @@ export class AuthController {
     return await this.authService.updateAccessJWT(currentPayload);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
   async logout(@Request() req: any) {
@@ -158,6 +156,7 @@ export class AuthController {
     return true;
   }
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseGuards(ThrottlerGuard)
   @Post('registration-confirmation')
   async registrationConfirmation(@Body() codeDto: CodeDto) {
     const result = await this.usersService.confirmByCodeInParams(codeDto.code);
@@ -177,7 +176,6 @@ export class AuthController {
     }
     return true;
   }
-  @UseGuards(ThrottlerGuard)
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
