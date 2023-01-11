@@ -19,13 +19,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 @Module({
   imports: [
     DatabaseModule,
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ttl: config.get('THROTTLE_TTL'),
-        limit: config.get('THROTTLE_LIMIT'),
-      }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
     }),
     UsersModule,
     PassportModule,
