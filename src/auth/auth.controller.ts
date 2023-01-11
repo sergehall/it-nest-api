@@ -40,6 +40,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Ip() ip: string,
   ) {
+    console.log(ip, 'ip-----------------------');
     const token = await this.authService.signRefreshJWT(req.user);
     const newPayload: PayloadDto = await this.authService.decode(
       token.refreshToken,
