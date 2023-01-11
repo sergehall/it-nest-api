@@ -21,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     DatabaseModule,
     ThrottlerModule.forRoot({
       ttl: 10,
-      limit: 10,
+      limit: 5,
     }),
     UsersModule,
     PassportModule,
