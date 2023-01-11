@@ -9,8 +9,8 @@ import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.set('trust proxy', true);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  app.set('trust proxy', true);
   app.useGlobalPipes(
     new TrimPipe(),
     new ValidationPipe({
