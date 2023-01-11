@@ -21,6 +21,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DemonsModule } from './demons/demons.module';
 import { MailsModule } from './mails/mails.module';
 import { TestingController } from './testing/testing.controller';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -28,6 +29,10 @@ import { TestingController } from './testing/testing.controller';
       isGlobal: true,
       envFilePath: '.env',
       load: [],
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
     }),
     ScheduleModule.forRoot(),
     UsersModule,
