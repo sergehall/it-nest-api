@@ -24,16 +24,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
       return;
     }
-    if (status === HttpStatus.UNAUTHORIZED) {
-      response.status(status).json({
-        statusCode: status,
-        message: responseBody.message,
-        timestamp: new Date().toISOString(),
-        path: request.url,
-      });
-      return;
-    }
-    if (status === HttpStatus.BAD_REQUEST) {
+    if (
+      status === HttpStatus.BAD_REQUEST ||
+      status === HttpStatus.UNAUTHORIZED
+    ) {
       response.status(status).json({
         errorsMessages: responseBody.message,
       });
