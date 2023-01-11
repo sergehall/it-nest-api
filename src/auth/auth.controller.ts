@@ -145,7 +145,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
-  async logout(@Request() req: any) {
+  async logout(@Request() req: any, @Res({ passthrough: true }) res: Response) {
     const refreshToken = req.cookies.refreshToken;
     const payload: PayloadDto = await this.authService.decode(refreshToken);
     const currentJwt = {
@@ -156,6 +156,7 @@ export class AuthController {
     await this.securityDevicesService.deleteDeviceByDeviceIdAfterLogout(
       payload,
     );
+    res.clearCookie('refreshToken');
     return true;
   }
   @HttpCode(HttpStatus.NO_CONTENT)
