@@ -31,9 +31,7 @@ import { LikeStatusDto } from './dto/like-status.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { NoneStatusGuard } from '../auth/guards/none-status.guard';
-import { SkipThrottle } from '@nestjs/throttler';
 
-@SkipThrottle()
 @Controller('posts')
 export class PostsController {
   constructor(

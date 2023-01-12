@@ -22,7 +22,7 @@ import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
-import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
+import { messageConfCodeInc } from '../exception-filter/errors-messages';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +32,6 @@ export class AuthController {
     private securityDevicesService: SecurityDevicesService,
   ) {}
   @HttpCode(HttpStatus.OK)
-  @UseGuards(ThrottlerGuard)
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
@@ -57,7 +56,6 @@ export class AuthController {
     return this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(ThrottlerGuard)
   @Post('registration')
   async registration(
     @Request() req: any,
@@ -100,14 +98,12 @@ export class AuthController {
     };
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(ThrottlerGuard)
   @Post('registration-email-resending')
   async registrationEmailResending(@Body() emailDto: EmailDto) {
     return await this.usersService.updateAndSentConfirmationCodeByEmail(
       emailDto.email,
     );
   }
-  @SkipThrottle()
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
@@ -140,7 +136,7 @@ export class AuthController {
     });
     return await this.authService.updateAccessJWT(currentPayload);
   }
-  @SkipThrottle()
+
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
@@ -159,27 +155,14 @@ export class AuthController {
     return true;
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(ThrottlerGuard)
   @Post('registration-confirmation')
   async registrationConfirmation(@Body() codeDto: CodeDto) {
     const result = await this.usersService.confirmByCodeInParams(codeDto.code);
     if (!result) {
-      throw new HttpException(
-        {
-          message: [
-            {
-              message:
-                'Confirmation code is incorrect, expired or already been applied',
-              field: 'code',
-            },
-          ],
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException(messageConfCodeInc, HttpStatus.BAD_REQUEST);
     }
     return true;
   }
-  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {

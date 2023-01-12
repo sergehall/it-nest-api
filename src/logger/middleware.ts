@@ -1,9 +1,7 @@
 import { Injectable, Logger, NestMiddleware, UseFilters } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { HttpExceptionFilter } from '../exception-filter/http-exception.filter';
-import { SkipThrottle } from '@nestjs/throttler';
 
-@SkipThrottle()
 @Injectable()
 @UseFilters(HttpExceptionFilter)
 export class LoggerMiddleware implements NestMiddleware {
