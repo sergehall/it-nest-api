@@ -75,7 +75,7 @@ export class AuthService {
       }),
     };
   }
-  async validAccessJWT(JWT: string): Promise<UsersEntity | null> {
+  async validAccessJWT(JWT: string): Promise<PayloadDto | null> {
     try {
       const result = await this.jwtService.verify(JWT, {
         secret: process.env.ACCESS_SECRET_KEY,
@@ -85,7 +85,7 @@ export class AuthService {
       return null;
     }
   }
-  async validRefreshJWT(JWT: string): Promise<UsersEntity | null> {
+  async validRefreshJWT(JWT: string): Promise<PayloadDto | null> {
     try {
       const result = await this.jwtService.verify(JWT, {
         secret: process.env.REFRESH_SECRET_KEY,
@@ -99,9 +99,6 @@ export class AuthService {
     return jwt_decode(JWT);
   }
   async addRefreshTokenToBl(currentToken: JwtBlacklistDto): Promise<boolean> {
-    return await this.blacklistJwtRepository.addJWT(currentToken);
-  }
-  async checkRefreshTokenInBl(currentToken: JwtBlacklistDto): Promise<boolean> {
     return await this.blacklistJwtRepository.addJWT(currentToken);
   }
 }

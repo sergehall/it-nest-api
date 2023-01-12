@@ -3,6 +3,11 @@ export const jwtIncorrect = {
     'JWT refreshToken inside headers.authorization is missing, expired or incorrect',
   field: 'headers.authorization',
 };
+export const jwtCookiesIncorrect = {
+  message:
+    'JWT refreshToken inside request.cookies is missing, expired or incorrect',
+  field: 'request.cookies',
+};
 export const codeIncorrect = {
   message: 'Confirmation code is incorrect, expired or already been applied',
   field: 'code',
@@ -30,4 +35,8 @@ export const passwordInvalid = {
 export const validatePasswordFailed = {
   message: 'Login or password invalid',
   field: 'loginOrEmail or password in auth headers',
+};
+export const userNotExists = {
+  message: 'User does not exist',
+  field: 'email',
 };

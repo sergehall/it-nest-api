@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { BlacklistJwtRepository } from '../infrastructure/blacklist-jwt.repository';
+import { jwtCookiesIncorrect } from '../../exception-filter/errors-messages';
 
 @Injectable()
 export class JwtCookiesValidGuard implements CanActivate {
@@ -25,15 +26,7 @@ export class JwtCookiesValidGuard implements CanActivate {
       }
     }
     throw new HttpException(
-      {
-        message: [
-          {
-            message:
-              'JWT refreshToken inside cookie is missing, expired or incorrect',
-            field: 'JWT',
-          },
-        ],
-      },
+      { message: [jwtCookiesIncorrect] },
       HttpStatus.UNAUTHORIZED,
     );
   }

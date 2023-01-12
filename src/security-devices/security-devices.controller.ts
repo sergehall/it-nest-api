@@ -8,6 +8,7 @@ import {
   HttpStatus,
   HttpException,
   Param,
+  NotFoundException,
 } from '@nestjs/common';
 import { SecurityDevicesService } from './security-devices.service';
 import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
@@ -57,12 +58,7 @@ export class SecurityDevicesController {
       deviceId,
       currentPayload,
     );
-    if (result === '404') {
-      throw new HttpException(
-        { message: ['Not found device'] },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    if (result === '404') throw new NotFoundException();
     if (result === '403') {
       throw new HttpException(
         {

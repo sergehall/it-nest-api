@@ -1,8 +1,7 @@
 import {
   ForbiddenException,
-  HttpException,
-  HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
@@ -38,10 +37,7 @@ export class CommentsService {
   ): Promise<CommentsEntity> {
     const post = await this.postsService.checkPostInDB(postId);
     if (!post) {
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     const newComment: CommentsEntity = {
       id: uuid4().toString(),
@@ -60,11 +56,9 @@ export class CommentsService {
   }
   async findCommentById(commentId: string, currentUser: UsersEntity | null) {
     const comment = await this.commentsRepository.findCommentById(commentId);
-    if (!comment)
-      throw new HttpException(
-        { message: ['Not found comment'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!comment) {
+      throw new NotFoundException();
+    }
     const filledComments =
       await this.likeStatusCommentsRepository.preparationCommentsForReturn(
         [comment],
@@ -80,10 +74,7 @@ export class CommentsService {
   ) {
     const post = await this.postsService.checkPostInDB(postId);
     if (!post) {
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     const commentsDoc = await this.commentsRepository.findCommentsByPostId(
       postId,
@@ -158,10 +149,7 @@ export class CommentsService {
       commentId,
     );
     if (!findComment) {
-      throw new HttpException(
-        { message: ['Not found comment'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     const likeStatusCommEntity: LikeStatusCommentEntity = {
       commentId: commentId,
@@ -173,9 +161,6 @@ export class CommentsService {
       likeStatusCommEntity,
     );
   }
-  async findOne(id: string) {
-    return `This action returns a #${id} comment`;
-  }
 
   async updateComment(
     commentId: string,
@@ -186,10 +171,7 @@ export class CommentsService {
       commentId,
     );
     if (!findComment) {
-      throw new HttpException(
-        { message: ['Not found comment'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     try {
       const ability = this.caslAbilityFactory.createForComments({
@@ -213,12 +195,7 @@ export class CommentsService {
     const findComment = await this.commentsRepository.findCommentById(
       commentId,
     );
-    if (!findComment) {
-      throw new HttpException(
-        { message: ['Not found comment'] },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    if (!findComment) throw new NotFoundException();
     try {
       const ability = this.caslAbilityFactory.createForComments({
         id: currentUser.id,

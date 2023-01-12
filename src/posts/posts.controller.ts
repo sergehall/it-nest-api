@@ -5,13 +5,13 @@ import {
   Body,
   Param,
   Delete,
-  HttpException,
   Put,
   Query,
   HttpCode,
   UseGuards,
   HttpStatus,
   Request,
+  NotFoundException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -41,7 +41,6 @@ export class PostsController {
     private readonly commentsService: CommentsService,
     private readonly blogsService: BlogsService,
   ) {}
-
   @Get()
   @UseGuards(AbilitiesGuard)
   @UseGuards(NoneStatusGuard)
@@ -71,7 +70,7 @@ export class PostsController {
       createPostDto.blogId,
     );
     if (!blog) {
-      throw new HttpException({ message: ['Not found blogger'] }, 404);
+      throw new NotFoundException();
     }
     return this.postsService.createPost(createPostDto, blog.name);
   }
@@ -84,11 +83,7 @@ export class PostsController {
   ) {
     const currentUser: UsersEntity = req.user;
     const post = await this.postsService.checkPostInDB(postId);
-    if (!post)
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!post) throw new NotFoundException();
     return await this.commentsService.createComment(
       postId,
       createCommentDto,
@@ -113,11 +108,7 @@ export class PostsController {
       sortDirection: paginationData.sortDirection,
     };
     const post = await this.postsService.checkPostInDB(postId);
-    if (!post)
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!post) throw new NotFoundException();
     return await this.commentsService.findCommentsByPostId(
       queryPagination,
       postId,
@@ -134,11 +125,7 @@ export class PostsController {
   ): Promise<PostsEntity> {
     const currentUser: UsersEntity | null = req.user;
     const post = await this.postsService.findPostById(postId, currentUser);
-    if (!post)
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!post) throw new NotFoundException();
     return post;
   }
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -149,11 +136,7 @@ export class PostsController {
     @Body() updatePostDto: CreatePostDto,
   ) {
     const post = await this.postsService.updatePost(id, updatePostDto);
-    if (!post)
-      throw new HttpException(
-        { message: ['Not found post'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!post) throw new NotFoundException();
     return post;
   }
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -49,17 +49,16 @@ export class LikeStatusPostsRepository {
       // getting likes count
       const likesCount = await this.likeStatusPostModel
         .countDocuments({
-          $and: [{ postId: postId }, { likeStatus: 'Like' }],
+          $and: [{ postId: postId }, { likeStatus: StatusLike.LIKE }],
         })
         .lean();
 
       // getting dislikes count
       const dislikesCount = await this.likeStatusPostModel
         .countDocuments({
-          $and: [{ postId: postId }, { likeStatus: 'Dislike' }],
+          $and: [{ postId: postId }, { likeStatus: StatusLike.DISLIKE }],
         })
         .lean();
-
       // getting the status of the post owner
       let ownLikeStatus = StatusLike.NONE;
       if (currentUser) {
@@ -75,7 +74,7 @@ export class LikeStatusPostsRepository {
       const newestLikes = await this.likeStatusPostModel
         .find(
           {
-            $and: [{ postId: postId }, { likeStatus: 'Like' }],
+            $and: [{ postId: postId }, { likeStatus: StatusLike.LIKE }],
           },
           {
             _id: false,

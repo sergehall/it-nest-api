@@ -7,11 +7,11 @@ import {
   Delete,
   Put,
   Query,
-  HttpException,
   HttpCode,
   UseGuards,
   HttpStatus,
   Request,
+  NotFoundException,
 } from '@nestjs/common';
 import { BlogsService } from './blogs.service';
 import { CreateBlogsDto } from './dto/create-blogs.dto';
@@ -68,10 +68,7 @@ export class BlogsController {
     const currentUser: UsersEntity | null = req.user;
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
-      throw new HttpException(
-        { message: ['Not found blogger'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     const paginationData = ParseQuery.getPaginationData(query);
     const dtoPagination: PaginationDto = {
@@ -95,10 +92,7 @@ export class BlogsController {
   ) {
     const blog = await this.blogsService.findOne(blogId);
     if (!blog) {
-      throw new HttpException(
-        { message: ['Not found blogger'] },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException();
     }
     const createPostDto = {
       title: createPostByBlogIdDto.title,
@@ -111,11 +105,9 @@ export class BlogsController {
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<BlogsEntity | null> {
     const blog = await this.blogsService.findOne(id);
-    if (!blog)
-      throw new HttpException(
-        { message: ['Not found blogger'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!blog) {
+      throw new NotFoundException();
+    }
     return blog;
   }
   @HttpCode(HttpStatus.NO_CONTENT)

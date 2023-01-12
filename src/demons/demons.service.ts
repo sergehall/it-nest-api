@@ -15,22 +15,20 @@ export class DemonsService {
   ) {}
   @Cron('0 */1 * * * *')
   async clearingIpOlder10Sec() {
-    // await this.last10secReqRepository.cleanup();
-    // console.log('0 */1 * * * * : clearingIpOlder10Sec');
+    await this.last10secReqRepository.cleanup();
   }
   @Cron('* * * * * *')
   async sendAndDeleteConfirmationCode() {
     const emailAndCode = await this.mailService.findEmailByOldestDate();
     if (emailAndCode) {
       await this.mailService.sendCodeByRegistration(emailAndCode);
+      console.log(`send confirmation code to email:  ${emailAndCode.email}`);
       await this.usersService.addSentEmailTime(emailAndCode.email);
       await this.mailService.removeEmailById(emailAndCode.id);
     }
-    // console.log('* * * * * * : sendAndDeleteConfirmationCode');
   }
   @Cron('0 */5 * * * *')
   async clearingInvalidJWTFromBlackList() {
     await this.blacklistJwtRepository.clearingInvalidJWTFromBlackList();
-    console.log('0 */5 * * * * : clearingInvalidJWTFromBlackList');
   }
 }

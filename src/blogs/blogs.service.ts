@@ -1,9 +1,8 @@
 import { CreateBlogsDto } from './dto/create-blogs.dto';
 import {
   ForbiddenException,
-  HttpException,
-  HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { ConvertFiltersForDB } from '../infrastructure/common/convert-filters/convertFiltersForDB';
 import { PaginationDto } from '../infrastructure/common/pagination/dto/pagination.dto';
@@ -88,11 +87,9 @@ export class BlogsService {
   async updateBlog(id: string, updateBlogDto: CreateBlogsDto) {
     const blogToUpdate: BlogsEntity | null =
       await this.blogsRepository.findBlogById(id);
-    if (!blogToUpdate)
-      throw new HttpException(
-        { message: ['Not found user'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!blogToUpdate) {
+      throw new NotFoundException();
+    }
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {
@@ -115,11 +112,9 @@ export class BlogsService {
 
   async removeBlog(id: string) {
     const blogToUpdate = await this.blogsRepository.findBlogById(id);
-    if (!blogToUpdate)
-      throw new HttpException(
-        { message: ['Not found user'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!blogToUpdate) {
+      throw new NotFoundException();
+    }
     const ability = this.caslAbilityFactory.createForBlog({ id: id });
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, {

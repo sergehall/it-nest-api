@@ -23,6 +23,7 @@ import { MailsModule } from './mails/mails.module';
 import { TestingController } from './testing/testing.controller';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { appProviders } from './app.providers';
+import * as process from 'process';
 
 @Module({
   imports: [
@@ -32,8 +33,8 @@ import { appProviders } from './app.providers';
       load: [],
     }),
     ThrottlerModule.forRoot({
-      ttl: 10,
-      limit: 5,
+      ttl: Number(process.env.THROTTLE_TTL),
+      limit: Number(process.env.THROTTLE_LIMIT),
     }),
     ScheduleModule.forRoot(),
     UsersModule,

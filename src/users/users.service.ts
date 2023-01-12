@@ -3,6 +3,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,6 +24,8 @@ import { UsersEntity } from './entities/users.entity';
 import { QueryArrType } from '../infrastructure/common/convert-filters/types/convert-filter.types';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
+import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
+import { userNotExists } from '../exception-filter/errors-messages';
 
 @Injectable()
 export class UsersService {
@@ -104,14 +107,7 @@ export class UsersService {
       return true;
     } else {
       throw new HttpException(
-        {
-          message: [
-            {
-              message: 'User not exists',
-              field: 'email',
-            },
-          ],
-        },
+        { message: [userNotExists] },
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -183,7 +179,6 @@ export class UsersService {
     userToUpdate.orgId = currentUser.orgId;
     userToUpdate.roles = currentUser.roles;
 
-    console.log(userToUpdate, 'userToUpdate');
     const ability = this.caslAbilityFactory.createForUser(currentUser);
     try {
       ForbiddenError.from(ability).throwUnlessCan(Action.UPDATE, userToUpdate);
@@ -203,11 +198,7 @@ export class UsersService {
 
   async removeUserById(id: string, currentUser: User) {
     const userToDelete = await this.usersRepository.findUserByUserId(id);
-    if (!userToDelete)
-      throw new HttpException(
-        { message: ['Not found user'] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!userToDelete) throw new NotFoundException();
     try {
       const ability = this.caslAbilityFactory.createForUser(currentUser);
       ForbiddenError.from(ability).throwUnlessCan(Action.DELETE, userToDelete);
@@ -235,7 +226,7 @@ export class UsersService {
       email: createUserDto.email,
       passwordHash: passwordHash,
       createdAt: currentTime,
-      orgId: 'It-Incubator',
+      orgId: OrgIdEnums.IT_INCUBATOR,
       roles: Role.User,
       emailConfirmation: {
         confirmationCode: confirmationCode,

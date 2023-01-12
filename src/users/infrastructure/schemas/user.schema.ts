@@ -80,7 +80,7 @@ export class User {
     makeInstance.email = createUserDto.email.toLowerCase();
     makeInstance.passwordHash = passwordHash;
     makeInstance.createdAt = createdAt;
-    makeInstance.orgId = OrgIdEnums.INCUBATOR;
+    makeInstance.orgId = OrgIdEnums.IT_INCUBATOR;
     makeInstance.roles = Role.User;
     makeInstance.emailConfirmation = {
       confirmationCode: confirmationCode,
