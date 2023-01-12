@@ -8,16 +8,16 @@ import {
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 import {
-  JwtRefreshBlacklistDocument,
-  JwtRefreshBlacklistSchema,
-} from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
+  refreshTokenBlackListDocument,
+  RefreshTokenBlacklistSchema,
+} from '../../auth/infrastructure/schemas/refreshToken-blacklist.schema';
 
 export const usersProviders = [
   {
     provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<UsersDocument>(
-        'Users',
+        NamesCollectionsEnums.USERS,
         UsersSchema,
         NamesCollectionsEnums.USERS,
       ),
@@ -27,7 +27,7 @@ export const usersProviders = [
     provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
-        'EmailsConfirmCodes',
+        NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
         EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
@@ -36,10 +36,10 @@ export const usersProviders = [
   {
     provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<JwtRefreshBlacklistDocument>(
-        'JwtRefreshBlacklist',
-        JwtRefreshBlacklistSchema,
-        NamesCollectionsEnums.BL_JWT_REF,
+      mongoose.model<refreshTokenBlackListDocument>(
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
+        RefreshTokenBlacklistSchema,
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

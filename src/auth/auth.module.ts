@@ -6,7 +6,6 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './strategies/local.strategy';
-import { Last10secReqRepository } from './infrastructure/last10sec-req..repository';
 import { DatabaseModule } from '../infrastructure/database/database.module';
 import { UsersRepository } from '../users/infrastructure/users.repository';
 import { authProviders } from './infrastructure/auth.providers';
@@ -25,7 +24,6 @@ import { BlacklistJwtRepository } from './infrastructure/blacklist-jwt.repositor
     SecurityDevicesService,
     LocalStrategy,
     JwtStrategy,
-    Last10secReqRepository,
     ...authProviders,
   ],
   exports: [AuthService],

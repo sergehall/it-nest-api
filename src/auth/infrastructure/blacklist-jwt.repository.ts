@@ -3,23 +3,23 @@ import { ProvidersEnums } from '../../infrastructure/database/enums/providers.en
 import { Model } from 'mongoose';
 
 import { JwtBlacklistDto } from '../dto/jwt-blacklist.dto';
-import { JwtRefreshBlacklistDocument } from './schemas/jwtRefresh-blacklist.schema';
+import { refreshTokenBlackListDocument } from './schemas/refreshToken-blacklist.schema';
 
 @Injectable()
 export class BlacklistJwtRepository {
   constructor(
     @Inject(ProvidersEnums.BL_REFRESH_JWT_MODEL)
-    private JwtRefreshBlacklistModel: Model<JwtRefreshBlacklistDocument>,
+    private RefreshTokenBlackListModel: Model<refreshTokenBlackListDocument>,
   ) {}
   async findJWT(refreshToken: string): Promise<boolean> {
-    const result = await this.JwtRefreshBlacklistModel.findOne({
+    const result = await this.RefreshTokenBlackListModel.findOne({
       refreshToken: { $eq: refreshToken },
     });
     return result !== null;
   }
   async addJWT(jwtBlacklistDto: JwtBlacklistDto): Promise<boolean> {
     try {
-      const result = await this.JwtRefreshBlacklistModel.create(
+      const result = await this.RefreshTokenBlackListModel.create(
         {
           refreshToken: jwtBlacklistDto.refreshToken,
           expirationDate: jwtBlacklistDto.expirationDate,
@@ -32,7 +32,7 @@ export class BlacklistJwtRepository {
     }
   }
   async clearingInvalidJWTFromBlackList() {
-    return await this.JwtRefreshBlacklistModel.deleteMany({
+    return await this.RefreshTokenBlackListModel.deleteMany({
       expirationDate: { $lt: new Date().toISOString() },
     });
   }

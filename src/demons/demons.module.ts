@@ -3,7 +3,6 @@ import { DemonsService } from './demons.service';
 import { DemonsController } from './demons.controller';
 import { demonsProviders } from './infrastructure/demons.providers';
 import { DatabaseModule } from '../infrastructure/database/database.module';
-import { Last10secReqRepository } from '../auth/infrastructure/last10sec-req..repository';
 import { MailsModule } from '../mails/mails.module';
 import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { UsersService } from '../users/users.service';
@@ -18,7 +17,6 @@ import { BlacklistJwtRepository } from '../auth/infrastructure/blacklist-jwt.rep
   controllers: [DemonsController],
   providers: [
     DemonsService,
-    Last10secReqRepository,
     MailsRepository,
     UsersService,
     Pagination,

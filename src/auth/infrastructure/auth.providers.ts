@@ -3,10 +3,6 @@ import { Mongoose } from 'mongoose';
 import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
 import { ConnectionEnums } from '../../infrastructure/database/enums/connection.enums';
 import {
-  Last10secDocument,
-  Last10secSchema,
-} from './schemas/last10sec.schemas';
-import {
   UsersDocument,
   UsersSchema,
 } from '../../users/infrastructure/schemas/user.schema';
@@ -16,26 +12,16 @@ import {
   DevicesSchema,
 } from '../../security-devices/infrastructure/schemas/devices.schema';
 import {
-  JwtRefreshBlacklistDocument,
-  JwtRefreshBlacklistSchema,
-} from './schemas/jwtRefresh-blacklist.schema';
+  refreshTokenBlackListDocument,
+  RefreshTokenBlacklistSchema,
+} from './schemas/refreshToken-blacklist.schema';
 
 export const authProviders = [
-  {
-    provide: ProvidersEnums.LAST_10SEC_MODEL,
-    useFactory: (mongoose: Mongoose) =>
-      mongoose.model<Last10secDocument>(
-        'Last10sec',
-        Last10secSchema,
-        NamesCollectionsEnums.LAST_10SEC,
-      ),
-    inject: [ConnectionEnums.ASYNC_CONNECTION],
-  },
   {
     provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<UsersDocument>(
-        'Users',
+        NamesCollectionsEnums.USERS,
         UsersSchema,
         NamesCollectionsEnums.USERS,
       ),
@@ -44,10 +30,10 @@ export const authProviders = [
   {
     provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<JwtRefreshBlacklistDocument>(
-        'JwtRefreshBlacklist',
-        JwtRefreshBlacklistSchema,
-        NamesCollectionsEnums.BL_JWT_REF,
+      mongoose.model<refreshTokenBlackListDocument>(
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
+        RefreshTokenBlacklistSchema,
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
@@ -55,7 +41,7 @@ export const authProviders = [
     provide: ProvidersEnums.DEVICES_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<DevicesDocument>(
-        'Devices',
+        NamesCollectionsEnums.DEVICES,
         DevicesSchema,
         NamesCollectionsEnums.DEVICES,
       ),

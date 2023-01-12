@@ -27,10 +27,6 @@ import {
   CommentsSchema,
 } from '../../comments/infrastructure/schemas/comments.schema';
 import {
-  Last10secDocument,
-  Last10secSchema,
-} from '../../auth/infrastructure/schemas/last10sec.schemas';
-import {
   EmailsConfirmCodeDocument,
   EmailsConfirmCodeSchema,
 } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
@@ -39,16 +35,16 @@ import {
   DevicesSchema,
 } from '../../security-devices/infrastructure/schemas/devices.schema';
 import {
-  JwtRefreshBlacklistDocument,
-  JwtRefreshBlacklistSchema,
-} from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
+  refreshTokenBlackListDocument,
+  RefreshTokenBlacklistSchema,
+} from '../../auth/infrastructure/schemas/refreshToken-blacklist.schema';
 
 export const testingProviders = [
   {
     provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<UsersDocument>(
-        'Users',
+        NamesCollectionsEnums.USERS,
         UsersSchema,
         NamesCollectionsEnums.USERS,
       ),
@@ -58,7 +54,7 @@ export const testingProviders = [
     provide: ProvidersEnums.BLOG_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<BlogsDocument>(
-        'Blogs',
+        NamesCollectionsEnums.BLOGS,
         BlogSchema,
         NamesCollectionsEnums.BLOGS,
       ),
@@ -68,7 +64,7 @@ export const testingProviders = [
     provide: ProvidersEnums.POST_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<PostsDocument>(
-        'Posts',
+        NamesCollectionsEnums.POSTS,
         PostsSchema,
         NamesCollectionsEnums.POSTS,
       ),
@@ -105,20 +101,10 @@ export const testingProviders = [
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
   {
-    provide: ProvidersEnums.LAST_10SEC_MODEL,
-    useFactory: (mongoose: Mongoose) =>
-      mongoose.model<Last10secDocument>(
-        'Last10sec',
-        Last10secSchema,
-        NamesCollectionsEnums.LAST_10SEC,
-      ),
-    inject: [ConnectionEnums.ASYNC_CONNECTION],
-  },
-  {
     provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
-        'EmailsConfirmCodes',
+        NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
         EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
@@ -127,10 +113,10 @@ export const testingProviders = [
   {
     provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<JwtRefreshBlacklistDocument>(
-        'JwtRefreshBlacklist',
-        JwtRefreshBlacklistSchema,
-        NamesCollectionsEnums.BL_JWT_REF,
+      mongoose.model<refreshTokenBlackListDocument>(
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
+        RefreshTokenBlacklistSchema,
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
@@ -138,7 +124,7 @@ export const testingProviders = [
     provide: ProvidersEnums.DEVICES_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<DevicesDocument>(
-        'Devices',
+        NamesCollectionsEnums.DEVICES,
         DevicesSchema,
         NamesCollectionsEnums.DEVICES,
       ),

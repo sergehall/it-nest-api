@@ -1,9 +1,5 @@
 import { ProvidersEnums } from '../../infrastructure/database/enums/providers.enums';
 import { Mongoose } from 'mongoose';
-import {
-  Last10secDocument,
-  Last10secSchema,
-} from '../../auth/infrastructure/schemas/last10sec.schemas';
 import { NamesCollectionsEnums } from '../../infrastructure/database/enums/names-collections.enums';
 import { ConnectionEnums } from '../../infrastructure/database/enums/connection.enums';
 import {
@@ -15,28 +11,18 @@ import {
   UsersSchema,
 } from '../../users/infrastructure/schemas/user.schema';
 import {
-  JwtRefreshBlacklistDocument,
-  JwtRefreshBlacklistSchema,
-} from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
+  refreshTokenBlackListDocument,
+  RefreshTokenBlacklistSchema,
+} from '../../auth/infrastructure/schemas/refreshToken-blacklist.schema';
 
 export const demonsProviders = [
   {
     provide: ProvidersEnums.USER_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<UsersDocument>(
-        'Users',
+        NamesCollectionsEnums.USERS,
         UsersSchema,
         NamesCollectionsEnums.USERS,
-      ),
-    inject: [ConnectionEnums.ASYNC_CONNECTION],
-  },
-  {
-    provide: ProvidersEnums.LAST_10SEC_MODEL,
-    useFactory: (mongoose: Mongoose) =>
-      mongoose.model<Last10secDocument>(
-        'Last10sec',
-        Last10secSchema,
-        NamesCollectionsEnums.LAST_10SEC,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },
@@ -44,7 +30,7 @@ export const demonsProviders = [
     provide: ProvidersEnums.CONFIRM_CODE_MODEL,
     useFactory: (mongoose: Mongoose) =>
       mongoose.model<EmailsConfirmCodeDocument>(
-        'EmailsConfirmCodes',
+        NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
         EmailsConfirmCodeSchema,
         NamesCollectionsEnums.EMAILS_CONFIRM_CODES,
       ),
@@ -53,10 +39,10 @@ export const demonsProviders = [
   {
     provide: ProvidersEnums.BL_REFRESH_JWT_MODEL,
     useFactory: (mongoose: Mongoose) =>
-      mongoose.model<JwtRefreshBlacklistDocument>(
-        'JwtRefreshBlacklist',
-        JwtRefreshBlacklistSchema,
-        NamesCollectionsEnums.BL_JWT_REF,
+      mongoose.model<refreshTokenBlackListDocument>(
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
+        RefreshTokenBlacklistSchema,
+        NamesCollectionsEnums.REFRESH_TOKEN_BL,
       ),
     inject: [ConnectionEnums.ASYNC_CONNECTION],
   },

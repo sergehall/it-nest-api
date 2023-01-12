@@ -7,10 +7,9 @@ import { ProvidersEnums } from '../../infrastructure/database/enums/providers.en
 import { LikeStatusPostsDocument } from '../../posts/infrastructure/schemas/like-status-posts.schemas';
 import { LikeStatusCommentDocument } from '../../comments/infrastructure/schemas/like-status-comments.schema';
 import { CommentsDocument } from '../../comments/infrastructure/schemas/comments.schema';
-import { Last10secDocument } from '../../auth/infrastructure/schemas/last10sec.schemas';
 import { EmailsConfirmCodeDocument } from '../../mails/infrastructure/schemas/email-confirm-code.schema';
 import { DevicesDocument } from '../../security-devices/infrastructure/schemas/devices.schema';
-import { JwtRefreshBlacklistDocument } from '../../auth/infrastructure/schemas/jwtRefresh-blacklist.schema';
+import { refreshTokenBlackListDocument } from '../../auth/infrastructure/schemas/refreshToken-blacklist.schema';
 
 @Injectable()
 export class TestingRepository {
@@ -27,12 +26,10 @@ export class TestingRepository {
     private LikeStatusCommentModel: Model<LikeStatusCommentDocument>,
     @Inject(ProvidersEnums.COMMENT_MODEL)
     private CommentsModel: Model<CommentsDocument>,
-    @Inject(ProvidersEnums.LAST_10SEC_MODEL)
-    private Last10secModel: Model<Last10secDocument>,
     @Inject(ProvidersEnums.CONFIRM_CODE_MODEL)
     private EmailsConfirmModel: Model<EmailsConfirmCodeDocument>,
     @Inject(ProvidersEnums.BL_REFRESH_JWT_MODEL)
-    private JwtRefreshBlacklist: Model<JwtRefreshBlacklistDocument>,
+    private JwtRefreshBlacklist: Model<refreshTokenBlackListDocument>,
     @Inject(ProvidersEnums.DEVICES_MODEL)
     private MyModelDevicesSchema: Model<DevicesDocument>,
   ) {}
@@ -44,7 +41,6 @@ export class TestingRepository {
     await this.CommentsModel.deleteMany({});
     await this.LikeStatusPostModel.deleteMany({});
     await this.LikeStatusCommentModel.deleteMany({});
-    await this.Last10secModel.deleteMany({});
     await this.EmailsConfirmModel.deleteMany({});
     await this.JwtRefreshBlacklist.deleteMany({});
     await this.MyModelDevicesSchema.deleteMany({});
