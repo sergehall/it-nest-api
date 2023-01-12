@@ -27,6 +27,8 @@ import {
   userAlreadyExists,
 } from '../exception-filter/errors-messages';
 import { SkipThrottle } from '@nestjs/throttler';
+import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
+import { AccessToken } from './dto/accessToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,21 +44,18 @@ export class AuthController {
     @Request() req: any,
     @Res({ passthrough: true }) res: Response,
     @Ip() ip: string,
-  ) {
+  ): Promise<AccessToken> {
     const token = await this.authService.signRefreshJWT(req.user);
     const newPayload: PayloadDto = await this.authService.decode(
       token.refreshToken,
     );
-    let userAgent = req.get('user-agent');
-    if (!userAgent) {
-      userAgent = 'None';
-    }
+    const userAgent = req.get('user-agent') || 'None';
     await this.securityDevicesService.createDevices(newPayload, ip, userAgent);
     res.cookie('refreshToken', token.refreshToken, {
       httpOnly: true,
       secure: true,
     });
-    return this.authService.signAccessJWT(req.user);
+    return await this.authService.signAccessJWT(req.user);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration')
@@ -77,10 +76,7 @@ export class AuthController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    let userAgent = req.get('user-agent');
-    if (!userAgent) {
-      userAgent = 'None';
-    }
+    const userAgent = req.get('user-agent') || 'None';
     const registrationData = {
       ip: ip,
       userAgent: userAgent,
@@ -110,7 +106,7 @@ export class AuthController {
     @Request() req: any,
     @Res({ passthrough: true }) res: Response,
     @Ip() ip: string,
-  ) {
+  ): Promise<AccessToken> {
     const refreshToken = req.cookies.refreshToken;
     const currentPayload: PayloadDto = await this.authService.decode(
       refreshToken,
@@ -139,10 +135,13 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
-  async logout(@Request() req: any, @Res({ passthrough: true }) res: Response) {
+  async logout(
+    @Request() req: any,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<boolean> {
     const refreshToken = req.cookies.refreshToken;
     const payload: PayloadDto = await this.authService.decode(refreshToken);
-    const currentJwt = {
+    const currentJwt: JwtBlacklistDto = {
       refreshToken: refreshToken,
       expirationDate: new Date(payload.exp * 1000).toISOString(),
     };

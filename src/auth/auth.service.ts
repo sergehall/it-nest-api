@@ -8,6 +8,7 @@ import jwt_decode from 'jwt-decode';
 import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
 import { BlacklistJwtRepository } from './infrastructure/blacklist-jwt.repository';
 import { PayloadDto } from './dto/payload.dto';
+import { AccessToken } from './dto/accessToken.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +28,7 @@ export class AuthService {
     return null;
   }
 
-  async signAccessJWT(user: UsersEntity) {
+  async signAccessJWT(user: UsersEntity): Promise<AccessToken> {
     const deviceId = uuid4().toString();
     const payload = { userId: user.id, email: user.email, deviceId: deviceId };
     return {
@@ -37,7 +38,7 @@ export class AuthService {
       }),
     };
   }
-  async updateAccessJWT(currentPayload: PayloadDto) {
+  async updateAccessJWT(currentPayload: PayloadDto): Promise<AccessToken> {
     const payload = {
       userId: currentPayload.userId,
       deviceId: currentPayload.deviceId,
