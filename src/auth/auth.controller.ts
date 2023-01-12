@@ -29,6 +29,7 @@ import {
 import { SkipThrottle } from '@nestjs/throttler';
 import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
 import { AccessToken } from './dto/accessToken.dto';
+import { UsersEntity } from '../users/entities/users.entity';
 
 @Controller('auth')
 export class AuthController {
@@ -154,7 +155,7 @@ export class AuthController {
   }
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('registration-confirmation')
-  async registrationConfirmation(@Body() codeDto: CodeDto) {
+  async registrationConfirmation(@Body() codeDto: CodeDto): Promise<boolean> {
     const result = await this.usersService.confirmByCodeInParams(codeDto.code);
     if (!result) {
       throw new HttpException(
