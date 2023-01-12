@@ -22,7 +22,11 @@ import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
 import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
-import { messageConfCodeInc } from '../exception-filter/errors-messages';
+import {
+  codeIncorrect,
+  userAlreadyExists,
+} from '../exception-filter/errors-messages';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -69,12 +73,7 @@ export class AuthController {
     if (userExist) {
       throw new HttpException(
         {
-          message: [
-            {
-              message: `${userExist} already exists`,
-              field: userExist,
-            },
-          ],
+          message: [userAlreadyExists],
         },
         HttpStatus.BAD_REQUEST,
       );
@@ -104,6 +103,7 @@ export class AuthController {
       emailDto.email,
     );
   }
+  @SkipThrottle()
   @HttpCode(HttpStatus.OK)
   @UseGuards(JwtCookiesValidGuard)
   @Post('refresh-token')
@@ -137,6 +137,7 @@ export class AuthController {
     return await this.authService.updateAccessJWT(currentPayload);
   }
 
+  @SkipThrottle()
   @HttpCode(HttpStatus.NO_CONTENT)
   @UseGuards(JwtCookiesValidGuard)
   @Post('logout')
@@ -159,10 +160,14 @@ export class AuthController {
   async registrationConfirmation(@Body() codeDto: CodeDto) {
     const result = await this.usersService.confirmByCodeInParams(codeDto.code);
     if (!result) {
-      throw new HttpException(messageConfCodeInc, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        { message: [codeIncorrect] },
+        HttpStatus.BAD_REQUEST,
+      );
     }
     return true;
   }
+  @SkipThrottle()
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {

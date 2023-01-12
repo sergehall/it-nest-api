@@ -19,7 +19,9 @@ import { CheckAbilities } from '../ability/abilities.decorator';
 import { Action } from '../ability/roles/action.enum';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { NoneStatusGuard } from '../auth/guards/none-status.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}

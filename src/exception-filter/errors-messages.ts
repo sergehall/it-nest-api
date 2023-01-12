@@ -1,19 +1,33 @@
-export const messageHeaderJwt = {
-  message: [
-    {
-      message:
-        'JWT refreshToken inside headers.authorization is missing, expired or incorrect',
-      field: 'headers.authorization',
-    },
-  ],
+export const jwtIncorrect = {
+  message:
+    'JWT refreshToken inside headers.authorization is missing, expired or incorrect',
+  field: 'headers.authorization',
 };
-
-export const messageConfCodeInc = {
-  message: [
-    {
-      message:
-        'Confirmation code is incorrect, expired or already been applied',
-      field: 'code',
-    },
-  ],
+export const codeIncorrect = {
+  message: 'Confirmation code is incorrect, expired or already been applied',
+  field: 'code',
+};
+export const loginOrPassInvalid = {
+  message: 'Login or password invalid',
+  field: 'Login or password in auth headers',
+};
+export const moAnyAuthHeaders = {
+  message: 'No any auth headers',
+  field: 'headers.authorization',
+};
+export const userAlreadyExists = {
+  message: 'No any auth headers',
+  field: 'headers.authorization',
+};
+export const loginOrEmailInvalid = {
+  message: 'Unsuitable loginOrEmail min 3 max 20',
+  field: 'loginOrEmail',
+};
+export const passwordInvalid = {
+  message: 'Unsuitable password min 6 max 20',
+  field: 'password',
+};
+export const validatePasswordFailed = {
+  message: 'Login or password invalid',
+  field: 'loginOrEmail or password in auth headers',
 };

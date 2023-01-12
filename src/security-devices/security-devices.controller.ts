@@ -13,7 +13,9 @@ import { SecurityDevicesService } from './security-devices.service';
 import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
 import { AuthService } from '../auth/auth.service';
 import { PayloadDto } from '../auth/dto/payload.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('security')
 export class SecurityDevicesController {
   constructor(

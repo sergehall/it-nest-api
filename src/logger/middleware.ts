@@ -1,8 +1,10 @@
 import { Injectable, Logger, NestMiddleware, UseFilters } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { HttpExceptionFilter } from '../exception-filter/http-exception.filter';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Injectable()
+@SkipThrottle()
 @UseFilters(HttpExceptionFilter)
 export class LoggerMiddleware implements NestMiddleware {
   private logger = new Logger('HTTP');
@@ -12,18 +14,11 @@ export class LoggerMiddleware implements NestMiddleware {
     req.on('finish: ', () => {
       const { statusCode } = req;
       const contentLength = req.get('content-length');
-
       this.logger.log(
         `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
       );
     });
-    // const params = req.params;
-    // const query = req.query;
-    // console.log('body: ', body);
-    // console.log('params: ', params);
-    // console.log('query: ', query);
     console.log('Logger', method, originalUrl);
-    console.log(ip, 'ip-----------------------');
     next();
   }
 }

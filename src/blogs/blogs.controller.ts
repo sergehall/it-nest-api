@@ -24,7 +24,9 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { CreatePostByBlogIdDto } from '../posts/dto/create-post-blogid.dto';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
 import { NoneStatusGuard } from '../auth/guards/none-status.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('blogs')
 export class BlogsController {
   constructor(

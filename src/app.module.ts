@@ -21,6 +21,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { DemonsModule } from './demons/demons.module';
 import { MailsModule } from './mails/mails.module';
 import { TestingController } from './testing/testing.controller';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { appProviders } from './app.providers';
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { TestingController } from './testing/testing.controller';
       isGlobal: true,
       envFilePath: '.env',
       load: [],
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
     }),
     ScheduleModule.forRoot(),
     UsersModule,
@@ -42,7 +48,7 @@ import { TestingController } from './testing/testing.controller';
     MailsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ...appProviders],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

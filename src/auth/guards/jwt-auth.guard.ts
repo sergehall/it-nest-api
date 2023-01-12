@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BlacklistJwtRepository } from '../infrastructure/blacklist-jwt.repository';
-import { messageHeaderJwt } from '../../exception-filter/errors-messages';
+import { jwtIncorrect } from '../../exception-filter/errors-messages';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -22,7 +22,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const checkInBL = this.blacklistJwtRepository.findJWT(token);
     checkInBL.then((success) => {
       if (success) {
-        throw new HttpException(messageHeaderJwt, HttpStatus.UNAUTHORIZED);
+        throw new HttpException(
+          { message: [jwtIncorrect] },
+          HttpStatus.UNAUTHORIZED,
+        );
       }
     });
     return super.canActivate(context);
@@ -31,7 +34,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err: any, user: any, info: any) {
     // You can throw an exception based on either "info" or "err" arguments
     if (err || !user) {
-      throw err || new HttpException(messageHeaderJwt, HttpStatus.UNAUTHORIZED);
+      throw (
+        err ||
+        new HttpException({ message: [jwtIncorrect] }, HttpStatus.UNAUTHORIZED)
+      );
     }
     return user;
   }

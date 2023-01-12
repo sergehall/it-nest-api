@@ -3,6 +3,11 @@ import { PassportStrategy } from '@nestjs/passport';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 import { UsersEntity } from '../../users/entities/users.entity';
+import {
+  loginOrEmailInvalid,
+  passwordInvalid,
+  validatePasswordFailed,
+} from '../../exception-filter/errors-messages';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -21,16 +26,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       loginOrEmail.toString().length < 3 ||
       loginOrEmail.toString().length > 20
     ) {
-      messages.push({
-        message: 'Unsuitable loginOrEmail min 3 max 20',
-        field: 'loginOrEmail',
-      });
+      messages.push(loginOrEmailInvalid);
     }
     if (password.toString().length < 6 || password.toString().length > 20) {
-      messages.push({
-        message: 'Unsuitable password min 6 max 20',
-        field: 'password',
-      });
+      messages.push(passwordInvalid);
     }
     if (messages.length !== 0) {
       throw new HttpException(
@@ -47,16 +46,10 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (!user) {
       throw new HttpException(
         {
-          message: [
-            {
-              message: 'Password or login is wrong',
-              field: 'loginOrEmail or password',
-            },
-          ],
+          message: [validatePasswordFailed],
         },
         HttpStatus.UNAUTHORIZED,
       );
-      // throw new UnauthorizedException();
     }
     return user;
   }

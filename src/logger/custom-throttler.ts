@@ -9,8 +9,10 @@ import { HttpExceptionFilter } from '../exception-filter/http-exception.filter';
 import { Last10secReqRepository } from '../auth/infrastructure/last10sec-req..repository';
 import { Request, Response, NextFunction } from 'express';
 import { maxAttempts } from '../auth/count-attempts.constants';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Injectable()
+@SkipThrottle()
 @UseFilters(HttpExceptionFilter)
 export class CustomThrottler implements NestMiddleware {
   constructor(private last10secReqRepository: Last10secReqRepository) {}

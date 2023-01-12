@@ -28,7 +28,9 @@ import * as uuid4 from 'uuid4';
 import { User } from './infrastructure/schemas/user.schema';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { BaseAuthGuard } from '../auth/guards/base-auth.guard';
+import { SkipThrottle } from '@nestjs/throttler';
 
+@SkipThrottle()
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
