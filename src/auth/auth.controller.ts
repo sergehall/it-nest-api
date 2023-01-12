@@ -20,7 +20,6 @@ import { EmailDto } from './dto/email.dto';
 import { CodeDto } from './dto/code.dto';
 import { Response } from 'express';
 import { SecurityDevicesService } from '../security-devices/security-devices.service';
-import { JwtCookiesValidGuard } from './guards/jwt-cookies-valid.guard';
 import { PayloadDto } from './dto/payload.dto';
 import {
   codeIncorrect,
@@ -29,7 +28,7 @@ import {
 import { SkipThrottle } from '@nestjs/throttler';
 import { JwtBlacklistDto } from './dto/jwt-blacklist.dto';
 import { AccessToken } from './dto/accessToken.dto';
-import { UsersEntity } from '../users/entities/users.entity';
+import { CookiesJwtVerificationGuard } from './guards/cookies-jwt.verification.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -101,7 +100,7 @@ export class AuthController {
   }
   @SkipThrottle()
   @HttpCode(HttpStatus.OK)
-  @UseGuards(JwtCookiesValidGuard)
+  @UseGuards(CookiesJwtVerificationGuard)
   @Post('refresh-token')
   async refreshToken(
     @Request() req: any,
@@ -134,7 +133,7 @@ export class AuthController {
 
   @SkipThrottle()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtCookiesValidGuard)
+  @UseGuards(CookiesJwtVerificationGuard)
   @Post('logout')
   async logout(
     @Request() req: any,
@@ -169,6 +168,10 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
-    return req.user;
+    return {
+      email: req.user.email,
+      login: req.user.login,
+      userId: req.user.id,
+    };
   }
 }

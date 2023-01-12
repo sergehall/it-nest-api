@@ -10,7 +10,7 @@ import { BlacklistJwtRepository } from '../infrastructure/blacklist-jwt.reposito
 import { jwtCookiesIncorrect } from '../../exception-filter/errors-messages';
 
 @Injectable()
-export class JwtCookiesValidGuard implements CanActivate {
+export class CookiesJwtVerificationGuard implements CanActivate {
   constructor(
     private blacklistJwtRepository: BlacklistJwtRepository,
     private authService: AuthService,

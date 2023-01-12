@@ -11,7 +11,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { SecurityDevicesService } from './security-devices.service';
-import { JwtCookiesValidGuard } from '../auth/guards/jwt-cookies-valid.guard';
+import { CookiesJwtVerificationGuard } from '../auth/guards/cookies-jwt.verification.guard';
 import { AuthService } from '../auth/auth.service';
 import { PayloadDto } from '../auth/dto/payload.dto';
 import { SkipThrottle } from '@nestjs/throttler';
@@ -23,7 +23,7 @@ export class SecurityDevicesController {
     private readonly securityDevicesService: SecurityDevicesService,
     private authService: AuthService,
   ) {}
-  @UseGuards(JwtCookiesValidGuard)
+  @UseGuards(CookiesJwtVerificationGuard)
   @Get('devices')
   async findDevices(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
@@ -33,7 +33,7 @@ export class SecurityDevicesController {
     return this.securityDevicesService.findDevices(currentPayload);
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtCookiesValidGuard)
+  @UseGuards(CookiesJwtVerificationGuard)
   @Delete('devices')
   async removeDevicesExceptCurrent(@Request() req: any) {
     const refreshToken = req.cookies.refreshToken;
@@ -45,7 +45,7 @@ export class SecurityDevicesController {
     );
   }
   @HttpCode(HttpStatus.NO_CONTENT)
-  @UseGuards(JwtCookiesValidGuard)
+  @UseGuards(CookiesJwtVerificationGuard)
   @Delete('/devices/:deviceId')
   async removeDeviceByDeviceId(
     @Request() req: any,
