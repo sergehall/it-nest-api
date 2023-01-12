@@ -62,7 +62,7 @@ export class SecurityDevicesController {
     if (result === '403') {
       throw new HttpException(
         {
-          message: ['FORBIDDEN. You try to delete the deviceId of other user'],
+          message: ['It is forbidden to delete a device that is not your own.'],
         },
         HttpStatus.FORBIDDEN,
       );
