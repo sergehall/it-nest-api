@@ -46,7 +46,7 @@ export class PostsController {
   @UseGuards(NoneStatusGuard)
   @CheckAbilities({ action: Action.READ, subject: User })
   async findPosts(@Request() req: any, @Query() query: any) {
-    const currentUser: UsersEntity | null = req.user;
+    const currentUser = req.user;
     const paginationData = ParseQuery.getPaginationData(query);
     const searchFilters = {};
     const queryPagination: PaginationDto = {

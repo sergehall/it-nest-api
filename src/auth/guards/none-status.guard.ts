@@ -20,7 +20,14 @@ export class NoneStatusGuard implements CanActivate {
     const checkInBL = await this.blacklistJwtRepository.findJWT(token);
     const payload = await this.authService.validAccessJWT(token);
     if (!checkInBL && payload) {
-      request.user = await this.usersService.findUserByUserId(payload.userId);
+      const user = await this.usersService.findUserByUserId(payload.userId);
+      if (user) {
+        request.user = {
+          email: user.email,
+          login: user.login,
+          id: user.id,
+        };
+      }
     }
     return true;
   }
