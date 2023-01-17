@@ -26,7 +26,7 @@ import { MailsRepository } from '../mails/infrastructure/mails.repository';
 import { EmailConfimCodeEntity } from '../mails/entities/email-confim-code.entity';
 import { OrgIdEnums } from '../infrastructure/database/enums/org-id.enums';
 import { userNotExists } from '../exception-filter/errors-messages';
-//
+
 @Injectable()
 export class UsersService {
   constructor(
